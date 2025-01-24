@@ -104,6 +104,31 @@ public class LaunchInterceptor {
             return CompType.GT; // A is greater than B
         }
     }
+    
+    /**
+     * Determines whether or not there exists at least one set of three consecutive data points that are the vertices of a triangle
+     * with area greater than AREA1.
+     * @return true or false
+     */
+    public Boolean determineLIC3() {
+
+        if (numPoints < 3) {
+            return false; // Not enough points to form a triangle
+        }
+
+        for (int i = 2; i < numPoints; i++) {
+            // first coordinate = (x[i-2], y[i-2])
+            // second coordinate = (x[i-1], y[i-1])
+            // third coordinate = (x[i], y[i])
+
+            double triangleArea = 0.5 * Math.abs( x[i-2] * (y[i-1]- y[i]) + x[i-1] * (y[i] - y[i-2]) + x[i] * (y[i-2] - y[i-1]));
+            if (triangleArea > parameters.AREA1) {
+                return true;
+            }
+        }
+
+        return false; // If program reaches this point, no such triangle exists
+    }
 
     public void setInputVariables(int inNumPoints, double[][] inPoints, Parameters inParameters, Connectors[][] inLCM, boolean[] inPUV) {
         this.numPoints = inNumPoints;
