@@ -104,4 +104,17 @@ public class DECIDE {
             return CompType.GT; // A is greater than B
         }
     }
+
+    public DECIDE(int inNumPoints, double[][] inPoints, Parameters inParameters, Connectors[][] inLCM, boolean[][] inPUM) {
+        this.numPoints = inNumPoints;
+        this.x = new double[inNumPoints];
+        this.y = new double[inNumPoints];
+        for (int i = 0; i < inNumPoints; i++) {
+            this.x[i] = inPoints[i][0];
+            this.y[i] = inPoints[i][1];
+        }
+        this.parameters = inParameters;
+        this.LCM = inLCM;
+        this.PUM = inPUM;
+    }
 }
