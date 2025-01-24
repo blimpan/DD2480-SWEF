@@ -1,5 +1,5 @@
 
-public class DECIDE {
+public class LaunchInterceptor {
 
     public static final double PI = 3.1415926535;
 
@@ -105,7 +105,7 @@ public class DECIDE {
         }
     }
 
-    public DECIDE(int inNumPoints, double[][] inPoints, Parameters inParameters, Connectors[][] inLCM, boolean[][] inPUM) {
+    public LaunchInterceptor(int inNumPoints, double[][] inPoints, Parameters inParameters, Connectors[][] inLCM, boolean[][] inPUM) {
         this.numPoints = inNumPoints;
         this.x = new double[inNumPoints];
         this.y = new double[inNumPoints];
