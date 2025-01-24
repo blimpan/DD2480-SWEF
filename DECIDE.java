@@ -31,12 +31,35 @@ public class DECIDE {
         public double LENGTH1, RADIUS1, EPSILON, AREA1, LENGTH2, RADIUS2, AREA2;
         public int QPTS, QUADS, NPTS, KPTS, APTS, BPTS, CPTS, DPTS, EPTS, FPTS, GPTS;
         public double DIST;
+
+        public void setAllParameters(double LENGTH1, double RADIUS1, double EPSILON, double AREA1, double LENGTH2, double RADIUS2, double AREA2, int QPTS, int QUADS, int NPTS, int KPTS, int APTS, int BPTS, int CPTS, int DPTS, int EPTS, int FPTS, int GPTS, double DIST) {
+            this.LENGTH1 = LENGTH1;
+            this.RADIUS1 = RADIUS1;
+            this.EPSILON = EPSILON;
+            this.AREA1 = AREA1;
+            this.LENGTH2 = LENGTH2;
+            this.RADIUS2 = RADIUS2;
+            this.AREA2 = AREA2;
+            this.QPTS = QPTS;
+            this.QUADS = QUADS;
+            this.NPTS = NPTS;
+            this.KPTS = KPTS;
+            this.APTS = APTS;
+            this.BPTS = BPTS;
+            this.CPTS = CPTS;
+            this.DPTS = DPTS;
+            this.EPTS = EPTS;
+            this.FPTS = FPTS;
+            this.GPTS = GPTS;
+            this.DIST = DIST;
+        }
     }
     
     // GLOBAL VARIABLE DECLARATIONS 
     
     public Parameters parameters = new Parameters();
     public static Parameters parameters2 = new Parameters();
+
 
     // X coordinates of data points
     public double[] x = new double[100];
