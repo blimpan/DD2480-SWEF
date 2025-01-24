@@ -16,7 +16,7 @@ public class LaunchInterceptor {
     
     public boolean[][] boolMatrix = new boolean[15][15];
 
-    public boolean[] vector = new boolean[15];
+    public boolean[] PUV = new boolean[15];
     
     public enum CompType { 
         LT(1111), EQ(1112), GT(1113);
@@ -29,10 +29,10 @@ public class LaunchInterceptor {
     
     public static class Parameters {
         public double LENGTH1, RADIUS1, EPSILON, AREA1, LENGTH2, RADIUS2, AREA2;
-        public int QPTS, QUADS, NPTS, KPTS, APTS, BPTS, CPTS, DPTS, EPTS, FPTS, GPTS;
+        public int Q_PTS, QUADS, N_PTS, K_PTS, A_PTS, B_PTS, C_PTS, D_PTS, E_PTS, F_PTS, G_PTS;
         public double DIST;
 
-        public void setAllParameters(double LENGTH1, double RADIUS1, double EPSILON, double AREA1, double LENGTH2, double RADIUS2, double AREA2, int QPTS, int QUADS, int NPTS, int KPTS, int APTS, int BPTS, int CPTS, int DPTS, int EPTS, int FPTS, int GPTS, double DIST) {
+        public void setAllParameters(double LENGTH1, double RADIUS1, double EPSILON, double AREA1, int Q_PTS, int QUADS, double DIST, int N_PTS, int K_PTS, int A_PTS, int B_PTS, int C_PTS, int D_PTS, int E_PTS, int F_PTS, int G_PTS, double LENGTH2, double RADIUS2, double AREA2) {
             this.LENGTH1 = LENGTH1;
             this.RADIUS1 = RADIUS1;
             this.EPSILON = EPSILON;
@@ -40,17 +40,17 @@ public class LaunchInterceptor {
             this.LENGTH2 = LENGTH2;
             this.RADIUS2 = RADIUS2;
             this.AREA2 = AREA2;
-            this.QPTS = QPTS;
+            this.Q_PTS = Q_PTS;
             this.QUADS = QUADS;
-            this.NPTS = NPTS;
-            this.KPTS = KPTS;
-            this.APTS = APTS;
-            this.BPTS = BPTS;
-            this.CPTS = CPTS;
-            this.DPTS = DPTS;
-            this.EPTS = EPTS;
-            this.FPTS = FPTS;
-            this.GPTS = GPTS;
+            this.N_PTS = N_PTS;
+            this.K_PTS = K_PTS;
+            this.A_PTS = A_PTS;
+            this.B_PTS = B_PTS;
+            this.C_PTS = C_PTS;
+            this.D_PTS = D_PTS;
+            this.E_PTS = E_PTS;
+            this.F_PTS = F_PTS;
+            this.G_PTS = G_PTS;
             this.DIST = DIST;
         }
     }
@@ -105,7 +105,7 @@ public class LaunchInterceptor {
         }
     }
 
-    public LaunchInterceptor(int inNumPoints, double[][] inPoints, Parameters inParameters, Connectors[][] inLCM, boolean[][] inPUM) {
+    public void setInputVariables(int inNumPoints, double[][] inPoints, Parameters inParameters, Connectors[][] inLCM, boolean[] inPUV) {
         this.numPoints = inNumPoints;
         this.x = new double[inNumPoints];
         this.y = new double[inNumPoints];
@@ -115,6 +115,6 @@ public class LaunchInterceptor {
         }
         this.parameters = inParameters;
         this.LCM = inLCM;
-        this.PUM = inPUM;
+        this.PUV = inPUV;
     }
 }
