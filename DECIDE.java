@@ -89,6 +89,10 @@ public class DECIDE {
      */
     public Boolean determineLIC3() {
 
+        if (numPoints < 3) {
+            return false; // Not enough points to form a triangle
+        }
+
         for (int i = 2; i < numPoints; i++) {
             // first coordinate = (x[i-2], y[i-2])
             // second coordinate = (x[i-1], y[i-1])
