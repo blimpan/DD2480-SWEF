@@ -1,3 +1,4 @@
+import java.awt.geom.*;
 
 public class DECIDE {
 
@@ -81,4 +82,57 @@ public class DECIDE {
             return CompType.GT; // A is greater than B
         }
     }
+
+    //Calculates distance between a point and a line
+    public double pointLineDistance(double a, double b, double c, double x, double y){
+        double distance = abs(a*x + b*y + c)/sqrt(Math.pow(a,2) + Math.pow(b,2));
+        return distance;
+    }
+
+    //Calculates distance between two points
+    public double pointsDistance(double x1, double y1, double x2, double y2){
+        double distance = sqrt(Math.pow((x2-x1),2) + Math.pow((y2-y1),2))
+        return distance;
+    }
+
+    /* LIC 6 : 
+    - There exists at least one set of N PTS consecutive data points s.t. at least one
+    of these lies at a calculated distance > DIST from the line joining the first and last point.
+    - If first and last points are identical, calculated distance = distance from coincident point to all other 
+    consecutive points. */
+    public Boolean determineLIC6() {
+
+        //Condition is not met when NUMPOINTS < 3
+        if(numPoints<3){
+            return false;
+        }
+
+        double a, b, c; //parameters for straight line equation between first and last point
+        double k = 0;
+
+        for (int i = 0; i < numPoints && k < numPoints; i++) {
+            k = i + NPTS - 1;
+            for (int j = i + 1; j < k; j++) {
+
+                //special case when first and last coordinate is the same
+                if (x[i] == x[k] && y[i] == y[k]) {
+                    distance = pointsDistance(x[i], y[i], x[j], y[j]);
+                    if (distance > DIST) {
+                        return true;
+                    }
+                } else {
+                    a = (y[k]-y[i])/(x[k]-x[i]);
+                    b = (x[i]-x[k])/(x[k]-x[i]);
+                    c = (y[i]*x[k] - y[k]*x[i])/(x[k]-x[i]);
+
+                    distance = pointLineDistance(a,b,c,x[j],y[j]);
+                    if (distance > DIST){
+                        return true;
+                    } 
+                }
+            }
+        }
+        return false; //no such set of points found
+    }
+
 }
