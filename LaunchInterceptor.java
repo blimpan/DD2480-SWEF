@@ -104,6 +104,12 @@ public class LaunchInterceptor {
             return CompType.GT; // A is greater than B
         }
     }
+
+    //Calculates distance between two points
+    public double pointsDistance(double x1, double y1, double x2, double y2){
+        double distance = sqrt(Math.pow((x2-x1),2) + Math.pow((y2-y1),2))
+        return distance;
+    }
     
     /**
      * Determines whether or not there exists at least one set of three consecutive data points that are the vertices of a triangle
@@ -128,6 +134,37 @@ public class LaunchInterceptor {
         }
 
         return false; // If program reaches this point, no such triangle exists
+    }
+
+    /**
+     * Determines if there exists at least one set of two data points 
+     * separated by exactly K_PTS consecutive intervening points 
+     * that are a distance greater than LENGTH1 apart
+     * @return true or false
+     */
+    public Boolean determineLIC7() {
+
+        //Condition is not met when NUMPOINTS < 3
+        if(numPoints<3){
+            return false;
+        }
+
+        int k = 0;
+        double x1, x2, y1, y2;
+        for (int i = 0; i < numPoints && k < numPoints; i++) {
+            k = i + K_PTS + 1;
+            x1 = x[i];
+            y1 = y[i];
+            x2 = x[k];
+            y2 = y[k];
+
+            double distance = pointsDistance(x1, y1, x2, y2);
+
+            if (doubleCompare(distance, LENGTH1) == CompType.GT){
+                return true; //points found
+            }
+        }
+        return false; //no such points
     }
 
     public void setInputVariables(int inNumPoints, double[][] inPoints, Parameters inParameters, Connectors[][] inLCM, boolean[] inPUV) {
