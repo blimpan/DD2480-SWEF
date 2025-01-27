@@ -156,6 +156,40 @@ public class LaunchInterceptor {
         return false; //no such points
     }
 
+    /**
+     *
+     * @return true or false
+     */
+    public boolean determineLIC12() {
+        if (parameters.LENGTH2 < 0)
+            throw new IllegalArgumentException("Length2 must be greater than 0");
+
+        //Condition is not met when numPoints < 3
+        if (numPoints < 3) {
+            return false;
+        }
+
+        boolean matchFound = false;
+        for (int i = 0; ! matchFound && i < numPoints + parameters.K_PTS + 1; i++) {
+            if (pointsDistance(x[i], y[i], x[i + parameters.K_PTS + 1], y[i + parameters.K_PTS + 1])
+                    < parameters.LENGTH1) {
+                matchFound = true;
+            }
+        }
+        
+        if (!matchFound)
+            return false;
+
+        matchFound = false;
+        for (int i = 0; ! matchFound && i < numPoints + parameters.K_PTS + 1; i++) {
+            if (pointsDistance(x[i], y[i], x[i + parameters.K_PTS + 1], y[i + parameters.K_PTS + 1])
+                    > parameters.LENGTH2) {
+                matchFound = true;
+            }
+        }
+        return matchFound;
+    }
+
     //==========GETTER METHODS==========
     public Parameters getParameters() {
         return parameters;
