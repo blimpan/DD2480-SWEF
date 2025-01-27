@@ -107,10 +107,35 @@ public class LaunchInterceptor {
 
     //Calculates distance between two points
     public double pointsDistance(double x1, double y1, double x2, double y2){
-        double distance = sqrt(Math.pow((x2-x1),2) + Math.pow((y2-y1),2))
+        double distance = Math.sqrt((x2-x1)*(x2-x1) + (y2-y1)*(y2-y1));
         return distance;
     }
     
+    /**
+     * Determines whether or not there exists at least one set of two consecutive data points that are 
+     * less than LENGTH1 apart
+     * @return true or false
+     */
+    public Boolean determineLIC0() {
+
+        if (numPoints < 2) {
+            return false; // Not enough points 
+        }
+
+        for (int i = 1; i < numPoints; i++) {
+            
+            // first coordinate = (x[i-1], y[i-1])
+            // second coordinate = (x[i], y[i])
+            double distance = pointsDistance(x[i-1], y[i-1],x[i], y[i]);
+            if (distance > parameters.AREA1) {
+                return true;
+            }
+        }
+
+        return false; // No such points exists
+    }
+
+
     /**
      * Determines whether or not there exists at least one set of three consecutive data points that are the vertices of a triangle
      * with area greater than AREA1.
@@ -152,7 +177,7 @@ public class LaunchInterceptor {
         int k = 0;
         double x1, x2, y1, y2;
         for (int i = 0; i < numPoints && k < numPoints; i++) {
-            k = i + K_PTS + 1;
+            k = i + parameters.K_PTS + 1;
             x1 = x[i];
             y1 = y[i];
             x2 = x[k];
@@ -160,7 +185,7 @@ public class LaunchInterceptor {
 
             double distance = pointsDistance(x1, y1, x2, y2);
 
-            if (doubleCompare(distance, LENGTH1) == CompType.GT){
+            if (doubleCompare(distance, parameters.LENGTH1) == CompType.GT){
                 return true; //points found
             }
         }
