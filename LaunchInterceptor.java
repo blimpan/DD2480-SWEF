@@ -156,6 +156,54 @@ public class LaunchInterceptor {
         return false; //no such points
     }
 
+    /**
+     *
+     * @return true or false
+     */
+    public boolean determineLIC13() {
+        if (parameters.RADIUS2 < 0)
+            throw new IllegalArgumentException("Radius2 must be greater than 0");
+
+        //Condition is not met when numPoints < 5
+        if (numPoints < 5) {
+            return false;
+        }
+
+        boolean matchFound = false;
+        for (int i = 0; ! matchFound && i < numPoints + parameters.A_PTS + parameters.B_PTS + 2; i++) {
+            var averageX = (x[i] + x[i + parameters.A_PTS + 1] + x[i + parameters.A_PTS + parameters.B_PTS + 2])/3;
+            var averageY = (y[i] + y[i + parameters.A_PTS + 1] + y[i + parameters.A_PTS + parameters.B_PTS + 2])/3;
+
+            var distPointOne = pointsDistance(averageX, averageY, x[i], y[i]) < parameters.RADIUS1;
+            var distPointTwo = pointsDistance(averageX, averageY, x[i + parameters.A_PTS + 1],
+                    y[i + parameters.A_PTS + 1]) < parameters.RADIUS1;
+            var distPointThree = pointsDistance(averageX, averageY, x[i + parameters.A_PTS + parameters.B_PTS + 2],
+                    y[i + parameters.A_PTS + parameters.B_PTS + 2]) < parameters.RADIUS1;
+
+            if (distPointOne && distPointTwo && distPointThree)
+                matchFound = true;
+        }
+
+        if (!matchFound)
+            return false;
+
+        matchFound = false;
+        for (int i = 0; ! matchFound && i < numPoints + parameters.A_PTS + parameters.B_PTS + 2; i++) {
+            var averageX = (x[i] + x[i + parameters.A_PTS + 1] + x[i + parameters.A_PTS + parameters.B_PTS + 2])/3;
+            var averageY = (y[i] + y[i + parameters.A_PTS + 1] + y[i + parameters.A_PTS + parameters.B_PTS + 2])/3;
+
+            var distPointOne = pointsDistance(averageX, averageY, x[i], y[i]) > parameters.RADIUS2;
+            var distPointTwo = pointsDistance(averageX, averageY, x[i + parameters.A_PTS + 1],
+                    y[i + parameters.A_PTS + 1]) > parameters.RADIUS2;
+            var distPointThree = pointsDistance(averageX, averageY, x[i + parameters.A_PTS + parameters.B_PTS + 2],
+                    y[i + parameters.A_PTS + parameters.B_PTS + 2]) > parameters.RADIUS2;
+
+            if (distPointOne && distPointTwo && distPointThree)
+                matchFound = true;
+        }
+        return matchFound;
+    }
+
     //==========GETTER METHODS==========
     public Parameters getParameters() {
         return parameters;
