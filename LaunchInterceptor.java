@@ -105,10 +105,33 @@ public class LaunchInterceptor {
         }
     }
 
+    //HELPER FUNCTIONS
+
     //Calculates distance between two points
     public double pointsDistance(double x1, double y1, double x2, double y2){
-        double distance = sqrt(Math.pow((x2-x1),2) + Math.pow((y2-y1),2))
+        double distance = Math.sqrt(Math.pow((x2-x1),2) + Math.pow((y2-y1),2));
         return distance;
+    }
+
+    //Form a circle from 3 given points, return radius
+    public double makeCircle(double x1, double y1, double x2, double y2, double x3, double y3){
+        
+        // Intermediate values
+        double a = x2 - x1;
+        double b = y2 - y1;
+        double p = (y2 * y2 - y1 * y1 + x2 * x2 - x1 * x1) / 2;
+        double c = x3 - x1;
+        double d = y3 - y1;
+        double q = (y3 * y3 - y1 * y1 + x3 * x3 - x1 * x1) / 2;
+
+        // center of circle
+        double xCenter = (d * p - b * q) / (a * d - b * c);
+        double yCenter = (a * q - c * p) / (a * d - b * c);
+
+        //radius
+        double r = Math.sqrt(Math.pow(xCenter - x1, 2.0) + Math.pow(yCenter - y1, 2.0));
+        return r;
+        
     }
     
     /**
@@ -152,7 +175,7 @@ public class LaunchInterceptor {
         int k = 0;
         double x1, x2, y1, y2;
         for (int i = 0; i < numPoints && k < numPoints; i++) {
-            k = i + K_PTS + 1;
+            k = i + parameters.K_PTS + 1;
             x1 = x[i];
             y1 = y[i];
             x2 = x[k];
@@ -160,10 +183,45 @@ public class LaunchInterceptor {
 
             double distance = pointsDistance(x1, y1, x2, y2);
 
-            if (doubleCompare(distance, LENGTH1) == CompType.GT){
+            if (doubleCompare(distance, parameters.LENGTH1) == CompType.GT){
                 return true; //points found
             }
         }
+        return false; //no such points
+    }
+
+    /**
+     * Determines if there exists at least one set of three data points 
+     * separated by exactly A_PTS and B_PTS consecutive intervening points, respectively,
+     *  that cannot be contained within or on a circle of radius RADIUS1.
+     * @return true or false
+     */
+    public Boolean determineLIC8() {
+
+        //Condition is not met when NUMPOINTS < 3
+        if(numPoints<3){
+            return false;
+        }
+
+        double x1, x2, x3, y1, y2, y3;
+
+        for(int i = 0; i < numPoints - parameters.A_PTS - parameters.B_PTS - 1; i++){
+            x1 = x[i];
+            x2 = x[i + parameters.A_PTS + 1];
+            x3 = x[i + parameters.A_PTS + parameters.B_PTS + 1]; 
+            y1 = y[i];
+            y2 = y[i + parameters.A_PTS + 1];
+            y3 = y[i + parameters.A_PTS + parameters.B_PTS + 1];
+
+            //Make a circle of the current points and compare the radius to RADIUS1
+            CompType radiusComp = doubleCompare(makeCircle(x1, y1, x2, y2, x3, y3), parameters.RADIUS1);
+        
+            //If the radius <= RADIUS1 the points fit the criterion
+            if( radiusComp == CompType.EQ | radiusComp == CompType.LT ){
+                return true;
+            }
+        }
+
         return false; //no such points
     }
 
