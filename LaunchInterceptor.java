@@ -1,4 +1,7 @@
+import java.util.HashSet;
+import java.util.Set;
 import java.util.Arrays;
+
 
 public class LaunchInterceptor {
 
@@ -238,6 +241,53 @@ public boolean determineLIC2() {
     }
 
     /**
+     * Determines whether or not there exists at least one set of Q_PTS points that lie in more than QUADS different quadrants.
+     * @return true or false
+     */
+    public Boolean determineLIC4() {
+        if (2 > parameters.Q_PTS || parameters.Q_PTS > numPoints) {
+            return false; // Invalid conditions
+        }
+        if (1 > parameters.QUADS || parameters.QUADS > 3) {
+            return false; // Invalid conditions
+        }
+
+        for (int i = 0; i <= numPoints - parameters.Q_PTS; i++) {
+            Set<Integer> quadrants = new HashSet<>();
+
+            for (int j = 0; j < parameters.Q_PTS; j++) {
+                double xPos = x[i + j];
+                double yPos = y[i + j];
+
+                // Determine the quadrant of the point
+                if (xPos >= 0 && yPos >= 0) {
+                    quadrants.add(1); // Quadrant I
+                } else if (xPos < 0 && yPos >= 0) {
+                    quadrants.add(2); // Quadrant II
+                } else if (xPos <= 0 && yPos < 0) {
+                    quadrants.add(3); // Quadrant III
+                } else if (xPos > 0 && yPos < 0) {
+                    quadrants.add(4); // Quadrant IV
+                }
+
+                // Break early if enough quadrants are found
+                if (quadrants.size() > parameters.QUADS) {
+                    return true;
+                }
+            }
+        }
+
+    return false; // No set meets the condition
+    }
+
+    public void setInputVariables(int inNumPoints, double[][] inPoints, Parameters inParameters, Connectors[][] inLCM, boolean[] inPUV) {
+        this.numPoints = inNumPoints;
+        this.x = new double[inNumPoints];
+        this.y = new double[inNumPoints];
+        for (int i = 0; i < inNumPoints; i++) {
+            this.x[i] = inPoints[i][0];
+            this.y[i] = inPoints[i][1];
+
      * Determines if there exists at least one set of two data points 
      * separated by exactly K_PTS consecutive intervening points 
      * that are a distance greater than LENGTH1 apart
@@ -248,6 +298,7 @@ public boolean determineLIC2() {
         //Condition is not met when NUMPOINTS < 3
         if(numPoints<3){
             return false;
+
         }
 
         int k = 0;
