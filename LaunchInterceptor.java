@@ -177,10 +177,10 @@ public class LaunchInterceptor {
         // Parameters passed requirements, proceed to finding data points
         // Start from first data point to be A
         for (int aIndex=0; aIndex<numPoints; ++aIndex){
-            if (aIndex+C_PTS>numPoints)break; //if B is already out of boundary then so is C, therefore quit the loop
-            int bIndex = aIndex+C_PTS; // reaching here indicates B is in boundary
-            if (bIndex+D_PTS>numPoints)break;  //if C is out of boundary, then for the next A, the C also will be out of boundary
-            int cIndex = bIndex+D_PTS;// reaching here indicates C is in boundary
+            if (aIndex+C_PTS+1>=numPoints)break; //if B is already out of boundary then so is C, therefore quit the loop
+            int bIndex = aIndex+C_PTS+1; // reaching here indicates B is in boundary
+            if (bIndex+D_PTS+1>=numPoints)break;  //if C is out of boundary, then for the next A, the C also will be out of boundary
+            int cIndex = bIndex+D_PTS+1;// reaching here indicates C is in boundary
             //A, B and C are all set
             //Compute the angle using the helper function (implemented in Helper Function Section)
             double angle = computeAngle(aIndex, bIndex, cIndex);
@@ -214,10 +214,10 @@ public class LaunchInterceptor {
         if(E_PTS<1 || F_PTS<1 || E_PTS+F_PTS>numPoints-3 || numPoints<5) return false;
         //Loop through each point as A
         for (int aIndex=0; aIndex<numPoints; ++aIndex){
-            if (aIndex+E_PTS>numPoints)break; //if B is already out of boundary then so is C, therefore quit the loop
-            int bIndex = aIndex+E_PTS; // reaching here indicates B is in boundary
-            if (bIndex+F_PTS>numPoints)break;  //if C is out of boundary, then for the next A, the C also will be out of boundary
-            int cIndex = bIndex+F_PTS;// reaching here indicates C is in boundary
+            if (aIndex+E_PTS+1 >=numPoints)break; //if B is already out of boundary then so is C, therefore quit the loop
+            int bIndex = aIndex+E_PTS+1; // reaching here indicates B is in boundary
+            if (bIndex+F_PTS+1 >=numPoints)break;  //if C is out of boundary, then for the next A, the C also will be out of boundary
+            int cIndex = bIndex+F_PTS+1;// reaching here indicates C is in boundary
             //A, B and C are all set
             //Compute the angle using the helper function (implemented in Helper Function Section)
             double area = computeTriangleArea(aIndex, bIndex, cIndex);
