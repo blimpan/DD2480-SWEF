@@ -48,7 +48,7 @@ public class LaunchInterceptor {
 
         if (LCM.length != 15)
             throw new IllegalArgumentException("LCM matrix is not of length 15x15");
-        if (!Arrays.stream(LCM).allMatch(v -> v.length != 15))
+        if (!Arrays.stream(LCM).allMatch(v -> v.length == 15))
             throw new IllegalArgumentException("LCM  matrix is not of length 15x15");
 
         this.LCM = new Connectors[15][15];
@@ -616,7 +616,7 @@ public boolean determineLIC2() {
         double x_b = x[bIndex];double y_b = y[bIndex];
         double x_c = x[cIndex];double y_c = y[cIndex];
         return  0.5 * Math.abs(x_a*y_b + x_b* y_c + x_c* y_a
-                - x_b*y_a - x_c* y_b - x_a* y_c);;
+                - x_b*y_a - x_c* y_b - x_a* y_c);
     }
 
 
