@@ -48,7 +48,7 @@ public class LaunchInterceptor {
 
         if (LCM.length != 15)
             throw new IllegalArgumentException("LCM matrix is not of length 15x15");
-        if (Arrays.stream(LCM).allMatch(v -> v.length != 15))
+        if (!Arrays.stream(LCM).allMatch(v -> v.length == 15))
             throw new IllegalArgumentException("LCM  matrix is not of length 15x15");
 
         this.LCM = new Connectors[15][15];
@@ -96,7 +96,7 @@ public class LaunchInterceptor {
      * @return the launch decision (boolean)
      */
     public boolean decide(){
-        //TODO call each LIC and populate the PUM, CMV, FUV as well as encode launch decision in STDOUT
+
         this.processed = true;
         throw new Error("Decide function is not implemented yet");
     }
@@ -105,18 +105,18 @@ public class LaunchInterceptor {
     //==========LIC RELATED METHODS==========
 
     /**
-     * Determines whether or not there exists at least one set of two consecutive data points that are 
+     * Determines whether or not there exists at least one set of two consecutive data points that are
      * less than LENGTH1 apart
      * @return true or false
      */
     public boolean determineLIC0() {
 
         if (numPoints < 2) {
-            return false; // Not enough points 
+            return false; // Not enough points
         }
 
         for (int i = 1; i < numPoints; i++) {
-            
+
             // first coordinate = (x[i-1], y[i-1])
             // second coordinate = (x[i], y[i])
             double distance = pointsDistance(x[i-1], y[i-1],x[i], y[i]);
@@ -130,7 +130,7 @@ public class LaunchInterceptor {
 
 
     /**
-     * Determines whether or not there exists at least one set of three consecutive data points that can not 
+     * Determines whether or not there exists at least one set of three consecutive data points that can not
      * be contained in a circle of radius RADIUS1
      * @return true or false
      */
@@ -145,18 +145,18 @@ public class LaunchInterceptor {
             // second coordinate = (x[i-1], y[i-1])
             // third coordinate = (x[i], y[i])
             double a = pointsDistance(x[i-2],y[i-2],x[i-1],y[i-1]);
-            double b = pointsDistance(x[i-1],y[i-1],x[i],y[i]); 
+            double b = pointsDistance(x[i-1],y[i-1],x[i],y[i]);
             double c = pointsDistance(x[i-2],y[i-2],x[i],y[i]);
 
-            //Caluclating the area using Heron's formula 
+            //Caluclating the area using Heron's formula
             double semiPerimeter = (a+b+c)/2;
             double area = Math.sqrt(semiPerimeter * (semiPerimeter-a)*(semiPerimeter-b)*(semiPerimeter-c));
-            
+
             if (area == 0) {
                 //break;
             }
 
-            //Calculating the circumradius for a triangle  
+            //Calculating the circumradius for a triangle
             double circumRadius = (a*b*c)/(4*a);
             if (circumRadius > parameters.RADIUS1) {
                 return true;
@@ -168,7 +168,7 @@ public class LaunchInterceptor {
 
 
 /**
- * Determines whether or not there exists at least one set of three consecutive data points 
+ * Determines whether or not there exists at least one set of three consecutive data points
  * that form an angle < (PI − EPSILON) or angle > (PI + EPSILON).
  * @return true if such a set exists, false otherwise.
  */
@@ -302,10 +302,10 @@ public boolean determineLIC2() {
         return false; // If program reaches this point, no such triangle exists
     }
 
-    /* LIC 6 : 
+    /* LIC 6 :
     - There exists at least one set of N PTS consecutive data points s.t. at least one
     of these lies at a calculated distance > DIST from the line joining the first and last point.
-    - If first and last points are identical, calculated distance = distance from coincident point to all other 
+    - If first and last points are identical, calculated distance = distance from coincident point to all other
     consecutive points. */
     public Boolean determineLIC6() {
 
@@ -320,7 +320,7 @@ public boolean determineLIC2() {
 
         for (int i = 0; i < numPoints && k < numPoints; i++) {
             k = i + parameters.N_PTS - 1;
-            for (int j = i + 1; j < k; j++) {
+            for (int j = i + 1; j < k & j< numPoints & k< numPoints; j++) {
 
                 //special case when first and last coordinate is the same
                 if (x[i] == x[k] && y[i] == y[k]) {
@@ -329,14 +329,14 @@ public boolean determineLIC2() {
                         return true;
                     }
                 } else {
-                    a = (y[k]-y[i])/(x[k]-x[i]);
-                    b = (x[i]-x[k])/(x[k]-x[i]);
-                    c = (y[i]*x[k] - y[k]*x[i])/(x[k]-x[i]);
+                    a = y[k]-y[i];
+                    b = x[i]-x[k];
+                    c = a*x[i] + b*y[i];
 
                     distance = pointLineDistance(a,b,c,x[j],y[j]);
                     if (distance > parameters.DIST){
                         return true;
-                    } 
+                    }
                 }
             }
         }
@@ -375,13 +375,13 @@ public boolean determineLIC2() {
         return false; //no such points
     }
 
-    /** 
+    /**
      * Determines if there exists a set of 3 points (A,B,C) which meets the following conditions:
      * 1. there are C PTS in bewteen A and B
      * 2. there are D PTS in between B and C
      * 3. the angle is defined
      * 4. angle < (PI−EPSILON) or angle > (PI+EPSILON)
-     * 5. NUMPOINTS >= 5 
+     * 5. NUMPOINTS >= 5
      * 6. C PTS >= 1
      * 7. D PTS >= 1
      * 8. C PTS+D PTS ≤ NUMPOINTS−3 (to ensure the size of data is enough)
@@ -414,7 +414,7 @@ public boolean determineLIC2() {
         return found;
     }
 
-   /** 
+   /**
      * Determines if there exists a set of 3 points (A, B, C) such that:
      * 1. There are E PTS in between A and B.
      * 2. There are F PTS in between B and C.
@@ -423,7 +423,7 @@ public boolean determineLIC2() {
      * 5. E PTS >= 1.
      * 6. F PTS >= 1.
      * 7. E PTS + F PTS ≤ NUMPOINTS - 3 (to ensure sufficient data points).
-     * 
+     *
      * @return true if at least one valid set of points exists, false otherwise.
      */
     public boolean determineLIC10(){
@@ -450,14 +450,14 @@ public boolean determineLIC2() {
         return found;
     }
 
-    /** 
+    /**
      * Determines if there exists a set of two data points (X[i], Y[i]) and (X[j], Y[j]) such that:
      * 1. There are G PTS in between the two points (A, B).
      * 2. The condition X[j] - X[i] < 0 holds true (where i < j).
      * 3. The condition is not met when NUMPOINTS < 3.
      * 4. G PTS >= 1.
      * 5. G PTS ≤ NUMPOINTS - 2 (to ensure sufficient data points).
-     * 
+     *
      * @return true if at least one valid set of points exists, false otherwise.
      */
     public boolean determineLIC11(){
@@ -476,6 +476,71 @@ public boolean determineLIC2() {
         return found;
     }
 
+
+    /**
+     *
+     * @return true or false
+     */
+    public boolean determineLIC12() {
+        if (parameters.LENGTH2 < 0)
+            throw new IllegalArgumentException("Length2 must be greater than 0");
+
+        //Condition is not met when numPoints < 3
+        if (numPoints < 3) {
+            return false;
+        }
+
+        boolean matchFound = false;
+        for (int i = 0; (! matchFound) && i + parameters.K_PTS + 1 < numPoints; i++) {
+            if (pointsDistance(x[i], y[i], x[i + parameters.K_PTS + 1], y[i + parameters.K_PTS + 1])
+                    > parameters.LENGTH1) {
+                matchFound = true;
+            }
+        }
+
+        if (!matchFound)
+            return false;
+
+        matchFound = false;
+        for (int i = 0; ! matchFound && i + parameters.K_PTS + 1 < numPoints; i++) {
+            if (pointsDistance(x[i], y[i], x[i + parameters.K_PTS + 1], y[i + parameters.K_PTS + 1])
+                    < parameters.LENGTH2) {
+                matchFound = true;
+            }
+        }
+        return matchFound;
+    }
+
+    /**
+     *
+     * @return true or false
+     */
+    public boolean determineLIC14() {
+        if (parameters.AREA2 < 0)
+            throw new IllegalArgumentException("Area2 must be greater than 0");
+
+        //Condition is not met when numPoints < 5
+        if (numPoints < 5) {
+            return false;
+        }
+
+        boolean matchFound = false;
+        for (int i = 0; ! matchFound && i + parameters.E_PTS + parameters.F_PTS + 2 < numPoints; i++) {
+            var area = computeTriangleArea(i, i + parameters.E_PTS + 1, i + parameters.E_PTS + parameters.F_PTS + 1);
+            if (area > parameters.AREA1)
+                matchFound = true;
+        }
+
+        if (!matchFound)
+            return false;
+
+        for (int i = 0; i + parameters.E_PTS + parameters.F_PTS + 2 < numPoints; i++) {
+            var area = computeTriangleArea(i, i + parameters.E_PTS + 1, i + parameters.E_PTS + parameters.F_PTS + 1);
+            if (area < parameters.AREA2)
+                return true;
+        }
+        return false;
+    }
 
     //==========GETTER METHODS==========
     public Parameters getParameters() {
@@ -561,16 +626,16 @@ public boolean determineLIC2() {
 
     /**
      * Calculates the angle given the indexes of three points.
-     * 
-     * Input: 
+     *
+     * Input:
      * - int aIndex: the index of the first point (Point A)
      * - int bIndex: the index of the second point (Point B), which is always the vertex of the angle
      * - int cIndex: the index of the third point (Point C)
-     * 
+     *
      * This function determines the angle formed by the three points, with the vertex at Point B.
-     * It uses the coordinates of the points identified by the provided indexes to compute the angle 
+     * It uses the coordinates of the points identified by the provided indexes to compute the angle
      * between the lines connecting Point A to Point B and Point B to Point C.
-     * 
+     *
      * The function returns the angle in radians
      */
     public double computeAngle(int aIndex, int bIndex, int cIndex){
@@ -578,7 +643,7 @@ public boolean determineLIC2() {
         double x_a = x[aIndex];double y_a = y[aIndex];
         double x_b = x[bIndex];double y_b = y[bIndex];
         double x_c = x[cIndex];double y_c = y[cIndex];
-        // Compute vector BA and BC 
+        // Compute vector BA and BC
         //BA = OA - OB
         double[] vecBA = {x_a-x_b, y_a-y_b};
         //BC = OC - OB
@@ -597,18 +662,18 @@ public boolean determineLIC2() {
 
     /**
      * Calculates the area of a triangle formed by three points.
-     * 
-     * Input: 
+     *
+     * Input:
      * - int aIndex: the index of the first point (Point A)
      * - int bIndex: the index of the second point (Point B)
      * - int cIndex: the index of the third point (Point C)
-     * 
-     * This function computes the area of the triangle defined by the three points using the 
-     * coordinates of the points identified by the provided indexes. The area is calculated 
-     * using the SHOELACE formula: 
-     * 
+     *
+     * This function computes the area of the triangle defined by the three points using the
+     * coordinates of the points identified by the provided indexes. The area is calculated
+     * using the SHOELACE formula:
+     *
      * Area = 0.5 * (x1y2 +x2y3+ x3y1 - x2y1 - x3y2 - x1y3)
-     * 
+     *
      * The function returns the area as a double value.
      */
     double computeTriangleArea (int aIndex, int bIndex, int cIndex){
@@ -619,6 +684,4 @@ public boolean determineLIC2() {
         return  0.5 * Math.abs(x_a*y_b + x_b* y_c + x_c* y_a
                 - x_b*y_a - x_c* y_b - x_a* y_c);
     }
-
-
 }
