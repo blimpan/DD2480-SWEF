@@ -154,6 +154,7 @@ public class LaunchInterceptor {
                 return true;
             }
         }
+
         return false; // No consecutive points do not fulfuill the criteria
     }
 
@@ -345,7 +346,6 @@ public boolean determineLIC2() {
         //Condition is not met when NUMPOINTS < 3
         if(numPoints<3){
             return false;
-
         }
 
         int k = 0;
@@ -506,6 +506,50 @@ public boolean determineLIC2() {
      *
      * @return true or false
      */
+    public boolean determineLIC13() {
+        if (parameters.RADIUS2 < 0)
+            throw new IllegalArgumentException("Radius2 must be greater than 0");
+
+        //Condition is not met when numPoints < 5
+        if (numPoints < 5) {
+            return false;
+        }
+
+        boolean matchFound = false;
+        for (int i = 0; ! matchFound && i < numPoints + parameters.A_PTS + parameters.B_PTS + 2; i++) {
+            var x1 = x[i];
+            var y1 = y[i];
+            var x2 = x[i + parameters.A_PTS + 1];
+            var y2 = y[i + parameters.A_PTS + 1];
+            var x3 = x[i + parameters.A_PTS + parameters.B_PTS + 2];
+            var y3 = y[i + parameters.A_PTS + parameters.B_PTS + 2];
+
+            if (containedInCircle(x1, y1, x2, y2, x3, y3, parameters.RADIUS1, true))
+                matchFound = true;
+        }
+
+        if (!matchFound)
+            return false;
+
+        matchFound = false;
+        for (int i = 0; ! matchFound && i < numPoints + parameters.A_PTS + parameters.B_PTS + 2; i++) {
+            var x1 = x[i];
+            var y1 = y[i];
+            var x2 = x[i + parameters.A_PTS + 1];
+            var y2 = y[i + parameters.A_PTS + 1];
+            var x3 = x[i + parameters.A_PTS + parameters.B_PTS + 2];
+            var y3 = y[i + parameters.A_PTS + parameters.B_PTS + 2];
+
+            if (containedInCircle(x1, y1, x2, y2, x3, y3, parameters.RADIUS2, false))
+                matchFound = true;
+        }
+        return matchFound;
+    }
+
+    /**
+     *
+     * @return true or false
+     */
     public boolean determineLIC14() {
         if (parameters.AREA2 < 0)
             throw new IllegalArgumentException("Area2 must be greater than 0");
@@ -626,7 +670,7 @@ public boolean determineLIC2() {
      * This function determines the angle formed by the three points, with the vertex at Point B.
      * It uses the coordinates of the points identified by the provided indexes to compute the angle 
      * between the lines connecting Point A to Point B and Point B to Point C.
-     * 
+     *
      * The function returns the angle in radians
      */
     public double computeAngle(int aIndex, int bIndex, int cIndex){
@@ -679,7 +723,7 @@ public boolean determineLIC2() {
     /**
     * Determines wherter three points would be contained within a circle of a specified radius
     *
-    * mode == false @return true if all points can be contained within circle 
+    * mode == false @return true if all points can be contained within circle
     * mode == true @return true if no circle of that radius can contain all three points
     *
     * first coordinate = (x[i-2], y[i-2])
@@ -729,7 +773,7 @@ public boolean determineLIC2() {
         else if (mode == true){
             if (containingCircles == 0){return true;}
         }
-        return false; 
+        return false;
     }
 
 }

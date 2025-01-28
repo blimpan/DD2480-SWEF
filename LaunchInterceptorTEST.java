@@ -458,6 +458,34 @@ public class LaunchInterceptorTEST {
     }
 
     @Test
+    public void testLIC13ValidInput() {
+        var param = new LaunchInterceptor.Parameters(0, 1, 0, 0, 10,
+                10, 0, 0, 0, 0, 0, 0, 1, 1, 0,
+                0, 0, 0, 0);
+        var pointCoords = new double[][]{{0, 0}, {0, 1}, {2, 1}, {5, 1}, {10, 3}, {-1, 7}, {7, -1}, {0, 1}};
+        var lInterceptor = new LaunchInterceptor(param, 8, pointCoords, minLCM, minPUV);
+        Assert.assertTrue(null, lInterceptor.determineLIC13());
+    }
+
+    @Test
+    public void testLIC13InvalidParameters() {
+        var param = new LaunchInterceptor.Parameters(0, 2, 0, 0, 0,
+                -3, 0, 0, 0, 0, 0, 0, 1, 1, 0,
+                0, 0, 0, 0);
+        var lInterceptor = new LaunchInterceptor(param, 2, minPoints, minLCM, minPUV);
+        Assert.assertThrows(IllegalArgumentException.class, lInterceptor::determineLIC13);
+    }
+
+    @Test
+    public void testLIC13InsufficientPoints() {
+        var param = new LaunchInterceptor.Parameters(0, 2, 0, 0, 0,
+                10, 0, 0, 0, 0, 0, 0, 1, 1, 0,
+                0, 0, 0, 0);
+        var lInterceptor = new LaunchInterceptor(param, 1, new double[][]{{0, 0}}, minLCM, minPUV);
+        Assert.assertFalse(lInterceptor.determineLIC13());
+    }
+
+    @Test
     public void testLIC10InvalidParameters(){
         // Define the invalid parameters
         double[][] points = {
