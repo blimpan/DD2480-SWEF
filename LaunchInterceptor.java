@@ -114,13 +114,16 @@ public class LaunchInterceptor {
         if (numPoints < 2) {
             return false; // Not enough points
         }
+        if (parameters.LENGTH1 < 0) {
+            throw new IllegalArgumentException("LENGTH1 cannot be negative.");
+        }
 
         for (int i = 1; i < numPoints; i++) {
 
             // first coordinate = (x[i-1], y[i-1])
             // second coordinate = (x[i], y[i])
             double distance = pointsDistance(x[i-1], y[i-1],x[i], y[i]);
-            if (distance > parameters.AREA1) {
+            if (distance > parameters.LENGTH1) {
                 return true;
             }
         }
