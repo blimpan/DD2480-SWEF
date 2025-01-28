@@ -87,7 +87,7 @@ public class LaunchInterceptor {
      */
     public record Parameters(double LENGTH1, double RADIUS1, double EPSILON, double AREA1,
                                     double LENGTH2, double RADIUS2, double AREA2, double DIST,
-                                    int Q_PTS, int QUADS, int K_PTS, int A_PTS, int B_PTS,
+                                    int Q_PTS, int QUADS, int N_PTS, int K_PTS, int A_PTS, int B_PTS,
                                     int C_PTS, int D_PTS, int E_PTS, int F_PTS, int G_PTS){}
 
     /**
@@ -316,7 +316,7 @@ public boolean determineLIC2() {
 
         double a, b, c; //parameters for straight line equation between first and last point
         double distance;
-        double k = 0;
+        int k = 0;
 
         for (int i = 0; i < numPoints && k < numPoints; i++) {
             k = i + parameters.N_PTS - 1;
