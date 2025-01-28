@@ -571,4 +571,52 @@ public boolean determineLIC2() {
     }
 
 
+    /**
+    * Determines wherter three points would be contained within a circle with the radius RADIUS1
+    * 
+    * first coordinate = (x[i-2], y[i-2])
+    * second coordinate = (x[i-1], y[i-1])
+    * third coordinate = (x[i], y[i])
+    *
+    * This function calculates this by taking two of three points and calculating where a circle that intersects both points 
+    * with radius RADIUS1 would have it's center point and checking if both possible center points are further away than RADIUS1
+    * from the third point. If none of the three pairs contain all three points 
+    @return true
+    */
+    private boolean notContainedInCircle(double x1, double y1, double x2, double y2, double x3, double y3) {
+        double[] pointsX = {x1, x2, x3, x1, x2};
+        double[] pointsY = {y1, y2, y3, y1, y2};
+
+        for (int i = 1; i < 3; i++) {
+            double distance = pointsDistance(pointsX[i - 1], pointsY[i - 1], pointsX[i], pointsY[i]);
+            
+            if (distance == 0) {
+                // Less than diameter away when two points are on top of each other 
+                if (pointsDistance(pointsX[i], pointsY[i], pointsX[i + 1], pointsY[i + 1])<parameters.RADIUS1*2){
+                    return false;
+                }
+                continue; // Avoid division by zero
+            }
+            double height = Math.sqrt(parameters.RADIUS1 * parameters.RADIUS1 - distance * distance / 4);
+            
+            double midX = (pointsX[i] + pointsX[i - 1]) / 2;
+            double midY = (pointsY[i] + pointsY[i - 1]) / 2;
+    
+            double deltaX = (pointsY[i - 1] - pointsY[i]) / distance;
+            double deltaY = (pointsX[i - 1] - pointsX[i]) / distance;
+    
+            double xpos1 = midX + height * deltaX;
+            double ypos1 = midY - height * deltaY;
+    
+            double xpos2 = midX - height * deltaX;
+            double ypos2 = midY + height * deltaY;
+    
+            if (pointsDistance(pointsX[i + 1], pointsY[i + 1], xpos1, ypos1) < parameters.RADIUS1 || 
+                pointsDistance(pointsX[i + 1], pointsY[i + 1], xpos2, ypos2) < parameters.RADIUS1) {
+                return false;
+            } 
+        }
+        return true;
+    }
+    
 }
