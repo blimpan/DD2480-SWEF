@@ -221,7 +221,7 @@ public class LaunchInterceptor {
                 return true;
             }
         }
-
+        
         return false; //no such points
     }
 
