@@ -113,7 +113,29 @@ public class LaunchInterceptorTEST {
         double[][] threeClusteredPoints = {{0, 0}, {1, 0}, {0, 1}};
         interceptor = new LaunchInterceptor(validParams, 3, threeClusteredPoints, minLCM, minPUV);
         Assert.assertFalse(null, interceptor.determineLIC4());
-    }   
+    }
+    
+    @Test
+    public void LIC5Test() {
+        /*
+         * Should test the following...
+         * (1) Number of points < 2 --> false (invalid input)
+         * (2) Valid input --> true (condition met)
+         * (3) Valid input --> false (condition not met)
+         */
+
+        double[][] onePoint = {{0, 0}};
+        LaunchInterceptor interceptor = new LaunchInterceptor(minParameters, 1, onePoint, minLCM, minPUV);
+        Assert.assertFalse(null, interceptor.determineLIC5());
+
+        double[][] goodTwoPoints = {{1, 1}, {0, 0}};
+        interceptor = new LaunchInterceptor(minParameters, 2, goodTwoPoints, minLCM, minPUV);
+        Assert.assertTrue(null, interceptor.determineLIC5());
+
+        double[][] badTwoPoints = {{0, 0}, {1, 1}};
+        interceptor = new LaunchInterceptor(minParameters, 2, badTwoPoints, minLCM, minPUV);
+        Assert.assertFalse(null, interceptor.determineLIC5());
+    }
 
     @Test
     public void LIC6Test() {
