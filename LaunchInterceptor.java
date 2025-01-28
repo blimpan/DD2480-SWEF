@@ -106,7 +106,7 @@ public class LaunchInterceptor {
      * less than LENGTH1 apart
      * @return true or false
      */
-    public Boolean determineLIC0() {
+    public boolean determineLIC0() {
 
         if (numPoints < 2) {
             return false; // Not enough points 
@@ -162,6 +162,54 @@ public class LaunchInterceptor {
 
         return false; // No consecutive points do not fulfuill the criteria
     }
+
+
+/**
+ * Determines whether or not there exists at least one set of three consecutive data points 
+ * that form an angle < (PI − EPSILON) or angle > (PI + EPSILON).
+ * @return true if such a set exists, false otherwise.
+ */
+public boolean determineLIC2() {
+    if (numPoints < 3) {
+        return false; // Not enough points to form an angle
+    }
+
+    for (int i = 2; i < numPoints; i++) {
+        // First point: (x[i-2], y[i-2])
+        // Second point: (x[i-1], y[i-1])
+        // Third point: (x[i], y[i])
+
+        // Vector A (from second to first point): (x2 - x1, y2 - y1)
+        double vectorAx = x[i-1] - x[i-2];
+        double vectorAy = y[i-1] - y[i-2];
+
+        // Vector B (from second to third point): (x3 - x2, y3 - y2)
+        double vectorBx = x[i] - x[i-1];
+        double vectorBy = y[i] - y[i-1];
+
+        // Dot product of A and B
+        double dotProduct = vectorAx * vectorBx + vectorAy * vectorBy;
+
+        // Magnitudes of A and B
+        double magnitudeA = Math.sqrt(vectorAx * vectorAx + vectorAy * vectorAy);
+        double magnitudeB = Math.sqrt(vectorBx * vectorBx + vectorBy * vectorBy);
+
+        // Handle edge cases: If either magnitude is zero, skip this triplet
+        if (magnitudeA == 0 || magnitudeB == 0) {
+            continue;
+        }
+
+        // Calculate the angle in radians
+        double angle = Math.acos(dotProduct / (magnitudeA * magnitudeB));
+
+        // Check if the angle is < (PI - EPSILON) or > (PI + EPSILON)
+        if (angle < Math.PI - parameters.EPSILON || angle > Math.PI + parameters.EPSILON) {
+            return true;
+        }
+    }
+
+    return false; // No such angle found
+}
 
 
     /**
