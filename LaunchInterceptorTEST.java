@@ -7,7 +7,7 @@ public class LaunchInterceptorTEST {
     // Variables for minimum test input
     private int minNumPoints = 2;
     private double[][] minPoints = {{0, 0}, {1, 1}};
-    private LaunchInterceptor.Parameters minParameters = new LaunchInterceptor.Parameters(1, 1, 0.1, 0.1, 0.5, 2.0, 0.05, 0.5, 3, 2, 1, 1, 1, 1, 1, 1, 1, 1);
+    private LaunchInterceptor.Parameters minParameters = new LaunchInterceptor.Parameters(1, 1, 0.1, 0.1, 0.5, 2.0, 0.05, 0.5, 3, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1);
     private LaunchInterceptor.Connectors[][] minLCM = new LaunchInterceptor.Connectors[15][15];
     private boolean[] minPUV = {true, false, true, false, true, false, true, false, true, false, true, false, true, false, true};
 
@@ -68,7 +68,7 @@ public class LaunchInterceptorTEST {
         LaunchInterceptor interceptor = new LaunchInterceptor(minParameters, 2, twoPoints, minLCM, minPUV);
         Assert.assertFalse(null, interceptor.determineLIC3());
 
-        LaunchInterceptor.Parameters invalidAreaParameters = new LaunchInterceptor.Parameters(1, 1, 0.1, -0.1, 0.5, 2.0, 0.05, 0.5, 3, 2, 1, 1, 1, 1, 1, 1, 1, 1);
+        LaunchInterceptor.Parameters invalidAreaParameters = new LaunchInterceptor.Parameters(1, 1, 0.1, -0.1, 0.5, 2.0, 0.05, 0.5, 3, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1);
         double[][] threePoints = {{0, 0}, {1, 0}, {0, 1}};
         interceptor = new LaunchInterceptor(invalidAreaParameters, 3, threePoints, minLCM, minPUV);
         Assert.assertFalse(null, interceptor.determineLIC3());
@@ -76,7 +76,7 @@ public class LaunchInterceptorTEST {
         interceptor = new LaunchInterceptor(minParameters, 3, threePoints, minLCM, minPUV);
         Assert.assertTrue(null, interceptor.determineLIC3());
         
-        LaunchInterceptor.Parameters largeAreaParameters = new LaunchInterceptor.Parameters(1, 1, 0.1, 5, 0.5, 2.0, 0.05, 0.5, 3, 2, 1, 1, 1, 1, 1, 1, 1, 1);
+        LaunchInterceptor.Parameters largeAreaParameters = new LaunchInterceptor.Parameters(1, 1, 0.1, 5, 0.5, 2.0, 0.05, 0.5, 3, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1);
         interceptor = new LaunchInterceptor(largeAreaParameters, 3, threePoints, minLCM, minPUV);
         Assert.assertFalse(null, interceptor.determineLIC3());
     }
