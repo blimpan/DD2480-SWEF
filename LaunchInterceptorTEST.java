@@ -53,7 +53,44 @@ public class LaunchInterceptorTEST {
         Assert.assertEquals(minNumPoints, interceptor.getX().length);
         Assert.assertEquals(minNumPoints, interceptor.getY().length);  
     }
+    @Test
+    public void testLIC0FartherThanL1() {
+        var param = new LaunchInterceptor.Parameters(5, 0, 0, 0, 0,
+                0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                0, 0, 0, 0);
+        var pointCoords = new double[][]{{0, 0}, {0, 1}, {2, 1}, {5, 1}, {10, 3}, {-1, 7}, {7, -1}, {0, 1}};
+        var lInterceptor = new LaunchInterceptor(param, 8, pointCoords, minLCM, minPUV);
+        Assert.assertTrue(null, lInterceptor.determineLIC0());
+    }
 
+    @Test
+    public void testLIC0CloserThanL1() {
+        var param = new LaunchInterceptor.Parameters(50, 0, 0, 0, 0,
+                0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                0, 0, 0, 0);
+        var pointCoords = new double[][]{{0, 0}, {0, 1}, {2, 1}, {5, 1}, {10, 3}, {-1, 7}, {7, -1}, {0, 1}};
+        var lInterceptor = new LaunchInterceptor(param, 8, pointCoords, minLCM, minPUV);
+        Assert.assertTrue(null, lInterceptor.determineLIC0());
+    }
+
+    @Test
+    public void testLIC0InvalidParameters() {
+        var param = new LaunchInterceptor.Parameters(-2, 0, 0, 0, 0,
+                0, 0, 0, 0, 0, 0, 2, 0, 0, 0,
+                0, 0, 0, 0);
+        var pointCoords = new double[][]{{0, 0}, {0, 1}, {2, 1}, {5, 1}, {10, 3}, {-1, 7}, {7, -1}, {0, 1}};
+        var lInterceptor = new LaunchInterceptor(param, 2, pointCoords, minLCM, minPUV);
+        Assert.assertThrows(IllegalArgumentException.class, lInterceptor::determineLIC0); // Negative length
+    }
+
+    @Test
+    public void testLIC0InsufficientPoints() {
+        var param = new LaunchInterceptor.Parameters(2, 0, 0, 0, 0,
+                0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                0, 0, 0, 0);
+        var lInterceptor = new LaunchInterceptor(param, 1, new double[][]{{0, 0}}, minLCM, minPUV);
+        Assert.assertFalse(lInterceptor.determineLIC0());
+    }
     @Test
     public void LIC3Test() {
         /*
