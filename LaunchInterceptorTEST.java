@@ -6,6 +6,7 @@ public class LaunchInterceptorTEST {
     // Variables for minimum test input
     private int minNumPoints = 2;
     private double[][] minPoints = {{0, 0}, {1, 1}};
+
     private LaunchInterceptor.Parameters minParameters = new LaunchInterceptor.Parameters(1.0, 1.0, 0.1, 0.1, 0.5, 2.0, 0.05, 0.5, 3, 2, 1, 1, 1, 1, 1, 1, 1, 1,1);
     private LaunchInterceptor.Connectors[][] minLCM = new LaunchInterceptor.Connectors[15][15];
     private boolean[] minPUV = {true, false, true, false, true, false, true, false, true, false, true, false, true, false, true};
@@ -49,11 +50,35 @@ public class LaunchInterceptorTEST {
                 () -> new LaunchInterceptor(minParameters, minNumPoints, minPoints, minLCM, new boolean[3])
         );
 
-
         Assert.assertEquals(minNumPoints, interceptor.getX().length);
-        Assert.assertEquals(minNumPoints, interceptor.getY().length);
+        Assert.assertEquals(minNumPoints, interceptor.getY().length);  
+    }
 
-       
+    @Test
+    public void LIC3Test() {
+        /*
+         * Should test the following...
+         * (1) Number of points < 3 --> false (not enough points)
+         * (2) AREA1 < 0 --> false (invalid AREA1)
+         * (3) Valid points with valid AREA1 --> true (triangle area greater than AREA1)
+         * (4) Valid points with valid AREA1 --> false (triangle area less than AREA1)
+         */
+    
+        double[][] twoPoints = {{0, 0}, {1, 1}};
+        LaunchInterceptor interceptor = new LaunchInterceptor(minParameters, 2, twoPoints, minLCM, minPUV);
+        Assert.assertFalse(null, interceptor.determineLIC3());
+
+        LaunchInterceptor.Parameters invalidAreaParameters = new LaunchInterceptor.Parameters(1, 1, 0.1, -0.1, 0.5, 2.0, 0.05, 0.5, 3, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1);
+        double[][] threePoints = {{0, 0}, {1, 0}, {0, 1}};
+        interceptor = new LaunchInterceptor(invalidAreaParameters, 3, threePoints, minLCM, minPUV);
+        Assert.assertFalse(null, interceptor.determineLIC3());
+
+        interceptor = new LaunchInterceptor(minParameters, 3, threePoints, minLCM, minPUV);
+        Assert.assertTrue(null, interceptor.determineLIC3());
+        
+        LaunchInterceptor.Parameters largeAreaParameters = new LaunchInterceptor.Parameters(1, 1, 0.1, 5, 0.5, 2.0, 0.05, 0.5, 3, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1);
+        interceptor = new LaunchInterceptor(largeAreaParameters, 3, threePoints, minLCM, minPUV);
+        Assert.assertFalse(null, interceptor.determineLIC3());
     }
 
 

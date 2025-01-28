@@ -48,7 +48,7 @@ public class LaunchInterceptor {
 
         if (LCM.length != 15)
             throw new IllegalArgumentException("LCM matrix is not of length 15x15");
-        if (Arrays.stream(LCM).allMatch(v -> v.length == 15))
+        if (!Arrays.stream(LCM).allMatch(v -> v.length == 15))
             throw new IllegalArgumentException("LCM  matrix is not of length 15x15");
 
         this.LCM = new Connectors[15][15];
@@ -224,6 +224,9 @@ public boolean determineLIC2() {
 
         if (numPoints < 3) {
             return false; // Not enough points to form a triangle
+        }
+        if (parameters.AREA1 < 0) {
+            return false; // Invalid area
         }
 
         for (int i = 2; i < numPoints; i++) {
@@ -612,9 +615,8 @@ public boolean determineLIC2() {
         double x_a = x[aIndex];double y_a = y[aIndex];
         double x_b = x[bIndex];double y_b = y[bIndex];
         double x_c = x[cIndex];double y_c = y[cIndex];
-        double area = 0.5 * (x_a*y_b + x_b* y_c + x_c* y_a
-                            - x_b*y_a - x_c* y_b - x_a* y_c);
-        return area;
+        return  0.5 * Math.abs(x_a*y_b + x_b* y_c + x_c* y_a
+                - x_b*y_a - x_c* y_b - x_a* y_c);
     }
 
 
