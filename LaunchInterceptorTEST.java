@@ -55,6 +55,48 @@ public class LaunchInterceptorTEST {
     }
 
     @Test
+    public void testDecideValidInput() {
+        var param = new LaunchInterceptor.Parameters(1, 1, 1, 1, 10,
+                10, 10, 1, 3, 1, 2, 1, 1, 1,
+                1, 1, 1, 1, 1);
+        boolean[] decidePUV = {
+                true, true, false, true, false,
+                        true, false, true, true, false,
+                        true, true, true, true, true
+        };
+        // Arbitrary coherent values
+        var decideLCM = fromIntArray(new int[][]{
+                {0, 1, 2, 1, 2, 1, 0, 1, 1, 2, 1, 0, 0, 1, 1},
+                {1, 0, 2, 1, 2, 1, 0, 1, 2, 2, 2, 0, 0, 2, 2},
+                {2, 2, 0, 2, 0, 2, 0, 2, 0, 0, 2, 0, 0, 0, 0},
+                {1, 1, 2, 0, 2, 1, 0, 1, 2, 0, 2, 0, 0, 2, 2},
+                {2, 2, 0, 2, 0, 0, 0, 2, 0, 0, 2, 0, 0, 2, 0},
+                {1, 1, 2, 1, 0, 0, 0, 2, 1, 2, 2, 0, 0, 2, 2},
+                {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 2, 0},
+                {1, 1, 2, 1, 2, 2, 0, 0, 2, 0, 2, 0, 0, 2, 2},
+                {1, 2, 0, 2, 0, 1, 0, 2, 0, 2, 2, 0, 0, 1, 0},
+                {2, 2, 0, 0, 0, 2, 0, 0, 2, 0, 2, 0, 0, 2, 2},
+                {1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 0, 0, 0, 2, 0},
+                {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2},
+                {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0},
+                {1, 2, 0, 2, 2, 2, 2, 2, 1, 2, 2, 1, 2, 0, 2},
+                {1, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0}
+        });
+        var pointCoords = new double[][]{
+                {0, 0}, {5, 10}, {1, 1}, {-6, 15}, {0, 1}, {-15, -2}, {1, 0}, {14, -20}, {-1, 0},
+                {0, -1}, {0, 0}, {-1, -1}, {2, 1}, {5, 16}, {-20, 5}, {-5, -10}, {12, -7}
+        };
+        var lInterceptor = new LaunchInterceptor(param, pointCoords.length, pointCoords, decideLCM, decidePUV);
+
+        Assert.assertTrue(null, lInterceptor.decide());
+        Assert.assertTrue(null, lInterceptor.isLaunch());
+        Assert.assertArrayEquals(new Boolean[]{true, true, true, true, true, true,
+                true, true, true, true, true, true, true, true, true},
+                lInterceptor.getFUV()
+        );
+    }
+
+    @Test
     public void testLIC0FartherThanL1() {
         var param = new LaunchInterceptor.Parameters(5, 0, 0, 0, 0,
                 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -593,6 +635,24 @@ public class LaunchInterceptorTEST {
                         3, 2, 1, 1, 1, 0, 1, 1, 1, 1, 1);
         LaunchInterceptor interceptorFalse = new LaunchInterceptor(area1TruePar, points.length, points, minLCM, minPUV);
         Assert.assertTrue(interceptorFalse.determineLIC10());
+    }
+
+    /**
+     * Convert the array with 0 --> NOTUSED, 1 --> ANDD, 2 --> ORR, other --> NOTUSED
+     * @param arr the array to convert
+     * @return the converted array
+     */
+    private LaunchInterceptor.Connectors[][] fromIntArray(int[][] arr) {
+        var connectArray = new LaunchInterceptor.Connectors[15][15];
+        for (int i = 0; i < 15; i++)
+            for (int j = 0; j < 15; j++)
+                if (arr[i][j] == 1)
+                    connectArray[i][j] = LaunchInterceptor.Connectors.ANDD; 
+                else if (arr[i][j] == 2)
+                    connectArray[i][j] = LaunchInterceptor.Connectors.ORR;
+                else 
+                    connectArray[i][j] = LaunchInterceptor.Connectors.NOTUSED;
+        return connectArray;
     }
 }
 

@@ -22,11 +22,11 @@ public class LaunchInterceptor {
     // Determine if the decide() method has already been called
     private boolean processed;
     // Preliminary Unlocking Matrix
-    private boolean[][] PUM;
+    private final Boolean[][] PUM;
     // Conditions Met Vector
-    private boolean[] CMV;
+    private final Boolean[] CMV;
     // Final Unlocking Vector
-    private boolean[] FUV;
+    private final Boolean[] FUV;
     // Decision: Launch or No
     private boolean launch;
 
@@ -34,6 +34,10 @@ public class LaunchInterceptor {
     public LaunchInterceptor(Parameters parameters, int numPoints, double[][] pointCoords,
                              Connectors[][] LCM, boolean[] PUV) {
         this.parameters = parameters;
+
+        if (numPoints < 2 || numPoints > 100)
+            throw new IllegalArgumentException("numPoints must be between 2 and 100");
+
         this.numPoints = numPoints;
 
         if (pointCoords.length != numPoints)
@@ -61,9 +65,9 @@ public class LaunchInterceptor {
         this.PUV = new boolean[15];
         System.arraycopy(PUV, 0, this.PUV, 0, 15);
 
-        this.PUM = new boolean[15][15];
-        this.CMV = new boolean[15];
-        this.FUV = new boolean[15];
+        this.PUM = new Boolean[15][15];
+        this.CMV = new Boolean[15];
+        this.FUV = new Boolean[15];
         this.processed = false;
         this.launch = false;
     }
@@ -78,6 +82,14 @@ public class LaunchInterceptor {
 
         public int getValue() {
             return value;
+        }
+        public boolean apply(boolean left, boolean right) {
+            if (this.value == 777)
+                return true;
+            else if (this.value == 778)
+                return left || right;
+            else
+                return left && right;
         }
     }
 
@@ -110,9 +122,28 @@ public class LaunchInterceptor {
      * @return the launch decision (boolean)
      */
     public boolean decide() {
-        //TODO call each LIC and populate the PUM, CMV, FUV as well as encode launch decision in STDOUT
+        CMV[0] = determineLIC0(); CMV[1] = determineLIC1(); CMV[2] = determineLIC2(); CMV[3] = determineLIC3();
+        CMV[4] = determineLIC4(); CMV[5] = determineLIC5(); CMV[6] = determineLIC6(); CMV[7] = determineLIC7();
+        CMV[8] = determineLIC8(); CMV[9] = determineLIC9(); CMV[10] = determineLIC10(); CMV[11] = determineLIC11();
+        CMV[12] = determineLIC12(); CMV[13] = determineLIC13(); CMV[14] = determineLIC14();
+
+        for (int i = 0; i < 15; i++) {
+            for (int j = i; j < 15; j++) {
+                var primaryUnlocking = LCM[i][j].apply(CMV[i], CMV[j]);
+                PUM[i][j] = primaryUnlocking;
+                PUM[j][i] = primaryUnlocking;
+            }
+        }
+
+        for (int i = 0; i < 15; i++)
+            FUV[i] = PUV[i] || Arrays.stream(PUM[i]).allMatch(Boolean::valueOf);
+
+        launch = Arrays.stream(FUV).allMatch(Boolean::valueOf);
+
+        System.out.println(launch ? "YES" : "NO");
+
         this.processed = true;
-        throw new Error("Decide function is not implemented yet");
+        return launch;
     }
 
 
@@ -646,9 +677,9 @@ public class LaunchInterceptor {
         return PUV.clone();
     }
 
-    public boolean[][] getPUM() throws IllegalAccessException {
+    public Boolean[][] getPUM() {
         if (!processed)
-            throw new IllegalAccessException("Decision has not been processed yet");
+            throw new IllegalAccessError("Decision has not been processed yet");
         var PUMReturn = new boolean[15][15];
         for (int i = 0; i < 15; i++) {
             System.arraycopy(this.PUM[i], 0, PUMReturn[i], 0, 15);
@@ -656,21 +687,21 @@ public class LaunchInterceptor {
         return PUM;
     }
 
-    public boolean[] getCMV() throws IllegalAccessException {
+    public Boolean[] getCMV() {
         if (!processed)
-            throw new IllegalAccessException("Decision has not been processed yet");
+            throw new IllegalAccessError("Decision has not been processed yet");
         return CMV.clone();
     }
 
-    public boolean[] getFUV() throws IllegalAccessException {
+    public Boolean[] getFUV() {
         if (!processed)
-            throw new IllegalAccessException("Decision has not been processed yet");
+            throw new IllegalAccessError("Decision has not been processed yet");
         return FUV.clone();
     }
 
-    public boolean isLaunch() throws IllegalAccessException {
+    public boolean isLaunch() {
         if (!processed)
-            throw new IllegalAccessException("Decision has not been processed yet");
+            throw new IllegalAccessError("Decision has not been processed yet");
         return launch;
     }
 
