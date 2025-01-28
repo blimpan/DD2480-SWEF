@@ -280,14 +280,7 @@ public boolean determineLIC2() {
     return false; // No set meets the condition
     }
 
-    public void setInputVariables(int inNumPoints, double[][] inPoints, Parameters inParameters, Connectors[][] inLCM, boolean[] inPUV) {
-        this.numPoints = inNumPoints;
-        this.x = new double[inNumPoints];
-        this.y = new double[inNumPoints];
-        for (int i = 0; i < inNumPoints; i++) {
-            this.x[i] = inPoints[i][0];
-            this.y[i] = inPoints[i][1];
-
+    /**
      * Determines if there exists at least one set of two data points 
      * separated by exactly K_PTS consecutive intervening points 
      * that are a distance greater than LENGTH1 apart
