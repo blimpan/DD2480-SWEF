@@ -546,9 +546,9 @@ public boolean determineLIC2() {
         double x_a = x[aIndex];double y_a = y[aIndex];
         double x_b = x[bIndex];double y_b = y[bIndex];
         double x_c = x[cIndex];double y_c = y[cIndex];
-        double area = 0.5 * (x_a*y_b + x_b* y_c + x_c* y_a
-                            - x_b*y_a - x_c* y_b - x_a* y_c);
-        return area;
+
+        return 0.5 * Math.abs(x_a*y_b + x_b* y_c + x_c* y_a
+                - x_b*y_a - x_c* y_b - x_a* y_c);;
     }
 
 
