@@ -48,7 +48,7 @@ public class LaunchInterceptor {
 
         if (LCM.length != 15)
             throw new IllegalArgumentException("LCM matrix is not of length 15x15");
-        if (Arrays.stream(LCM).allMatch(v -> v.length == 15))
+        if (!Arrays.stream(LCM).allMatch(v -> v.length == 15))
             throw new IllegalArgumentException("LCM  matrix is not of length 15x15");
 
         this.LCM = new Connectors[15][15];
@@ -87,7 +87,7 @@ public class LaunchInterceptor {
      */
     public record Parameters(double LENGTH1, double RADIUS1, double EPSILON, double AREA1,
                                     double LENGTH2, double RADIUS2, double AREA2, double DIST,
-                                    int Q_PTS, int QUADS, int K_PTS, int A_PTS, int B_PTS,
+                                    int Q_PTS, int QUADS, int N_PTS, int K_PTS, int A_PTS, int B_PTS,
                                     int C_PTS, int D_PTS, int E_PTS, int F_PTS, int G_PTS){}
 
     /**
@@ -225,6 +225,9 @@ public boolean determineLIC2() {
         if (numPoints < 3) {
             return false; // Not enough points to form a triangle
         }
+        if (parameters.AREA1 < 0) {
+            return false; // Invalid area
+        }
 
         for (int i = 2; i < numPoints; i++) {
             // first coordinate = (x[i-2], y[i-2])
@@ -297,6 +300,47 @@ public boolean determineLIC2() {
             }
         }
         return false; // If program reaches this point, no such triangle exists
+    }
+
+    /* LIC 6 : 
+    - There exists at least one set of N PTS consecutive data points s.t. at least one
+    of these lies at a calculated distance > DIST from the line joining the first and last point.
+    - If first and last points are identical, calculated distance = distance from coincident point to all other 
+    consecutive points. */
+    public Boolean determineLIC6() {
+
+        //Condition is not met when NUMPOINTS < 3
+        if(numPoints<3){
+            return false;
+        }
+
+        double a, b, c; //parameters for straight line equation between first and last point
+        double distance;
+        int k = 0;
+
+        for (int i = 0; i < numPoints && k < numPoints; i++) {
+            k = i + parameters.N_PTS - 1;
+            for (int j = i + 1; j < k; j++) {
+
+                //special case when first and last coordinate is the same
+                if (x[i] == x[k] && y[i] == y[k]) {
+                    distance = pointsDistance(x[i], y[i], x[j], y[j]);
+                    if (distance > parameters.DIST) {
+                        return true;
+                    }
+                } else {
+                    a = (y[k]-y[i])/(x[k]-x[i]);
+                    b = (x[i]-x[k])/(x[k]-x[i]);
+                    c = (y[i]*x[k] - y[k]*x[i])/(x[k]-x[i]);
+
+                    distance = pointLineDistance(a,b,c,x[j],y[j]);
+                    if (distance > parameters.DIST){
+                        return true;
+                    } 
+                }
+            }
+        }
+        return false; //no such set of points found
     }
 
     /**
@@ -503,6 +547,12 @@ public boolean determineLIC2() {
         }
     }
 
+    //Calculates distance between a point and a line
+    public double pointLineDistance(double a, double b, double c, double x, double y){
+        double distance = Math.abs(a*x + b*y + c)/Math.sqrt(Math.pow(a,2) + Math.pow(b,2));
+        return distance;
+    }
+
     //Calculates distance between two points
     private static double pointsDistance(double x1, double y1, double x2, double y2){
         double distance = Math.sqrt(Math.pow((x2-x1),2) + Math.pow((y2-y1),2));
@@ -565,10 +615,10 @@ public boolean determineLIC2() {
         double x_a = x[aIndex];double y_a = y[aIndex];
         double x_b = x[bIndex];double y_b = y[bIndex];
         double x_c = x[cIndex];double y_c = y[cIndex];
-        double area = 0.5 * (x_a*y_b + x_b* y_c + x_c* y_a
-                            - x_b*y_a - x_c* y_b - x_a* y_c);
-        return area;
+        return  0.5 * Math.abs(x_a*y_b + x_b* y_c + x_c* y_a
+                - x_b*y_a - x_c* y_b - x_a* y_c);
     }
+
 
 
     /**
@@ -620,3 +670,4 @@ public boolean determineLIC2() {
     }
     
 }
+
