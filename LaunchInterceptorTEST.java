@@ -396,6 +396,36 @@ public class LaunchInterceptorTEST {
         Assert.assertFalse(interceptorInvalidCPTSDPTS.determineLIC10());
     }
 
+    @Test
+    public void testLIC10computeTriangleArea(){
+        // Define the points, including cases for 0 degrees (undefined) and negative coordinates
+        double[][] points = {
+                {1.0, 1.0},    // Point 0
+                {0.0, 0.0},    // Point 1
+                {1.0, 0.0},    // Point 2
+                {-1.0, -1.0},  // Point 3
+                {0.0, -1.0},   // Point 4
+                {-1.0, 0.0},   // Point 5
+                {2.0, 0.0},    // Point 6
+                {3.0, 5.0},    // Point 7
+                {-2.0, 4.0},    // Point 8
+                {-2.0, -3.0}     // Point 9
+        };
+
+        // Define parameters
+        LaunchInterceptor.Parameters parameters = new LaunchInterceptor.Parameters(1.0, 1.0, 0.1, 0.1, 0.5, 2.0,
+                0.05, 0.5, 3, 2, 1, 1, 1, 0, 1, 1, 1, 1, 1);
+        // Create the interceptor
+        LaunchInterceptor interceptorArea = new LaunchInterceptor(parameters, 10, points, minLCM, minPUV);
+        // Check area for valid points
+        Assert.assertEquals(interceptorArea.computeTriangleArea(0,1,2),0.5,1e-6);
+        //Check area for valid points (complex points)
+        Assert.assertEquals(interceptorArea.computeTriangleArea(7,8,9),17.5,1e-6);
+        //Check area for a line (should return 0)
+        Assert.assertEquals(interceptorArea.computeTriangleArea(5,1,2), 0.0, 1e-6);
+        //Check area for duplicate points
+        Assert.assertEquals(interceptorArea.computeTriangleArea(1,1,0),0.0, 1e-6);
+    }
 
 }
 
