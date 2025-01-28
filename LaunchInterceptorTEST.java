@@ -80,7 +80,40 @@ public class LaunchInterceptorTEST {
         Assert.assertFalse(null, interceptor.determineLIC3());
     }
 
+    @Test
+    public void LIC4Test() {
+        /*
+         * Should test the following...
+         * (1) Q_PTS < 2 --> false (invalid value)
+         * (2) Number of points < Q_PTS --> false (numpoints must be larger than Q_PTS)
+         * (3) QUADS < 1 --> false (invalid value)
+         * (4) Valid input --> true (condition met)
+         * (5) Valid input --> false (condition not met)
+         */
 
+        LaunchInterceptor.Parameters invalidQPTSParams = new LaunchInterceptor.Parameters(1, 1, 0.1, -0.1, 0.5, 2.0, 0.05, 0.5, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1);
+        double[][] threePoints = {{1, 1}, {-1, 1}, {-1, -1}};
+        LaunchInterceptor interceptor = new LaunchInterceptor(invalidQPTSParams, 3, threePoints, minLCM, minPUV);
+        Assert.assertFalse(null, interceptor.determineLIC4());
+
+        double[][] twoPoints = {{0, 0}, {1, 1}};
+        LaunchInterceptor.Parameters invalidNumPointsParams = new LaunchInterceptor.Parameters(1, 1, 0.1, -0.1, 0.5, 2.0, 0.05, 0.5, 3, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1);
+        interceptor = new LaunchInterceptor(invalidNumPointsParams, 2, twoPoints, minLCM, minPUV);
+        Assert.assertFalse(null, interceptor.determineLIC4());
+
+        LaunchInterceptor.Parameters invalidQUADSParams = new LaunchInterceptor.Parameters(1, 1, 0.1, -0.1, 0.5, 2.0, 0.05, 0.5, 2, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1);
+        interceptor = new LaunchInterceptor(invalidQUADSParams, 3, threePoints, minLCM, minPUV);
+        Assert.assertFalse(null, interceptor.determineLIC4());
+
+        LaunchInterceptor.Parameters validParams = new LaunchInterceptor.Parameters(1, 1, 0.1, -0.1, 0.5, 2.0, 0.05, 0.5, 3, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1);
+        // Q_PTS = 3, QUADS = 2
+        interceptor = new LaunchInterceptor(validParams, 3, threePoints, minLCM, minPUV);
+        Assert.assertTrue(null, interceptor.determineLIC4());
+
+        double[][] threeClusteredPoints = {{0, 0}, {1, 0}, {0, 1}};
+        interceptor = new LaunchInterceptor(validParams, 3, threeClusteredPoints, minLCM, minPUV);
+        Assert.assertFalse(null, interceptor.determineLIC4());
+    }   
 
     @Test
     public void LIC6Test() {
