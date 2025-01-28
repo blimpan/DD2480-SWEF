@@ -366,6 +366,15 @@ public boolean determineLIC2() {
         return false; //no such points
     }
 
+    /**
+     * Not implemented
+     * @return trivially true
+     */
+    public boolean determineLIC8(){
+        //TODO fix when merging LIC8
+        return true;
+    }
+
     /** 
      * Determines if there exists a set of 3 points (A,B,C) which meets the following conditions:
      * 1. there are C PTS in bewteen A and B
