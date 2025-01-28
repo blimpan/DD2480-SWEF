@@ -162,12 +162,13 @@ public class LaunchInterceptorTEST {
         Assert.assertFalse(null, interceptor.determineLIC6());
 
         double[][] truePoints = {{1, 2}, {4, 1}, {9, 10}};
-        LaunchInterceptor trueInterceptor = new LaunchInterceptor(minParameters, 2, truePoints, minLCM, minPUV);
+        LaunchInterceptor.Parameters trueParameters = new LaunchInterceptor.Parameters(1.0, 1.0, 0.1, 0.1, 0.5, 2.0, 0.05, 0.5, 3, 2, 3, 1, 1, 1, 1, 1, 1, 1, 1);
+        LaunchInterceptor trueInterceptor = new LaunchInterceptor(trueParameters, 3, truePoints, minLCM, minPUV);
         Assert.assertTrue(null, trueInterceptor.determineLIC6());
 
         LaunchInterceptor.Parameters largeDistParameters = new LaunchInterceptor.Parameters(1.0, 1.0, 0.1, 0.1, 0.5, 2.0, 0.05, 5.0, 3, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1);
         double[][] falsePoints = {{1, 1}, {2, 2}, {3, 3}};
-        LaunchInterceptor falseInterceptor = new LaunchInterceptor(largeDistParameters, 2, falsePoints, minLCM, minPUV);
+        LaunchInterceptor falseInterceptor = new LaunchInterceptor(largeDistParameters, 3, falsePoints, minLCM, minPUV);
         Assert.assertFalse(null, falseInterceptor.determineLIC6());
     }
 
