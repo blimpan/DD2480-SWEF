@@ -81,5 +81,32 @@ public class LaunchInterceptorTEST {
         Assert.assertFalse(null, interceptor.determineLIC3());
     }
 
+    @Test
+    public void testLIC14ValidInput() {
+        var param = new LaunchInterceptor.Parameters(0, 0, 0, 1, 0,
+                0, 20, 0, 0, 0, 0, 2, 0, 0, 0,
+                0, 1, 1, 0);
+        var pointCoords = new double[][]{{0, 0}, {0, 1}, {2, 1}, {5, 13}, {1, 3}, {-1, 7}, {7, -1}, {10, 1}};
+        var lInterceptor = new LaunchInterceptor(param, 8, pointCoords, minLCM, minPUV);
+        Assert.assertTrue(null, lInterceptor.determineLIC14());
+    }
+
+    @Test
+    public void testLIC14InvalidParameters() {
+        var param = new LaunchInterceptor.Parameters(0, 0, 0, 0, 0,
+                0, -4, 0, 0, 0, 0, 2, 0, 0, 0,
+                0, 0, 0, 0);
+        var lInterceptor = new LaunchInterceptor(param, minPoints.length, minPoints, minLCM, minPUV);
+        Assert.assertThrows(IllegalArgumentException.class, lInterceptor::determineLIC14);
+    }
+
+    @Test
+    public void testLIC14InsufficientPoints() {
+        var param = new LaunchInterceptor.Parameters(0, 0, 0, 1, 0,
+                0, 10, 0, 0, 0, 0, 2, 0, 0, 0,
+                0, 0, 0, 0);
+        var lInterceptor = new LaunchInterceptor(param, 1, new double[][]{{0, 0}}, minLCM, minPUV);
+        Assert.assertFalse(lInterceptor.determineLIC14());
+    }
 }
 

@@ -48,7 +48,7 @@ public class LaunchInterceptor {
 
         if (LCM.length != 15)
             throw new IllegalArgumentException("LCM matrix is not of length 15x15");
-        if (Arrays.stream(LCM).allMatch(v -> v.length == 15))
+        if (!Arrays.stream(LCM).allMatch(v -> v.length == 15))
             throw new IllegalArgumentException("LCM  matrix is not of length 15x15");
 
         this.LCM = new Connectors[15][15];
@@ -87,7 +87,7 @@ public class LaunchInterceptor {
      */
     public record Parameters(double LENGTH1, double RADIUS1, double EPSILON, double AREA1,
                                     double LENGTH2, double RADIUS2, double AREA2, double DIST,
-                                    int Q_PTS, int QUADS, int K_PTS, int A_PTS, int B_PTS,
+                                    int Q_PTS, int QUADS, int N_PTS, int K_PTS, int A_PTS, int B_PTS,
                                     int C_PTS, int D_PTS, int E_PTS, int F_PTS, int G_PTS){}
 
     /**
@@ -376,37 +376,6 @@ public boolean determineLIC2() {
     }
 
     /**
-     *
-     * @return true or false
-     */
-    public boolean determineLIC13() {
-        if (parameters.RADIUS2 < 0)
-            throw new IllegalArgumentException("Radius2 must be greater than 0");
-
-        //Condition is not met when numPoints < 5
-        if (numPoints < 5) {
-            return false;
-        }
-
-        boolean matchFound = false;
-        for (int i = 0; ! matchFound && i < numPoints + parameters.E_PTS + parameters.F_PTS + 2; i++) {
-            var area = computeTriangleArea(i, i + parameters.A_PTS + 1, i + parameters.A_PTS + parameters.B_PTS + 1);
-            if (area > parameters.AREA1)
-                matchFound = true;
-        }
-
-        if (!matchFound)
-            return false;
-
-        for (int i = 0; i < numPoints + parameters.E_PTS + parameters.F_PTS + 2; i++) {
-            var area = computeTriangleArea(i, i + parameters.A_PTS + 1, i + parameters.A_PTS + parameters.B_PTS + 1);
-            if (area < parameters.AREA2)
-                return true;
-        }
-        return false;
-    }
-
-    /**
      * Determines if there exists a set of 3 points (A,B,C) which meets the following conditions:
      * 1. there are C PTS in bewteen A and B
      * 2. there are D PTS in between B and C
@@ -507,6 +476,37 @@ public boolean determineLIC2() {
         return found;
     }
 
+
+    /**
+     *
+     * @return true or false
+     */
+    public boolean determineLIC14() {
+        if (parameters.AREA2 < 0)
+            throw new IllegalArgumentException("Area2 must be greater than 0");
+
+        //Condition is not met when numPoints < 5
+        if (numPoints < 5) {
+            return false;
+        }
+
+        boolean matchFound = false;
+        for (int i = 0; ! matchFound && i + parameters.E_PTS + parameters.F_PTS + 2 < numPoints; i++) {
+            var area = computeTriangleArea(i, i + parameters.E_PTS + 1, i + parameters.E_PTS + parameters.F_PTS + 1);
+            if (area > parameters.AREA1)
+                matchFound = true;
+        }
+
+        if (!matchFound)
+            return false;
+
+        for (int i = 0; i + parameters.E_PTS + parameters.F_PTS + 2 < numPoints; i++) {
+            var area = computeTriangleArea(i, i + parameters.E_PTS + 1, i + parameters.E_PTS + parameters.F_PTS + 1);
+            if (area < parameters.AREA2)
+                return true;
+        }
+        return false;
+    }
 
     //==========GETTER METHODS==========
     public Parameters getParameters() {
