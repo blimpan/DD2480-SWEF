@@ -687,8 +687,8 @@ public boolean determineLIC2() {
     /**
     * Determines wherter three points would be contained within a circle of a specified radius
     *
-    * mode == 0 @return true if all points can be contained within circle 
-    * mode == 1 @return true if no circle of that radius can contain all three points
+    * mode == false @return true if all points can be contained within circle 
+    * mode == true @return true if no circle of that radius can contain all three points
     *
     * first coordinate = (x[i-2], y[i-2])
     * second coordinate = (x[i-1], y[i-1])
@@ -698,17 +698,17 @@ public boolean determineLIC2() {
     * with radius RADIUS1 would have it's center point and checking if the third point is within the specified radius.
     * Depending on mode it returns true or false for including or excluding all points.
     */
-    public boolean containedInCircle(double x1, double y1, double x2, double y2, double x3, double y3, double radius, int mode) {
+    public boolean containedInCircle(double x1, double y1, double x2, double y2, double x3, double y3, double radius, boolean mode) {
         double[] pointsX = {x1, x2, x3, x1, x2};
         double[] pointsY = {y1, y2, y3, y1, y2};
-        int numContained = 0;
+        int containingCircles = 0;
         for (int i = 1; i < 4; i++) {
             double distance = pointsDistance(pointsX[i - 1], pointsY[i - 1], pointsX[i], pointsY[i]);
 
             if (distance == 0) {
                 // Less than diameter away when two points are on top of each other
                 if (pointsDistance(pointsX[i], pointsY[i], pointsX[i + 1], pointsY[i + 1])<radius*2){
-                    numContained++;
+                    containingCircles++;
                 }
                 continue; // Avoid division by zero
             }
@@ -728,14 +728,14 @@ public boolean determineLIC2() {
 
             if (pointsDistance(pointsX[i + 1], pointsY[i + 1], xPos1, yPos1) < radius ||
                 pointsDistance(pointsX[i + 1], pointsY[i + 1], xPos2, yPos2) < radius) {
-                    numContained++;
+                containingCircles++;
             }
         }
-        if (mode == 0){
-            if (numContained != 0){return true;}
+        if (mode == false){
+            if (containingCircles != 0){return true;}
         }
-        else if (mode == 1){
-            if (numContained == 0){return true;}
+        else if (mode == true){
+            if (containingCircles == 0){return true;}
         }
         return false; 
     }
