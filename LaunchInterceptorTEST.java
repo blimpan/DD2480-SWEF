@@ -352,6 +352,50 @@ public class LaunchInterceptorTEST {
         Assert.assertFalse(lInterceptor.determineLIC12());
     }
 
+    @Test
+    public void testLIC10InvalidParameters(){
+        // Define the invalid parameters
+        double[][] points = {
+                {1.0, 2.0},  // Point A
+                {2.0, 3.0},  // Point B
+                {3.0, 1.0},  // Point C
+                {4.0, 4.0},  // Point D
+                {5.0, 0.0},  // Point E
+                {6.0, 5.0},  // Point F
+                {7.0, 3.0},  // Point G
+                {8.0, 2.5},  // Point H
+                {9.0, 1.5},  // Point I
+                {10.0, 4.0}  // Point J
+        };
+
+        int numPointsValid = 10;
+
+        LaunchInterceptor.Parameters invalidParEPTS =
+                new LaunchInterceptor.Parameters(1.0, 1.0, 0.1, 0.1, 0.5, 2.0, 0.05, 0.5,
+                        3, 2, 1, 1, 1, 0, 1, 1, 0, 1,1);
+        // Test with invalid E_PTS
+        LaunchInterceptor interceptorInvalidCPTS = new LaunchInterceptor(invalidParEPTS, numPointsValid, points, minLCM, minPUV);
+        Assert.assertFalse(interceptorInvalidCPTS.determineLIC10());
+
+        // Define invalid F_PTS
+        LaunchInterceptor.Parameters invalidParFPTS =
+                new LaunchInterceptor.Parameters(1.0, 1.0, 0.1, 0.1, 0.5, 2.0, 0.05, 0.5,
+                        3, 2, 1, 1, 1, 1, 0, 1, 1, 0,1);
+
+        // Test with invalid D_PTS
+        LaunchInterceptor interceptorInvalidDPTS = new LaunchInterceptor(invalidParFPTS, numPointsValid, points, minLCM, minPUV);
+        Assert.assertFalse(interceptorInvalidDPTS.determineLIC10());
+
+        // Define parameters with invalid C_PTS and D_PTS combined
+        LaunchInterceptor.Parameters invalidParEPTSFPTS =
+                new LaunchInterceptor.Parameters(1.0, 1.0, 0.1, 0.1, 0.5, 2.0, 0.05, 0.5,
+                        3, 2, 1, 1, 1, 1, 1, 10, 10, 1,1); // C_PTS + D_PTS too large
+
+        // Test with invalid combined parameters
+        LaunchInterceptor interceptorInvalidCPTSDPTS = new LaunchInterceptor(invalidParEPTSFPTS, numPointsValid, points, minLCM, minPUV);
+        Assert.assertFalse(interceptorInvalidCPTSDPTS.determineLIC10());
+    }
+
 
 }
 
