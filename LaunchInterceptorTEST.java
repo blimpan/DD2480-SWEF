@@ -626,6 +626,48 @@ public class LaunchInterceptorTEST {
         LaunchInterceptor interceptorInvalidGPTS2 = new LaunchInterceptor(invalidGPTSLarge, numPointsValid, points, minLCM, minPUV);
         Assert.assertFalse(interceptorInvalidGPTS2.determineLIC11());
     }
+    @Test
+    public void testLIC11General(){
+        //Check for true case
+        // Define the parameters
+        double[][] pointsTrue = {
+                {1.0, 2.0},  // Point A
+                {2.0, 3.0},  // Point B
+                {3.0, 1.0},  // Point C
+                {4.0, 4.0},  // Point D
+                {5.0, 0.0},  // Point E
+                {4.0, 5.0},  // Point F
+                {3.0, 3.0},  // Point G
+                {2.0, 2.5},  // Point H
+                {9.0, 1.5},  // Point I
+                {10.0, 4.0}  // Point J
+        };
+        int numPointsValid = 10;
+        LaunchInterceptor.Parameters Par =
+                new LaunchInterceptor.Parameters(1.0, 1.0, 0.1, 0.1, 0.5, 2.0, 0.05, 0.5,
+                        3, 2, 1, 1, 1, 0, 1, 1, 1, 1,1);
+
+        LaunchInterceptor interceptorTrue = new LaunchInterceptor(Par, numPointsValid, pointsTrue, minLCM, minPUV);
+        Assert.assertTrue(interceptorTrue.determineLIC11());
+
+        //Check for false case
+        // Define the parameters
+        double[][] pointsFalse = {
+                {1.0, 2.0},  // Point A
+                {2.0, 3.0},  // Point B
+                {3.0, 1.0},  // Point C
+                {4.0, 4.0},  // Point D
+                {5.0, 0.0},  // Point E
+                {6.0, 5.0},  // Point F
+                {7.0, 3.0},  // Point G
+                {8.0, 2.5},  // Point H
+                {9.0, 1.5},  // Point I
+                {10.0, 4.0}  // Point J
+        };
+
+        LaunchInterceptor interceptorFalse = new LaunchInterceptor(Par, numPointsValid, pointsFalse, minLCM, minPUV);
+        Assert.assertFalse(interceptorFalse.determineLIC11());
+    }
 }
 
 
