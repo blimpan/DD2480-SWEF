@@ -676,7 +676,7 @@ public boolean determineLIC2() {
      *
      * The function returns the area as a double value.
      */
-    double computeTriangleArea (int aIndex, int bIndex, int cIndex){
+    public double computeTriangleArea (int aIndex, int bIndex, int cIndex){
         // get x, y coordinates of each point
         double x_a = x[aIndex];double y_a = y[aIndex];
         double x_b = x[bIndex];double y_b = y[bIndex];
