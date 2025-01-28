@@ -98,7 +98,33 @@ public class LaunchInterceptor {
         throw new Error("Decide function is not implemented yet");
     }
 
+
     //==========LIC RELATED METHODS==========
+
+    /**
+     * Determines whether or not there exists at least one set of two consecutive data points that are 
+     * less than LENGTH1 apart
+     * @return true or false
+     */
+    public Boolean determineLIC0() {
+
+        if (numPoints < 2) {
+            return false; // Not enough points 
+        }
+
+        for (int i = 1; i < numPoints; i++) {
+            
+            // first coordinate = (x[i-1], y[i-1])
+            // second coordinate = (x[i], y[i])
+            double distance = pointsDistance(x[i-1], y[i-1],x[i], y[i]);
+            if (distance > parameters.AREA1) {
+                return true;
+            }
+        }
+
+        return false; // No such points exists
+    }
+
 
     /**
      * Determines whether or not there exists at least one set of three consecutive data points that are the vertices of a triangle
