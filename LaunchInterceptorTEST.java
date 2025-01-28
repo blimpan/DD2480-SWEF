@@ -167,5 +167,42 @@ public class LaunchInterceptorTEST {
         double actualAngle270 = interceptorAngle.computeAngle(4, 1, 2);
         Assert.assertEquals(expectedAngle270, actualAngle270, 1e-6);
     }
+
+
+    @Test
+    public void LIC09TestGeneral() {
+        // Test case 1: Should return true
+        double[][] pointsTrue = {
+                {0, 0},   // Point A
+                {1, 1},   // Point B
+                {2, 0},   // Point C
+                {3, 3},   // Additional points
+                {4, 4},
+                {5, 5}
+        };
+
+        LaunchInterceptor.Parameters parametersTrue = new LaunchInterceptor.Parameters(2, 1, 0.1, 0.1, 0.5, 2.0,
+                0.05, 0.5, 3, 2, 1, 1, 1, 0, 1, 1, 1, 1, 1);
+        LaunchInterceptor interceptorTrue = new LaunchInterceptor(parametersTrue, pointsTrue.length, pointsTrue, minLCM, minPUV);
+
+        Assert.assertTrue(interceptorTrue.determineLIC9());
+
+        // Test case 2: Should return false
+        double[][] pointsFalse = {
+                {0, 0},   // Point A
+                {1, 1},   // Point B
+                {2, 2},   // Point C (collinear with A and B)
+                {3, 3},   // Additional points
+                {4, 4},
+                {5, 5},
+                {6, 6}
+        };
+
+        LaunchInterceptor.Parameters parametersFalse = new LaunchInterceptor.Parameters(2, 1, 0.1, 0.1, 0.5, 2.0,
+                0.05, 0.5, 3, 2, 1, 1, 1, 0, 1, 1, 1, 1, 1);
+        LaunchInterceptor interceptorFalse = new LaunchInterceptor(parametersFalse, pointsFalse.length, pointsFalse, minLCM, minPUV);
+
+        Assert.assertFalse(interceptorFalse.determineLIC9());
+    }
 }
 
