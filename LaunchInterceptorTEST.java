@@ -91,6 +91,74 @@ public class LaunchInterceptorTEST {
         var lInterceptor = new LaunchInterceptor(param, 1, new double[][]{{0, 0}}, minLCM, minPUV);
         Assert.assertFalse(lInterceptor.determineLIC0());
     }
+    
+    @Test
+    public void testLIC1LargerThanL1() {
+        var param = new LaunchInterceptor.Parameters(0, 5, 0, 0, 0,
+                0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                0, 0, 0, 0);
+        var pointCoords = new double[][]{{0, 0}, {0, 1}, {2, 1}, {5, 1}, {10, 3}, {-1, 7}, {7, -1}, {0, 1}};
+        var lInterceptor = new LaunchInterceptor(param, 8, pointCoords, minLCM, minPUV);
+        Assert.assertTrue(null, lInterceptor.determineLIC1());
+    }
+
+    @Test
+    public void testLIC1SmallerThanL1() {
+        var param = new LaunchInterceptor.Parameters(0, 50, 0, 0, 0,
+                0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                0, 0, 0, 0);
+        var pointCoords = new double[][]{{0, 0}, {0, 1}, {2, 1}, {5, 1}, {10, 3}, {-1, 7}, {7, -1}, {0, 1}};
+        var lInterceptor = new LaunchInterceptor(param, 8, pointCoords, minLCM, minPUV);
+        Assert.assertTrue(null, lInterceptor.determineLIC1());
+    }
+
+    @Test
+    public void testLIC1InvalidParameters() {
+        var param = new LaunchInterceptor.Parameters(0, -10, 0, 0, 0,
+                0, 0, 0, 0, 0, 0, 2, 0, 0, 0,
+                0, 0, 0, 0);
+        var pointCoords = new double[][]{{0, 0}, {0, 1}, {2, 1}, {5, 1}, {10, 3}, {-1, 7}, {7, -1}, {0, 1}};
+        var lInterceptor = new LaunchInterceptor(param, 8, pointCoords, minLCM, minPUV);
+        Assert.assertThrows(IllegalArgumentException.class, lInterceptor::determineLIC1); // Negative length
+    }
+
+    @Test
+    public void testLIC1InsufficientPoints() {
+        var param = new LaunchInterceptor.Parameters(0, 10, 0, 0, 0,
+                0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                0, 0, 0, 0);
+        var lInterceptor = new LaunchInterceptor(param, 2, new double[][]{{0, 0}, {1, 1}}, minLCM, minPUV);
+        Assert.assertFalse(lInterceptor.determineLIC1());
+    }
+
+    @Test
+    public void testLIC2LargerThanL1() {
+        var param = new LaunchInterceptor.Parameters(0, 0, 1, 0, 0,
+                0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                0, 0, 0, 0);
+        var pointCoords = new double[][]{{0, 0}, {0, 1}, {2, 1}, {5, 1}, {10, 3}, {-1, 7}, {7, -1}, {0, 1}};
+        var lInterceptor = new LaunchInterceptor(param, 8, pointCoords, minLCM, minPUV);
+        Assert.assertTrue(null, lInterceptor.determineLIC2());
+    }
+
+    @Test
+    public void testLIC2SmallerThanL1() {
+        var param = new LaunchInterceptor.Parameters(0, 0, 3.1, 0, 0,
+                0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                0, 0, 0, 0);
+        var pointCoords = new double[][]{{0, 0}, {0, 1}, {2, 1}, {5, 1}, {10, 3}, {-1, 7}, {7, -1}, {0, 1}};
+        var lInterceptor = new LaunchInterceptor(param, 8, pointCoords, minLCM, minPUV);
+        Assert.assertTrue(null, lInterceptor.determineLIC2());
+    }
+
+    @Test
+    public void testLIC2InsufficientPoints() {
+        var param = new LaunchInterceptor.Parameters(0, 0, 1, 0, 0,
+                0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                0, 0, 0, 0);
+        var lInterceptor = new LaunchInterceptor(param, 2, new double[][]{{0, 0}, {1, 1}}, minLCM, minPUV);
+        Assert.assertFalse(lInterceptor.determineLIC2());
+    }
     @Test
     public void LIC3Test() {
         /*
