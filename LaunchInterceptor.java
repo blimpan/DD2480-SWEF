@@ -281,6 +281,25 @@ public boolean determineLIC2() {
     }
 
     /**
+     * Determines if there exists at least one set of two consecutive data points, (X[i], Y[i]) and (X[j], Y[j]),
+     * such that X[j] - X[i] < 0 where i=j-1.
+     * @return true or false
+     */
+    public boolean determineLIC5() {
+
+        if (this.numPoints < 2) {
+            return false; // Not enough points
+        }
+
+        for (int j = 1; j < numPoints; j++) {
+            if (x[j] - x[j - 1] < 0) {
+                return true;
+            }
+        }
+        return false; // If program reaches this point, no such triangle exists
+    }
+
+    /**
      * Determines if there exists at least one set of two data points 
      * separated by exactly K_PTS consecutive intervening points 
      * that are a distance greater than LENGTH1 apart
