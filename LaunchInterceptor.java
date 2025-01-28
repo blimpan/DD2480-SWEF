@@ -48,7 +48,7 @@ public class LaunchInterceptor {
 
         if (LCM.length != 15)
             throw new IllegalArgumentException("LCM matrix is not of length 15x15");
-        if (Arrays.stream(LCM).allMatch(v -> v.length != 15))
+        if (!Arrays.stream(LCM).allMatch(v -> v.length != 15))
             throw new IllegalArgumentException("LCM  matrix is not of length 15x15");
 
         this.LCM = new Connectors[15][15];
