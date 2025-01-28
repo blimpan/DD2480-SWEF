@@ -142,7 +142,7 @@ public class LaunchInterceptor {
         if (numPoints < 3) {
             return false; // Not enough points to test
         }
-        if (parameters.LENGTH1 < 0) {
+        if (parameters.RADIUS1 < 0) {
             throw new IllegalArgumentException("LENGTH1 cannot be negative.");
         }
 
@@ -150,7 +150,7 @@ public class LaunchInterceptor {
             // first coordinate = (x[i-2], y[i-2])
             // second coordinate = (x[i-1], y[i-1])
             // third coordinate = (x[i], y[i])
-            if(containedInCircle(x[i-2],y[i-2],x[i-1],y[i-1],x[i],y[i],parameters.RADIUS1,1) == true){
+            if(containedInCircle(x[i-2],y[i-2],x[i-1],y[i-1],x[i],y[i],parameters.RADIUS1,true) == true){
                 return true;
             }
         }
