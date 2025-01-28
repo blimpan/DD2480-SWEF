@@ -528,16 +528,14 @@ public boolean determineLIC2() {
 
         boolean matchFound = false;
         for (int i = 0; ! matchFound && i < numPoints + parameters.A_PTS + parameters.B_PTS + 2; i++) {
-            var averageX = (x[i] + x[i + parameters.A_PTS + 1] + x[i + parameters.A_PTS + parameters.B_PTS + 2])/3;
-            var averageY = (y[i] + y[i + parameters.A_PTS + 1] + y[i + parameters.A_PTS + parameters.B_PTS + 2])/3;
+            var x1 = x[i];
+            var y1 = y[i];
+            var x2 = x[i + parameters.A_PTS + 1];
+            var y2 = y[i + parameters.A_PTS + 1];
+            var x3 = x[i + parameters.A_PTS + parameters.B_PTS + 2];
+            var y3 = y[i + parameters.A_PTS + parameters.B_PTS + 2];
 
-            var distPointOne = pointsDistance(averageX, averageY, x[i], y[i]) < parameters.RADIUS1;
-            var distPointTwo = pointsDistance(averageX, averageY, x[i + parameters.A_PTS + 1],
-                    y[i + parameters.A_PTS + 1]) < parameters.RADIUS1;
-            var distPointThree = pointsDistance(averageX, averageY, x[i + parameters.A_PTS + parameters.B_PTS + 2],
-                    y[i + parameters.A_PTS + parameters.B_PTS + 2]) < parameters.RADIUS1;
-
-            if (distPointOne && distPointTwo && distPointThree)
+            if (containedInCircle(x1, y1, x2, y2, x3, y3, parameters.RADIUS1, true))
                 matchFound = true;
         }
 
@@ -546,16 +544,14 @@ public boolean determineLIC2() {
 
         matchFound = false;
         for (int i = 0; ! matchFound && i < numPoints + parameters.A_PTS + parameters.B_PTS + 2; i++) {
-            var averageX = (x[i] + x[i + parameters.A_PTS + 1] + x[i + parameters.A_PTS + parameters.B_PTS + 2])/3;
-            var averageY = (y[i] + y[i + parameters.A_PTS + 1] + y[i + parameters.A_PTS + parameters.B_PTS + 2])/3;
+            var x1 = x[i];
+            var y1 = y[i];
+            var x2 = x[i + parameters.A_PTS + 1];
+            var y2 = y[i + parameters.A_PTS + 1];
+            var x3 = x[i + parameters.A_PTS + parameters.B_PTS + 2];
+            var y3 = y[i + parameters.A_PTS + parameters.B_PTS + 2];
 
-            var distPointOne = pointsDistance(averageX, averageY, x[i], y[i]) > parameters.RADIUS2;
-            var distPointTwo = pointsDistance(averageX, averageY, x[i + parameters.A_PTS + 1],
-                    y[i + parameters.A_PTS + 1]) > parameters.RADIUS2;
-            var distPointThree = pointsDistance(averageX, averageY, x[i + parameters.A_PTS + parameters.B_PTS + 2],
-                    y[i + parameters.A_PTS + parameters.B_PTS + 2]) > parameters.RADIUS2;
-
-            if (distPointOne && distPointTwo && distPointThree)
+            if (containedInCircle(x1, y1, x2, y2, x3, y3, parameters.RADIUS2, false))
                 matchFound = true;
         }
         return matchFound;
@@ -685,10 +681,10 @@ public boolean determineLIC2() {
      * This function determines the angle formed by the three points, with the vertex at Point B.
      * It uses the coordinates of the points identified by the provided indexes to compute the angle 
      * between the lines connecting Point A to Point B and Point B to Point C.
-     * 
+     *
      * The function returns the angle in radians
      */
-    private double computeAngle(int aIndex, int bIndex, int cIndex){
+    public double computeAngle(int aIndex, int bIndex, int cIndex){
         // get x, y coordinates of each point
         double x_a = x[aIndex];double y_a = y[aIndex];
         double x_b = x[bIndex];double y_b = y[bIndex];
