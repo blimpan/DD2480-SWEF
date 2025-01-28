@@ -573,7 +573,7 @@ public boolean determineLIC2() {
      * 
      * The function returns the angle in radians
      */
-    private double computeAngle(int aIndex, int bIndex, int cIndex){
+    public double computeAngle(int aIndex, int bIndex, int cIndex){
         // get x, y coordinates of each point
         double x_a = x[aIndex];double y_a = y[aIndex];
         double x_b = x[bIndex];double y_b = y[bIndex];
@@ -590,8 +590,9 @@ public boolean determineLIC2() {
         double magBC = Math.sqrt(vecBC[0]* vecBC[0] +vecBC[1] * vecBC[1]);
         //Compute cosTheta
         double cosTheta = dot/(magBA*magBC);
-        //theta = arccos(cosTheta)
-        return Math.acos(cosTheta);
+        double theta = Math.acos(cosTheta);
+        if (theta>Math.PI) return 2*Math.PI - theta;
+        return theta;
     }
 
     /**
@@ -616,7 +617,7 @@ public boolean determineLIC2() {
         double x_b = x[bIndex];double y_b = y[bIndex];
         double x_c = x[cIndex];double y_c = y[cIndex];
         return  0.5 * Math.abs(x_a*y_b + x_b* y_c + x_c* y_a
-                - x_b*y_a - x_c* y_b - x_a* y_c);;
+                - x_b*y_a - x_c* y_b - x_a* y_c);
     }
 
 

@@ -7,7 +7,7 @@ public class LaunchInterceptorTEST {
     // Variables for minimum test input
     private int minNumPoints = 2;
     private double[][] minPoints = {{0, 0}, {1, 1}};
-    private LaunchInterceptor.Parameters minParameters = new LaunchInterceptor.Parameters(1, 1, 0.1, 0.1, 0.5, 2.0, 0.05, 0.5, 3, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1);
+    private LaunchInterceptor.Parameters minParameters = new LaunchInterceptor.Parameters(1.0, 1.0, 0.1, 0.1, 0.5, 2.0, 0.05, 0.5, 3, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1);
     private LaunchInterceptor.Connectors[][] minLCM = new LaunchInterceptor.Connectors[15][15];
     private boolean[] minPUV = {true, false, true, false, true, false, true, false, true, false, true, false, true, false, true};
 
@@ -79,6 +79,50 @@ public class LaunchInterceptorTEST {
         LaunchInterceptor.Parameters largeAreaParameters = new LaunchInterceptor.Parameters(1, 1, 0.1, 5, 0.5, 2.0, 0.05, 0.5, 3, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1);
         interceptor = new LaunchInterceptor(largeAreaParameters, 3, threePoints, minLCM, minPUV);
         Assert.assertFalse(null, interceptor.determineLIC3());
+    }
+
+    @Test
+    public void LIC09TestInvalidParameters() {
+        // Define the invalid parameters
+        double[][] points = {
+                {1.0, 2.0},  // Point A
+                {2.0, 3.0},  // Point B
+                {3.0, 1.0},  // Point C
+                {4.0, 4.0},  // Point D
+                {5.0, 0.0},  // Point E
+                {6.0, 5.0},  // Point F
+                {7.0, 3.0},  // Point G
+                {8.0, 2.5},  // Point H
+                {9.0, 1.5},  // Point I
+                {10.0, 4.0}  // Point J
+        };
+
+        int numPointsValid = 10;
+
+        LaunchInterceptor.Parameters invalidParCPTS =
+                new LaunchInterceptor.Parameters(1.0, 1.0, 0.1, 0.1, 0.5, 2.0, 0.05, 0.5,
+                        3, 2, 1, 1, 1, 0, 0, 1, 1, 1,1);
+        // Test with invalid C_PTS
+        LaunchInterceptor interceptorInvalidCPTS = new LaunchInterceptor(invalidParCPTS, numPointsValid, points, minLCM, minPUV);
+        Assert.assertFalse(interceptorInvalidCPTS.determineLIC9());
+
+        // Define invalid D_PTS
+        LaunchInterceptor.Parameters invalidParDPTS =
+                new LaunchInterceptor.Parameters(1.0, 1.0, 0.1, 0.1, 0.5, 2.0, 0.05, 0.5,
+                        3, 2, 1, 1, 1, 1, 0, 1, 1, 1,1);
+
+        // Test with invalid D_PTS
+        LaunchInterceptor interceptorInvalidDPTS = new LaunchInterceptor(invalidParDPTS, numPointsValid, points, minLCM, minPUV);
+        Assert.assertFalse(interceptorInvalidDPTS.determineLIC9());
+
+        // Define parameters with invalid C_PTS and D_PTS combined
+        LaunchInterceptor.Parameters invalidParCPTSDPTS =
+                new LaunchInterceptor.Parameters(1.0, 1.0, 0.1, 0.1, 0.5, 2.0, 0.05, 0.5,
+                        3, 2, 1, 1, 1, 10, 10, 1, 1, 1,1); // C_PTS + D_PTS too large
+
+        // Test with invalid combined parameters
+        LaunchInterceptor interceptorInvalidCPTSDPTS = new LaunchInterceptor(invalidParCPTSDPTS, numPointsValid, points, minLCM, minPUV);
+        Assert.assertFalse(interceptorInvalidCPTSDPTS.determineLIC9());
     }
 
 }
