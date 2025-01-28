@@ -1,12 +1,12 @@
 import org.junit.*;
 
 public class LaunchInterceptorTEST {
-    
+
     // Variables for minimum test input
     private int minNumPoints = 2;
     private double[][] minPoints = {{0, 0}, {1, 1}};
 
-    private LaunchInterceptor.Parameters minParameters = new LaunchInterceptor.Parameters(1.0, 1.0, 0.1, 0.1, 0.5, 2.0, 0.05, 0.5, 3, 2, 1, 1, 1, 1, 1, 1, 1, 1,1);
+    private LaunchInterceptor.Parameters minParameters = new LaunchInterceptor.Parameters(1.0, 1.0, 0.1, 0.1, 0.5, 2.0, 0.05, 0.5, 3, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1);
 
     private LaunchInterceptor.Connectors[][] minLCM = new LaunchInterceptor.Connectors[15][15];
     private boolean[] minPUV = {true, false, true, false, true, false, true, false, true, false, true, false, true, false, true};
@@ -51,8 +51,9 @@ public class LaunchInterceptorTEST {
         );
 
         Assert.assertEquals(minNumPoints, interceptor.getX().length);
-        Assert.assertEquals(minNumPoints, interceptor.getY().length);  
+        Assert.assertEquals(minNumPoints, interceptor.getY().length);
     }
+
     @Test
     public void testLIC0FartherThanL1() {
         var param = new LaunchInterceptor.Parameters(5, 0, 0, 0, 0,
@@ -91,7 +92,7 @@ public class LaunchInterceptorTEST {
         var lInterceptor = new LaunchInterceptor(param, 1, new double[][]{{0, 0}}, minLCM, minPUV);
         Assert.assertFalse(lInterceptor.determineLIC0());
     }
-    
+
     @Test
     public void testLIC1LargerThanL1() {
         var param = new LaunchInterceptor.Parameters(0, 5, 0, 0, 0,
@@ -159,6 +160,7 @@ public class LaunchInterceptorTEST {
         var lInterceptor = new LaunchInterceptor(param, 2, new double[][]{{0, 0}, {1, 1}}, minLCM, minPUV);
         Assert.assertFalse(lInterceptor.determineLIC2());
     }
+
     @Test
     public void LIC3Test() {
         /*
@@ -168,7 +170,7 @@ public class LaunchInterceptorTEST {
          * (3) Valid points with valid AREA1 --> true (triangle area greater than AREA1)
          * (4) Valid points with valid AREA1 --> false (triangle area less than AREA1)
          */
-    
+
         double[][] twoPoints = {{0, 0}, {1, 1}};
         LaunchInterceptor interceptor = new LaunchInterceptor(minParameters, 2, twoPoints, minLCM, minPUV);
         Assert.assertFalse(null, interceptor.determineLIC3());
@@ -180,7 +182,7 @@ public class LaunchInterceptorTEST {
 
         interceptor = new LaunchInterceptor(minParameters, 3, threePoints, minLCM, minPUV);
         Assert.assertTrue(null, interceptor.determineLIC3());
-        
+
         LaunchInterceptor.Parameters largeAreaParameters = new LaunchInterceptor.Parameters(1, 1, 0.1, 5, 0.5, 2.0, 0.05, 0.5, 3, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1);
         interceptor = new LaunchInterceptor(largeAreaParameters, 3, threePoints, minLCM, minPUV);
         Assert.assertFalse(null, interceptor.determineLIC3());
@@ -207,7 +209,7 @@ public class LaunchInterceptorTEST {
 
         LaunchInterceptor.Parameters invalidParCPTS =
                 new LaunchInterceptor.Parameters(1.0, 1.0, 0.1, 0.1, 0.5, 2.0, 0.05, 0.5,
-                        3, 2, 1, 1, 1, 0, 0, 1, 1, 1,1);
+                        3, 2, 1, 1, 1, 0, 0, 1, 1, 1, 1);
         // Test with invalid C_PTS
         LaunchInterceptor interceptorInvalidCPTS = new LaunchInterceptor(invalidParCPTS, numPointsValid, points, minLCM, minPUV);
         Assert.assertFalse(interceptorInvalidCPTS.determineLIC9());
@@ -215,7 +217,7 @@ public class LaunchInterceptorTEST {
         // Define invalid D_PTS
         LaunchInterceptor.Parameters invalidParDPTS =
                 new LaunchInterceptor.Parameters(1.0, 1.0, 0.1, 0.1, 0.5, 2.0, 0.05, 0.5,
-                        3, 2, 1, 1, 1, 1, 0, 1, 1, 1,1);
+                        3, 2, 1, 1, 1, 1, 0, 1, 1, 1, 1);
 
         // Test with invalid D_PTS
         LaunchInterceptor interceptorInvalidDPTS = new LaunchInterceptor(invalidParDPTS, numPointsValid, points, minLCM, minPUV);
@@ -224,7 +226,7 @@ public class LaunchInterceptorTEST {
         // Define parameters with invalid C_PTS and D_PTS combined
         LaunchInterceptor.Parameters invalidParCPTSDPTS =
                 new LaunchInterceptor.Parameters(1.0, 1.0, 0.1, 0.1, 0.5, 2.0, 0.05, 0.5,
-                        3, 2, 1, 1, 1, 10, 10, 1, 1, 1,1); // C_PTS + D_PTS too large
+                        3, 2, 1, 1, 1, 10, 10, 1, 1, 1, 1); // C_PTS + D_PTS too large
 
         // Test with invalid combined parameters
         LaunchInterceptor interceptorInvalidCPTSDPTS = new LaunchInterceptor(invalidParCPTSDPTS, numPointsValid, points, minLCM, minPUV);
@@ -254,7 +256,7 @@ public class LaunchInterceptorTEST {
         // Create the interceptor
         LaunchInterceptor interceptorAngle = new LaunchInterceptor(parameters, 10, points, minLCM, minPUV);
         // Check for 45 degrees
-        double expectedAngle45 = Math.PI/4; // 0 degrees
+        double expectedAngle45 = Math.PI / 4; // 0 degrees
         double actualAngle45 = interceptorAngle.computeAngle(0, 1, 2);
         Assert.assertEquals(expectedAngle45, actualAngle45, 1e-6);
 
@@ -344,7 +346,7 @@ public class LaunchInterceptorTEST {
         interceptor = new LaunchInterceptor(validParams, 3, threeClusteredPoints, minLCM, minPUV);
         Assert.assertFalse(null, interceptor.determineLIC4());
     }
-    
+
     @Test
     public void LIC5Test() {
         /*
@@ -429,6 +431,7 @@ public class LaunchInterceptorTEST {
         var lInterceptor = new LaunchInterceptor(param, 1, new double[][]{{0, 0}}, minLCM, minPUV);
         Assert.assertFalse(lInterceptor.determineLIC14());
     }
+
     @Test
     public void testLIC12ValidInput() {
         var param = new LaunchInterceptor.Parameters(2, 0, 0, 0, 10,
@@ -486,7 +489,7 @@ public class LaunchInterceptorTEST {
     }
 
     @Test
-    public void testLIC10InvalidParameters(){
+    public void testLIC10InvalidParameters() {
         // Define the invalid parameters
         double[][] points = {
                 {1.0, 2.0},  // Point A
@@ -505,7 +508,7 @@ public class LaunchInterceptorTEST {
 
         LaunchInterceptor.Parameters invalidParEPTS =
                 new LaunchInterceptor.Parameters(1.0, 1.0, 0.1, 0.1, 0.5, 2.0, 0.05, 0.5,
-                        3, 2, 1, 1, 1, 0, 1, 1, 0, 1,1);
+                        3, 2, 1, 1, 1, 0, 1, 1, 0, 1, 1);
         // Test with invalid E_PTS
         LaunchInterceptor interceptorInvalidCPTS = new LaunchInterceptor(invalidParEPTS, numPointsValid, points, minLCM, minPUV);
         Assert.assertFalse(interceptorInvalidCPTS.determineLIC10());
@@ -513,7 +516,7 @@ public class LaunchInterceptorTEST {
         // Define invalid F_PTS
         LaunchInterceptor.Parameters invalidParFPTS =
                 new LaunchInterceptor.Parameters(1.0, 1.0, 0.1, 0.1, 0.5, 2.0, 0.05, 0.5,
-                        3, 2, 1, 1, 1, 1, 0, 1, 1, 0,1);
+                        3, 2, 1, 1, 1, 1, 0, 1, 1, 0, 1);
 
         // Test with invalid D_PTS
         LaunchInterceptor interceptorInvalidDPTS = new LaunchInterceptor(invalidParFPTS, numPointsValid, points, minLCM, minPUV);
@@ -522,7 +525,7 @@ public class LaunchInterceptorTEST {
         // Define parameters with invalid C_PTS and D_PTS combined
         LaunchInterceptor.Parameters invalidParEPTSFPTS =
                 new LaunchInterceptor.Parameters(1.0, 1.0, 0.1, 0.1, 0.5, 2.0, 0.05, 0.5,
-                        3, 2, 1, 1, 1, 1, 1, 10, 10, 1,1); // C_PTS + D_PTS too large
+                        3, 2, 1, 1, 1, 1, 1, 10, 10, 1, 1); // C_PTS + D_PTS too large
 
         // Test with invalid combined parameters
         LaunchInterceptor interceptorInvalidCPTSDPTS = new LaunchInterceptor(invalidParEPTSFPTS, numPointsValid, points, minLCM, minPUV);
@@ -530,7 +533,7 @@ public class LaunchInterceptorTEST {
     }
 
     @Test
-    public void testLIC10computeTriangleArea(){
+    public void testLIC10computeTriangleArea() {
         // Define the points, including cases for 0 degrees (undefined) and negative coordinates
         double[][] points = {
                 {1.0, 1.0},    // Point 0
@@ -551,17 +554,17 @@ public class LaunchInterceptorTEST {
         // Create the interceptor
         LaunchInterceptor interceptorArea = new LaunchInterceptor(parameters, 10, points, minLCM, minPUV);
         // Check area for valid points
-        Assert.assertEquals(interceptorArea.computeTriangleArea(0,1,2),0.5,1e-6);
+        Assert.assertEquals(interceptorArea.computeTriangleArea(0, 1, 2), 0.5, 1e-6);
         //Check area for valid points (complex points)
-        Assert.assertEquals(interceptorArea.computeTriangleArea(7,8,9),17.5,1e-6);
+        Assert.assertEquals(interceptorArea.computeTriangleArea(7, 8, 9), 17.5, 1e-6);
         //Check area for a line (should return 0)
-        Assert.assertEquals(interceptorArea.computeTriangleArea(5,1,2), 0.0, 1e-6);
+        Assert.assertEquals(interceptorArea.computeTriangleArea(5, 1, 2), 0.0, 1e-6);
         //Check area for duplicate points
-        Assert.assertEquals(interceptorArea.computeTriangleArea(1,1,0),0.0, 1e-6);
+        Assert.assertEquals(interceptorArea.computeTriangleArea(1, 1, 0), 0.0, 1e-6);
     }
 
     @Test
-    public void testLIC10General(){
+    public void testLIC10General() {
         // Define the invalid parameters
         double[][] points = {
                 {1.0, 2.0},  // Point A
@@ -580,14 +583,14 @@ public class LaunchInterceptorTEST {
         //Check for true case (points found with area larger than AREA1)
         LaunchInterceptor.Parameters area1TruePar =
                 new LaunchInterceptor.Parameters(1.0, 1.0, 0.1, 0.1, 0.5, 2.0, 0.05, 0.5,
-                        3, 2, 1, 1, 1, 0, 1, 1, 1, 1,1);
+                        3, 2, 1, 1, 1, 0, 1, 1, 1, 1, 1);
         LaunchInterceptor interceptorTrue = new LaunchInterceptor(area1TruePar, points.length, points, minLCM, minPUV);
         Assert.assertTrue(interceptorTrue.determineLIC10());
 
         //Check for false case (NO points found with area larger than AREA1)
         LaunchInterceptor.Parameters area1FalsePar =
                 new LaunchInterceptor.Parameters(1.0, 1.0, 0.1, 10, 0.5, 2.0, 0.05, 0.5,
-                        3, 2, 1, 1, 1, 0, 1, 1, 1, 1,1);
+                        3, 2, 1, 1, 1, 0, 1, 1, 1, 1, 1);
         LaunchInterceptor interceptorFalse = new LaunchInterceptor(area1TruePar, points.length, points, minLCM, minPUV);
         Assert.assertTrue(interceptorFalse.determineLIC10());
     }
