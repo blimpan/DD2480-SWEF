@@ -87,7 +87,7 @@ public class LaunchInterceptor {
      */
     public record Parameters(double LENGTH1, double RADIUS1, double EPSILON, double AREA1,
                                     double LENGTH2, double RADIUS2, double AREA2, double DIST,
-                                    int Q_PTS, int QUADS, int K_PTS, int A_PTS, int B_PTS,
+                                    int Q_PTS, int QUADS, int N_PTS, int K_PTS, int A_PTS, int B_PTS,
                                     int C_PTS, int D_PTS, int E_PTS, int F_PTS, int G_PTS){}
 
     /**
@@ -96,7 +96,7 @@ public class LaunchInterceptor {
      * @return the launch decision (boolean)
      */
     public boolean decide(){
-        //TODO call each LIC and populate the PUM, CMV, FUV as well as encode launch decision in STDOUT
+        
         this.processed = true;
         throw new Error("Decide function is not implemented yet");
     }
@@ -313,7 +313,7 @@ public boolean determineLIC2() {
 
         double a, b, c; //parameters for straight line equation between first and last point
         double distance;
-        double k = 0;
+        int k = 0;
 
         for (int i = 0; i < numPoints && k < numPoints; i++) {
             k = i + parameters.N_PTS - 1;
@@ -326,9 +326,9 @@ public boolean determineLIC2() {
                         return true;
                     }
                 } else {
-                    a = (y[k]-y[i])/(x[k]-x[i]);
-                    b = (x[i]-x[k])/(x[k]-x[i]);
-                    c = (y[i]*x[k] - y[k]*x[i])/(x[k]-x[i]);
+                    a = y[k]-y[i];
+                    b = x[i]-x[k];
+                    c = a*x[i] + b*y[i];
 
                     distance = pointLineDistance(a,b,c,x[j],y[j]);
                     if (distance > parameters.DIST){
