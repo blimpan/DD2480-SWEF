@@ -685,32 +685,34 @@ public boolean determineLIC2() {
     }
 
     /**
-    * Determines wherter three points would be contained within a circle with the radius RADIUS1
+    * Determines wherter three points would be contained within a circle of a specified radius
+    *
+    * mode == 0 @return true if all points can be contained within circle 
+    * mode == 1 @return true if no circle of that radius can contain all three points
     *
     * first coordinate = (x[i-2], y[i-2])
     * second coordinate = (x[i-1], y[i-1])
     * third coordinate = (x[i], y[i])
     *
     * This function calculates this by taking two of three points and calculating where a circle that intersects both points
-    * with radius RADIUS1 would have it's center point and checking if both possible center points are further away than RADIUS1
-    * from the third point. If none of the three pairs contain all three points
-    @return true
+    * with radius RADIUS1 would have it's center point and checking if the third point is within the specified radius.
+    * Depending on mode it returns true or false for including or excluding all points.
     */
-    private boolean notContainedInCircle(double x1, double y1, double x2, double y2, double x3, double y3) {
+    public boolean containedInCircle(double x1, double y1, double x2, double y2, double x3, double y3, double radius, int mode) {
         double[] pointsX = {x1, x2, x3, x1, x2};
         double[] pointsY = {y1, y2, y3, y1, y2};
-
-        for (int i = 1; i < 3; i++) {
+        int numContained = 0;
+        for (int i = 1; i < 4; i++) {
             double distance = pointsDistance(pointsX[i - 1], pointsY[i - 1], pointsX[i], pointsY[i]);
 
             if (distance == 0) {
                 // Less than diameter away when two points are on top of each other
-                if (pointsDistance(pointsX[i], pointsY[i], pointsX[i + 1], pointsY[i + 1])<parameters.RADIUS1*2){
-                    return false;
+                if (pointsDistance(pointsX[i], pointsY[i], pointsX[i + 1], pointsY[i + 1])<radius*2){
+                    numContained++;
                 }
                 continue; // Avoid division by zero
             }
-            double height = Math.sqrt(parameters.RADIUS1 * parameters.RADIUS1 - distance * distance / 4);
+            double height = Math.sqrt(radius * radius - distance * distance / 4);
 
             double midX = (pointsX[i] + pointsX[i - 1]) / 2;
             double midY = (pointsY[i] + pointsY[i - 1]) / 2;
@@ -724,12 +726,18 @@ public boolean determineLIC2() {
             double xPos2 = midX - height * deltaX;
             double yPos2 = midY + height * deltaY;
 
-            if (pointsDistance(pointsX[i + 1], pointsY[i + 1], xPos1, yPos1) < parameters.RADIUS1 ||
-                pointsDistance(pointsX[i + 1], pointsY[i + 1], xPos2, yPos2) < parameters.RADIUS1) {
-                return false;
+            if (pointsDistance(pointsX[i + 1], pointsY[i + 1], xPos1, yPos1) < radius ||
+                pointsDistance(pointsX[i + 1], pointsY[i + 1], xPos2, yPos2) < radius) {
+                    numContained++;
             }
         }
-        return true;
+        if (mode == 0){
+            if (numContained != 0){return true;}
+        }
+        else if (mode == 1){
+            if (numContained == 0){return true;}
+        }
+        return false; 
     }
 
 }
