@@ -156,6 +156,37 @@ public class LaunchInterceptor {
         return false; //no such points
     }
 
+    /**
+     *
+     * @return true or false
+     */
+    public boolean determineLIC13() {
+        if (parameters.RADIUS2 < 0)
+            throw new IllegalArgumentException("Radius2 must be greater than 0");
+
+        //Condition is not met when numPoints < 5
+        if (numPoints < 5) {
+            return false;
+        }
+
+        boolean matchFound = false;
+        for (int i = 0; ! matchFound && i < numPoints + parameters.E_PTS + parameters.F_PTS + 2; i++) {
+            var area = areaTriangle(i);
+            if (area > parameters.AREA1)
+                matchFound = true;
+        }
+
+        if (!matchFound)
+            return false;
+
+        for (int i = 0; i < numPoints + parameters.E_PTS + parameters.F_PTS + 2; i++) {
+            var area = areaTriangle(i);
+            if (area < parameters.AREA2)
+                return true;
+        }
+        return false;
+    }
+
     //==========GETTER METHODS==========
     public Parameters getParameters() {
         return parameters;
@@ -232,4 +263,18 @@ public class LaunchInterceptor {
         return distance;
     }
 
+    /**
+     * Calculates the area of the triangle described by the points at indexes i, i + parameters.E_PTS + 1
+     * and i + parameters.E_PTS + parameters.F_PTS + 2 with the following formula
+     * Area of triangle = (1/2) |x1(y2 − y3) + x2(y3 − y1) + x3(y1 − y2)|
+     * @param i the index from which to start considering points
+     * @return the area of the triangle
+     */
+    private double areaTriangle(int i) {
+        return  0.5 * Math.abs(
+                x[i] * (y[i + parameters.E_PTS + 1] - y[i + parameters.E_PTS + parameters.F_PTS + 2])
+                        + x[i + parameters.E_PTS + 1] * (y[i + parameters.E_PTS + parameters.F_PTS + 2] - y[i])
+                        + x[i + parameters.E_PTS + parameters.F_PTS + 2] * (y[i] - y[i + parameters.E_PTS + 1])
+        );
+    }
 }
