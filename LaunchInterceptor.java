@@ -96,7 +96,7 @@ public class LaunchInterceptor {
      * @return the launch decision (boolean)
      */
     public boolean decide(){
-        //TODO call each LIC and populate the PUM, CMV, FUV as well as encode launch decision in STDOUT
+
         this.processed = true;
         throw new Error("Decide function is not implemented yet");
     }
@@ -105,18 +105,18 @@ public class LaunchInterceptor {
     //==========LIC RELATED METHODS==========
 
     /**
-     * Determines whether or not there exists at least one set of two consecutive data points that are 
+     * Determines whether or not there exists at least one set of two consecutive data points that are
      * less than LENGTH1 apart
      * @return true or false
      */
     public boolean determineLIC0() {
 
         if (numPoints < 2) {
-            return false; // Not enough points 
+            return false; // Not enough points
         }
 
         for (int i = 1; i < numPoints; i++) {
-            
+
             // first coordinate = (x[i-1], y[i-1])
             // second coordinate = (x[i], y[i])
             double distance = pointsDistance(x[i-1], y[i-1],x[i], y[i]);
@@ -130,7 +130,7 @@ public class LaunchInterceptor {
 
 
     /**
-     * Determines whether or not there exists at least one set of three consecutive data points that can not 
+     * Determines whether or not there exists at least one set of three consecutive data points that can not
      * be contained in a circle of radius RADIUS1
      * @return true or false
      */
@@ -145,18 +145,18 @@ public class LaunchInterceptor {
             // second coordinate = (x[i-1], y[i-1])
             // third coordinate = (x[i], y[i])
             double a = pointsDistance(x[i-2],y[i-2],x[i-1],y[i-1]);
-            double b = pointsDistance(x[i-1],y[i-1],x[i],y[i]); 
+            double b = pointsDistance(x[i-1],y[i-1],x[i],y[i]);
             double c = pointsDistance(x[i-2],y[i-2],x[i],y[i]);
 
-            //Caluclating the area using Heron's formula 
+            //Caluclating the area using Heron's formula
             double semiPerimeter = (a+b+c)/2;
             double area = Math.sqrt(semiPerimeter * (semiPerimeter-a)*(semiPerimeter-b)*(semiPerimeter-c));
-            
+
             if (area == 0) {
                 //break;
             }
 
-            //Calculating the circumradius for a triangle  
+            //Calculating the circumradius for a triangle
             double circumRadius = (a*b*c)/(4*a);
             if (circumRadius > parameters.RADIUS1) {
                 return true;
@@ -168,7 +168,7 @@ public class LaunchInterceptor {
 
 
 /**
- * Determines whether or not there exists at least one set of three consecutive data points 
+ * Determines whether or not there exists at least one set of three consecutive data points
  * that form an angle < (PI − EPSILON) or angle > (PI + EPSILON).
  * @return true if such a set exists, false otherwise.
  */
@@ -302,10 +302,10 @@ public boolean determineLIC2() {
         return false; // If program reaches this point, no such triangle exists
     }
 
-    /* LIC 6 : 
+    /* LIC 6 :
     - There exists at least one set of N PTS consecutive data points s.t. at least one
     of these lies at a calculated distance > DIST from the line joining the first and last point.
-    - If first and last points are identical, calculated distance = distance from coincident point to all other 
+    - If first and last points are identical, calculated distance = distance from coincident point to all other
     consecutive points. */
     public Boolean determineLIC6() {
 
@@ -329,14 +329,14 @@ public boolean determineLIC2() {
                         return true;
                     }
                 } else {
-                    a = (y[k]-y[i])/(x[k]-x[i]);
-                    b = (x[i]-x[k])/(x[k]-x[i]);
-                    c = (y[i]*x[k] - y[k]*x[i])/(x[k]-x[i]);
+                    a = y[k]-y[i];
+                    b = x[i]-x[k];
+                    c = a*x[i] + b*y[i];
 
                     distance = pointLineDistance(a,b,c,x[j],y[j]);
                     if (distance > parameters.DIST){
                         return true;
-                    } 
+                    }
                 }
             }
         }
@@ -511,6 +511,37 @@ public boolean determineLIC2() {
         return matchFound;
     }
 
+    /**
+     *
+     * @return true or false
+     */
+    public boolean determineLIC14() {
+        if (parameters.AREA2 < 0)
+            throw new IllegalArgumentException("Area2 must be greater than 0");
+
+        //Condition is not met when numPoints < 5
+        if (numPoints < 5) {
+            return false;
+        }
+
+        boolean matchFound = false;
+        for (int i = 0; ! matchFound && i + parameters.E_PTS + parameters.F_PTS + 2 < numPoints; i++) {
+            var area = computeTriangleArea(i, i + parameters.E_PTS + 1, i + parameters.E_PTS + parameters.F_PTS + 1);
+            if (area > parameters.AREA1)
+                matchFound = true;
+        }
+
+        if (!matchFound)
+            return false;
+
+        for (int i = 0; i + parameters.E_PTS + parameters.F_PTS + 2 < numPoints; i++) {
+            var area = computeTriangleArea(i, i + parameters.E_PTS + 1, i + parameters.E_PTS + parameters.F_PTS + 1);
+            if (area < parameters.AREA2)
+                return true;
+        }
+        return false;
+    }
+
     //==========GETTER METHODS==========
     public Parameters getParameters() {
         return parameters;
@@ -652,6 +683,4 @@ public boolean determineLIC2() {
         return  0.5 * Math.abs(x_a*y_b + x_b* y_c + x_c* y_a
                 - x_b*y_a - x_c* y_b - x_a* y_c);
     }
-
-
 }
