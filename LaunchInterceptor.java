@@ -231,6 +231,31 @@ public class LaunchInterceptor {
         return found;
     }
 
+    /** 
+     * Determines if there exists a set of two data points (X[i], Y[i]) and (X[j], Y[j]) such that:
+     * 1. There are G PTS in between the two points (A, B).
+     * 2. The condition X[j] - X[i] < 0 holds true (where i < j).
+     * 3. The condition is not met when NUMPOINTS < 3.
+     * 4. G PTS >= 1.
+     * 5. G PTS ≤ NUMPOINTS - 2 (to ensure sufficient data points).
+     * 
+     * @return true if at least one valid set of points exists, false otherwise.
+     */
+    public boolean determineLIC11(){
+        int G_PTS = parameters.G_PTS;
+        boolean found = false; //set to true when a set of points are found to meet all requirements
+        //Check requirements 3-5
+        if(numPoints<3 || G_PTS<1 || G_PTS>numPoints-2) return false;
+        //loop through all data points for A
+        for (int aIndex=0; aIndex<numPoints; ++aIndex){
+            if (aIndex+G_PTS>=numPoints)break; //if B is out of boundary, then the next A will also result in out boundary B
+            int bIndex = aIndex+G_PTS+1; // reaching here indicates B is in boundary
+            //A, B  are all set
+            //Check conditions 2
+            if (x[bIndex]-x[aIndex]<0){found = true; break;}
+        }
+        return found;
+    }
 
 
     //==========GETTER METHODS==========
