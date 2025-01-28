@@ -156,6 +156,45 @@ public class LaunchInterceptor {
         return false; //no such points
     }
 
+    /** 
+     * Determines if there exists a set of 3 points (A,B,C) which meets the following conditions:
+     * 1. there are C PTS in bewteen A and B
+     * 2. there are D PTS in between B and C
+     * 3. the angle is defined
+     * 4. angle < (PI−EPSILON) or angle > (PI+EPSILON)
+     * 5. NUMPOINTS >= 5 
+     * 6. C PTS >= 1
+     * 7. D PTS >= 1
+     * 8. C PTS+D PTS ≤ NUMPOINTS−3 (to ensure the size of data is enough)
+     * @return true or flase
+     */
+    public boolean determineLIC9(){
+        // Check the requirments 5-8 for the parameters
+        int C_PTS = parameters.C_PTS;
+        int D_PTS = parameters.D_PTS;
+        boolean found = false; // set to true when a set of points are found to meet all requirements
+        if(C_PTS <1 || D_PTS<1 || numPoints<5 || C_PTS + D_PTS>numPoints-3 ) return false;
+        // Parameters passed requirements, proceed to finding data points
+        // Start from first data point to be A
+        for (int aIndex=0; aIndex<numPoints; ++aIndex){
+            if (aIndex+C_PTS>numPoints)break; //if B is already out of boundary then so is C, therefore quit the loop
+            int bIndex = aIndex+C_PTS; // reaching here indicates B is in boundary
+            if (bIndex+D_PTS>numPoints)break;  //if C is out of boundary, then for the next A, the C also will be out of boundary
+            int cIndex = bIndex+D_PTS;// reaching here indicates C is in boundary
+            //A, B and C are all set
+            //Compute the angle using the helper function (implemented in Helper Function Section)
+            double angle = computeAngle(aIndex, bIndex, cIndex);
+            //Check conditions 3-4
+            if(doubleCompare(angle, 0.0) ==CompType.EQ) continue; //if angle is undefined, continue to next set of points
+            if(doubleCompare(angle, PI-parameters.EPSILON) == CompType.LT ||
+                doubleCompare(angle, PI+parameters.EPSILON) == CompType.GT){
+                    found = true; //met conditions 3-4, found the set
+                    break; //stop exploring
+                }
+        }
+        return found;
+    }
+
     //==========GETTER METHODS==========
     public Parameters getParameters() {
         return parameters;
@@ -230,6 +269,42 @@ public class LaunchInterceptor {
     private static double pointsDistance(double x1, double y1, double x2, double y2){
         double distance = Math.sqrt(Math.pow((x2-x1),2) + Math.pow((y2-y1),2));
         return distance;
+    }
+
+ /**
+ * Calculates the angle given the indexes of three points.
+ * 
+ * Input: 
+ * - int aIndex: the index of the first point (Point A)
+ * - int bIndex: the index of the second point (Point B), which is always the vertex of the angle
+ * - int cIndex: the index of the third point (Point C)
+ * 
+ * This function determines the angle formed by the three points, with the vertex at Point B.
+ * It uses the coordinates of the points identified by the provided indexes to compute the angle 
+ * between the lines connecting Point A to Point B and Point B to Point C.
+ * 
+ * The function returns the angle in radians
+ */
+    private double computeAngle(int aIndex, int bIndex, int cIndex){
+        // get x, y coordinates of each point
+        double x_a = x[aIndex];double y_a = y[aIndex];
+        double x_b = x[bIndex];double y_b = y[bIndex];
+        double x_c = x[cIndex];double y_c = y[cIndex];
+        // Compute vector BA and BC 
+        //BA = OA - OB
+        double[] vecBA = {x_a-x_b, y_a-y_b};
+        //BC = OC - OB
+        double[] vecBC = {x_c-x_b, y_c-y_b};
+        //dot product of BA and BC
+        double dot = vecBA[0] * vecBC[0] + vecBA[1] * vecBC[1];
+        //Magnitude of BA and BC
+        double magBA = Math.sqrt(vecBA[0]* vecBA[0] +vecBA[1] * vecBA[1]);// |BA| = sqrt(x^2 + y^2)
+        double magBC = Math.sqrt(vecBC[0]* vecBC[0] +vecBC[1] * vecBC[1]);
+        //Compute cosTheta
+        double cosTheta = dot/(magBA*magBC);
+        //theta = arccos(cosTheta)
+        return Math.acos(cosTheta);
+
     }
 
 }
