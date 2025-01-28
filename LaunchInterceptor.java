@@ -1,4 +1,7 @@
+import java.util.HashSet;
+import java.util.Set;
 import java.util.Arrays;
+
 
 public class LaunchInterceptor {
 
@@ -98,7 +101,119 @@ public class LaunchInterceptor {
         throw new Error("Decide function is not implemented yet");
     }
 
+
     //==========LIC RELATED METHODS==========
+
+    /**
+     * Determines whether or not there exists at least one set of two consecutive data points that are
+     * less than LENGTH1 apart
+     * @return true or false
+     */
+    public boolean determineLIC0() {
+
+        if (numPoints < 2) {
+            return false; // Not enough points
+        }
+
+        for (int i = 1; i < numPoints; i++) {
+
+            // first coordinate = (x[i-1], y[i-1])
+            // second coordinate = (x[i], y[i])
+            double distance = pointsDistance(x[i-1], y[i-1],x[i], y[i]);
+            if (distance > parameters.AREA1) {
+                return true;
+            }
+        }
+
+        return false; // No such points exists
+    }
+
+
+    /**
+     * Determines whether or not there exists at least one set of three consecutive data points that can not
+     * be contained in a circle of radius RADIUS1
+     * @return true or false
+     */
+    public boolean determineLIC1() {
+
+        if (numPoints < 3) {
+            return false; // Not enough points to test
+        }
+
+        for (int i = 2; i < numPoints; i++) {
+            // first coordinate = (x[i-2], y[i-2])
+            // second coordinate = (x[i-1], y[i-1])
+            // third coordinate = (x[i], y[i])
+            double a = pointsDistance(x[i-2],y[i-2],x[i-1],y[i-1]);
+            double b = pointsDistance(x[i-1],y[i-1],x[i],y[i]);
+            double c = pointsDistance(x[i-2],y[i-2],x[i],y[i]);
+
+            //Caluclating the area using Heron's formula
+            double semiPerimeter = (a+b+c)/2;
+            double area = Math.sqrt(semiPerimeter * (semiPerimeter-a)*(semiPerimeter-b)*(semiPerimeter-c));
+
+            if (area == 0) {
+                //break;
+            }
+
+            //Calculating the circumradius for a triangle
+            double circumRadius = (a*b*c)/(4*a);
+            if (circumRadius > parameters.RADIUS1) {
+                return true;
+            }
+        }
+
+        return false; // No consecutive points do not fulfuill the criteria
+    }
+
+
+/**
+ * Determines whether or not there exists at least one set of three consecutive data points
+ * that form an angle < (PI − EPSILON) or angle > (PI + EPSILON).
+ * @return true if such a set exists, false otherwise.
+ */
+public boolean determineLIC2() {
+    if (numPoints < 3) {
+        return false; // Not enough points to form an angle
+    }
+
+    for (int i = 2; i < numPoints; i++) {
+        // First point: (x[i-2], y[i-2])
+        // Second point: (x[i-1], y[i-1])
+        // Third point: (x[i], y[i])
+
+        // Vector A (from second to first point): (x2 - x1, y2 - y1)
+        double vectorAx = x[i-1] - x[i-2];
+        double vectorAy = y[i-1] - y[i-2];
+
+        // Vector B (from second to third point): (x3 - x2, y3 - y2)
+        double vectorBx = x[i] - x[i-1];
+        double vectorBy = y[i] - y[i-1];
+
+        // Dot product of A and B
+        double dotProduct = vectorAx * vectorBx + vectorAy * vectorBy;
+
+        // Magnitudes of A and B
+        double magnitudeA = Math.sqrt(vectorAx * vectorAx + vectorAy * vectorAy);
+        double magnitudeB = Math.sqrt(vectorBx * vectorBx + vectorBy * vectorBy);
+
+        // Handle edge cases: If either magnitude is zero, skip this triplet
+        if (magnitudeA == 0 || magnitudeB == 0) {
+            continue;
+        }
+
+        // Calculate the angle in radians
+        double angle = Math.acos(dotProduct / (magnitudeA * magnitudeB));
+
+        // Check if the angle is < (PI - EPSILON) or > (PI + EPSILON)
+        if (angle < Math.PI - parameters.EPSILON || angle > Math.PI + parameters.EPSILON) {
+            return true;
+        }
+    }
+
+    return false; // No such angle found
+}
+
 
     /**
      * Determines whether or not there exists at least one set of three consecutive data points that are the vertices of a triangle
@@ -109,6 +224,9 @@ public class LaunchInterceptor {
 
         if (numPoints < 3) {
             return false; // Not enough points to form a triangle
+        }
+        if (parameters.AREA1 < 0) {
+            return false; // Invalid area
         }
 
         for (int i = 2; i < numPoints; i++) {
@@ -126,6 +244,106 @@ public class LaunchInterceptor {
     }
 
     /**
+     * Determines whether or not there exists at least one set of Q_PTS points that lie in more than QUADS different quadrants.
+     * @return true or false
+     */
+    public Boolean determineLIC4() {
+        if (2 > parameters.Q_PTS || parameters.Q_PTS > numPoints) {
+            return false; // Invalid conditions
+        }
+        if (1 > parameters.QUADS || parameters.QUADS > 3) {
+            return false; // Invalid conditions
+        }
+
+        for (int i = 0; i <= numPoints - parameters.Q_PTS; i++) {
+            Set<Integer> quadrants = new HashSet<>();
+
+            for (int j = 0; j < parameters.Q_PTS; j++) {
+                double xPos = x[i + j];
+                double yPos = y[i + j];
+
+                // Determine the quadrant of the point
+                if (xPos >= 0 && yPos >= 0) {
+                    quadrants.add(1); // Quadrant I
+                } else if (xPos < 0 && yPos >= 0) {
+                    quadrants.add(2); // Quadrant II
+                } else if (xPos <= 0 && yPos < 0) {
+                    quadrants.add(3); // Quadrant III
+                } else if (xPos > 0 && yPos < 0) {
+                    quadrants.add(4); // Quadrant IV
+                }
+
+                // Break early if enough quadrants are found
+                if (quadrants.size() > parameters.QUADS) {
+                    return true;
+                }
+            }
+        }
+
+    return false; // No set meets the condition
+    }
+
+    /**
+     * Determines if there exists at least one set of two consecutive data points, (X[i], Y[i]) and (X[j], Y[j]),
+     * such that X[j] - X[i] < 0 where i=j-1.
+     * @return true or false
+     */
+    public boolean determineLIC5() {
+
+        if (this.numPoints < 2) {
+            return false; // Not enough points
+        }
+
+        for (int j = 1; j < numPoints; j++) {
+            if (x[j] - x[j - 1] < 0) {
+                return true;
+            }
+        }
+        return false; // If program reaches this point, no such triangle exists
+    }
+
+    /* LIC 6 :
+    - There exists at least one set of N PTS consecutive data points s.t. at least one
+    of these lies at a calculated distance > DIST from the line joining the first and last point.
+    - If first and last points are identical, calculated distance = distance from coincident point to all other
+    consecutive points. */
+    public Boolean determineLIC6() {
+
+        //Condition is not met when NUMPOINTS < 3
+        if(numPoints<3){
+            return false;
+        }
+
+        double a, b, c; //parameters for straight line equation between first and last point
+        double distance;
+        int k = 0;
+
+        for (int i = 0; i < numPoints && k < numPoints; i++) {
+            k = i + parameters.N_PTS - 1;
+            for (int j = i + 1; j < k; j++) {
+
+                //special case when first and last coordinate is the same
+                if (x[i] == x[k] && y[i] == y[k]) {
+                    distance = pointsDistance(x[i], y[i], x[j], y[j]);
+                    if (distance > parameters.DIST) {
+                        return true;
+                    }
+                } else {
+                    a = (y[k]-y[i])/(x[k]-x[i]);
+                    b = (x[i]-x[k])/(x[k]-x[i]);
+                    c = (y[i]*x[k] - y[k]*x[i])/(x[k]-x[i]);
+
+                    distance = pointLineDistance(a,b,c,x[j],y[j]);
+                    if (distance > parameters.DIST){
+                        return true;
+                    }
+                }
+            }
+        }
+        return false; //no such set of points found
+    }
+
+    /**
      * Determines if there exists at least one set of two data points 
      * separated by exactly K_PTS consecutive intervening points 
      * that are a distance greater than LENGTH1 apart
@@ -136,6 +354,7 @@ public class LaunchInterceptor {
         //Condition is not met when NUMPOINTS < 3
         if(numPoints<3){
             return false;
+
         }
 
         int k = 0;
@@ -193,7 +412,7 @@ public class LaunchInterceptor {
      * 2. there are D PTS in between B and C
      * 3. the angle is defined
      * 4. angle < (PI−EPSILON) or angle > (PI+EPSILON)
-     * 5. NUMPOINTS >= 5
+     * 5. NUMPOINTS >= 5 
      * 6. C PTS >= 1
      * 7. D PTS >= 1
      * 8. C PTS+D PTS ≤ NUMPOINTS−3 (to ensure the size of data is enough)
@@ -226,7 +445,7 @@ public class LaunchInterceptor {
         return found;
     }
 
-   /**
+   /** 
      * Determines if there exists a set of 3 points (A, B, C) such that:
      * 1. There are E PTS in between A and B.
      * 2. There are F PTS in between B and C.
@@ -235,7 +454,7 @@ public class LaunchInterceptor {
      * 5. E PTS >= 1.
      * 6. F PTS >= 1.
      * 7. E PTS + F PTS ≤ NUMPOINTS - 3 (to ensure sufficient data points).
-     *
+     * 
      * @return true if at least one valid set of points exists, false otherwise.
      */
     public boolean determineLIC10(){
@@ -262,14 +481,14 @@ public class LaunchInterceptor {
         return found;
     }
 
-    /**
+    /** 
      * Determines if there exists a set of two data points (X[i], Y[i]) and (X[j], Y[j]) such that:
      * 1. There are G PTS in between the two points (A, B).
      * 2. The condition X[j] - X[i] < 0 holds true (where i < j).
      * 3. The condition is not met when NUMPOINTS < 3.
      * 4. G PTS >= 1.
      * 5. G PTS ≤ NUMPOINTS - 2 (to ensure sufficient data points).
-     *
+     * 
      * @return true if at least one valid set of points exists, false otherwise.
      */
     public boolean determineLIC11(){
@@ -359,6 +578,12 @@ public class LaunchInterceptor {
         }
     }
 
+    //Calculates distance between a point and a line
+    public double pointLineDistance(double a, double b, double c, double x, double y){
+        double distance = Math.abs(a*x + b*y + c)/Math.sqrt(Math.pow(a,2) + Math.pow(b,2));
+        return distance;
+    }
+
     //Calculates distance between two points
     private static double pointsDistance(double x1, double y1, double x2, double y2){
         double distance = Math.sqrt(Math.pow((x2-x1),2) + Math.pow((y2-y1),2));
@@ -367,16 +592,16 @@ public class LaunchInterceptor {
 
     /**
      * Calculates the angle given the indexes of three points.
-     *
-     * Input:
+     * 
+     * Input: 
      * - int aIndex: the index of the first point (Point A)
      * - int bIndex: the index of the second point (Point B), which is always the vertex of the angle
      * - int cIndex: the index of the third point (Point C)
-     *
+     * 
      * This function determines the angle formed by the three points, with the vertex at Point B.
-     * It uses the coordinates of the points identified by the provided indexes to compute the angle
+     * It uses the coordinates of the points identified by the provided indexes to compute the angle 
      * between the lines connecting Point A to Point B and Point B to Point C.
-     *
+     * 
      * The function returns the angle in radians
      */
     private double computeAngle(int aIndex, int bIndex, int cIndex){
@@ -384,7 +609,7 @@ public class LaunchInterceptor {
         double x_a = x[aIndex];double y_a = y[aIndex];
         double x_b = x[bIndex];double y_b = y[bIndex];
         double x_c = x[cIndex];double y_c = y[cIndex];
-        // Compute vector BA and BC
+        // Compute vector BA and BC 
         //BA = OA - OB
         double[] vecBA = {x_a-x_b, y_a-y_b};
         //BC = OC - OB
@@ -421,8 +646,7 @@ public class LaunchInterceptor {
         double x_a = x[aIndex];double y_a = y[aIndex];
         double x_b = x[bIndex];double y_b = y[bIndex];
         double x_c = x[cIndex];double y_c = y[cIndex];
-        double area = 0.5 * (x_a*y_b + x_b* y_c + x_c* y_a
-                            - x_b*y_a - x_c* y_b - x_a* y_c);
-        return area;
+        return  0.5 * Math.abs(x_a*y_b + x_b* y_c + x_c* y_a
+                - x_b*y_a - x_c* y_b - x_a* y_c);
     }
 }
