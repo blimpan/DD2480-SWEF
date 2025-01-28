@@ -99,7 +99,7 @@ public class LaunchInterceptorTEST {
                 0, 0, 0, 0);
         var pointCoords = new double[][]{{0, 0}, {0, 1}, {2, 1}, {5, 1}, {10, 3}, {-1, 7}, {7, -1}, {0, 1}};
         var lInterceptor = new LaunchInterceptor(param, 8, pointCoords, minLCM, minPUV);
-        Assert.assertTrue(null, lInterceptor.determineLIC0());
+        Assert.assertTrue(null, lInterceptor.determineLIC1());
     }
 
     @Test
@@ -124,11 +124,40 @@ public class LaunchInterceptorTEST {
 
     @Test
     public void testLIC1InsufficientPoints() {
-        var param = new LaunchInterceptor.Parameters(2, 0, 0, 0, 0,
+        var param = new LaunchInterceptor.Parameters(0, 10, 0, 0, 0,
                 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
                 0, 0, 0, 0);
         var lInterceptor = new LaunchInterceptor(param, 2, new double[][]{{0, 0}, {1, 1}}, minLCM, minPUV);
         Assert.assertFalse(lInterceptor.determineLIC1());
+    }
+
+    @Test
+    public void testLIC2LargerThanL1() {
+        var param = new LaunchInterceptor.Parameters(0, 0, 1, 0, 0,
+                0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                0, 0, 0, 0);
+        var pointCoords = new double[][]{{0, 0}, {0, 1}, {2, 1}, {5, 1}, {10, 3}, {-1, 7}, {7, -1}, {0, 1}};
+        var lInterceptor = new LaunchInterceptor(param, 8, pointCoords, minLCM, minPUV);
+        Assert.assertTrue(null, lInterceptor.determineLIC2());
+    }
+
+    @Test
+    public void testLIC2SmallerThanL1() {
+        var param = new LaunchInterceptor.Parameters(0, 0, 3.1, 0, 0,
+                0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                0, 0, 0, 0);
+        var pointCoords = new double[][]{{0, 0}, {0, 1}, {2, 1}, {5, 1}, {10, 3}, {-1, 7}, {7, -1}, {0, 1}};
+        var lInterceptor = new LaunchInterceptor(param, 8, pointCoords, minLCM, minPUV);
+        Assert.assertTrue(null, lInterceptor.determineLIC2());
+    }
+
+    @Test
+    public void testLIC2InsufficientPoints() {
+        var param = new LaunchInterceptor.Parameters(0, 0, 1, 0, 0,
+                0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                0, 0, 0, 0);
+        var lInterceptor = new LaunchInterceptor(param, 2, new double[][]{{0, 0}, {1, 1}}, minLCM, minPUV);
+        Assert.assertFalse(lInterceptor.determineLIC2());
     }
     @Test
     public void LIC3Test() {
