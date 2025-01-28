@@ -680,7 +680,7 @@ public class LaunchInterceptor {
     public Boolean[][] getPUM() {
         if (!processed)
             throw new IllegalAccessError("Decision has not been processed yet");
-        var PUMReturn = new boolean[15][15];
+        var PUMReturn = new Boolean[15][15];
         for (int i = 0; i < 15; i++) {
             System.arraycopy(this.PUM[i], 0, PUMReturn[i], 0, 15);
         }

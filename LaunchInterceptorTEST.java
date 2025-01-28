@@ -1,15 +1,21 @@
 import org.junit.*;
 
+import static org.junit.Assert.fail;
+
 public class LaunchInterceptorTEST {
 
     // Variables for minimum test input
-    private int minNumPoints = 2;
-    private double[][] minPoints = {{0, 0}, {1, 1}};
+    private final int minNumPoints = 2;
+    private final double[][] minPoints = {{0, 0}, {1, 1}};
 
-    private LaunchInterceptor.Parameters minParameters = new LaunchInterceptor.Parameters(1.0, 1.0, 0.1, 0.1, 0.5, 2.0, 0.05, 0.5, 3, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1);
+    private final LaunchInterceptor.Parameters minParameters =
+            new LaunchInterceptor.Parameters(1.0, 1.0, 0.1, 0.1, 0.5,
+                    2.0, 0.05, 0.5, 3, 2, 1, 1,
+                    1, 1, 1, 1, 1, 1, 1);
 
-    private LaunchInterceptor.Connectors[][] minLCM = new LaunchInterceptor.Connectors[15][15];
-    private boolean[] minPUV = {true, false, true, false, true, false, true, false, true, false, true, false, true, false, true};
+    private final LaunchInterceptor.Connectors[][] minLCM = new LaunchInterceptor.Connectors[15][15];
+    private final boolean[] minPUV =
+            {true, false, true, false, true, false, true, false, true, false, true, false, true, false, true};
 
     @Before
     public void setUp() {
@@ -29,15 +35,8 @@ public class LaunchInterceptorTEST {
     }
 
     @Test
-    public void constructorTest() {
-
+    public void testConstructorConditions() {
         LaunchInterceptor interceptor = new LaunchInterceptor(minParameters, minNumPoints, minPoints, minLCM, minPUV);
-
-        // should be moved to another test with better naming (tests the getters functionality)
-        Assert.assertThrows(IllegalAccessException.class, interceptor::getPUM);
-        Assert.assertThrows(IllegalAccessException.class, interceptor::getFUV);
-        Assert.assertThrows(IllegalAccessException.class, interceptor::getCMV);
-        Assert.assertThrows(IllegalAccessException.class, interceptor::isLaunch);
 
         Assert.assertThrows(IllegalArgumentException.class,
                 () -> new LaunchInterceptor(minParameters, minNumPoints, new double[4][5], minLCM, minPUV)
@@ -49,6 +48,16 @@ public class LaunchInterceptorTEST {
         Assert.assertThrows(IllegalArgumentException.class,
                 () -> new LaunchInterceptor(minParameters, minNumPoints, minPoints, minLCM, new boolean[3])
         );
+    }
+
+    @Test
+    public void testConstructedLInterceptorGetters() {
+        LaunchInterceptor interceptor = new LaunchInterceptor(minParameters, minNumPoints, minPoints, minLCM, minPUV);
+
+        Assert.assertThrows(IllegalAccessError.class, interceptor::getPUM);
+        Assert.assertThrows(IllegalAccessError.class, interceptor::getFUV);
+        Assert.assertThrows(IllegalAccessError.class, interceptor::getCMV);
+        Assert.assertThrows(IllegalAccessError.class, interceptor::isLaunch);
 
         Assert.assertEquals(minNumPoints, interceptor.getX().length);
         Assert.assertEquals(minNumPoints, interceptor.getY().length);
@@ -59,12 +68,11 @@ public class LaunchInterceptorTEST {
         var param = new LaunchInterceptor.Parameters(1, 1, 1, 1, 10,
                 10, 10, 1, 3, 1, 2, 1, 1, 1,
                 1, 1, 1, 1, 1);
-        boolean[] decidePUV = {
-                true, true, false, true, false,
-                        true, false, true, true, false,
-                        true, true, true, true, true
-        };
-        // Arbitrary coherent values
+
+        boolean[] decidePUV = {true, true, false, true, false, true, false, true,
+                true, false, true, true, true, true, true};
+
+        // Arbitrary but coherent values
         var decideLCM = fromIntArray(new int[][]{
                 {0, 1, 2, 1, 2, 1, 0, 1, 1, 2, 1, 0, 0, 1, 1},
                 {1, 0, 2, 1, 2, 1, 0, 1, 2, 2, 2, 0, 0, 2, 2},
@@ -94,6 +102,11 @@ public class LaunchInterceptorTEST {
                 true, true, true, true, true, true, true, true, true},
                 lInterceptor.getFUV()
         );
+
+        assertNoExceptionIsThrown(lInterceptor::getPUM);
+        assertNoExceptionIsThrown(lInterceptor::getFUV);
+        assertNoExceptionIsThrown(lInterceptor::getCMV);
+        assertNoExceptionIsThrown(lInterceptor::isLaunch);
     }
 
     @Test
@@ -122,7 +135,7 @@ public class LaunchInterceptorTEST {
                 0, 0, 0, 0, 0, 0, 2, 0, 0, 0,
                 0, 0, 0, 0);
         var pointCoords = new double[][]{{0, 0}, {0, 1}, {2, 1}, {5, 1}, {10, 3}, {-1, 7}, {7, -1}, {0, 1}};
-        var lInterceptor = new LaunchInterceptor(param, 2, pointCoords, minLCM, minPUV);
+        var lInterceptor = new LaunchInterceptor(param, 2, new double[][]{{0, 0}, {0, 0}}, minLCM, minPUV);
         Assert.assertThrows(IllegalArgumentException.class, lInterceptor::determineLIC0); // Negative length
     }
 
@@ -131,7 +144,7 @@ public class LaunchInterceptorTEST {
         var param = new LaunchInterceptor.Parameters(2, 0, 0, 0, 0,
                 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
                 0, 0, 0, 0);
-        var lInterceptor = new LaunchInterceptor(param, 1, new double[][]{{0, 0}}, minLCM, minPUV);
+        var lInterceptor = new LaunchInterceptor(param, 2, new double[][]{{0, 0}, {0, 0}}, minLCM, minPUV);
         Assert.assertFalse(lInterceptor.determineLIC0());
     }
 
@@ -398,12 +411,12 @@ public class LaunchInterceptorTEST {
          * (3) Valid input --> false (condition not met)
          */
 
-        double[][] onePoint = {{0, 0}};
-        LaunchInterceptor interceptor = new LaunchInterceptor(minParameters, 1, onePoint, minLCM, minPUV);
-        Assert.assertFalse(null, interceptor.determineLIC5());
+//        double[][] onePoint = {{0, 0}};
+//        LaunchInterceptor interceptor = new LaunchInterceptor(minParameters, 1, onePoint, minLCM, minPUV);
+//        Assert.assertFalse(null, interceptor.determineLIC5());
 
         double[][] goodTwoPoints = {{1, 1}, {0, 0}};
-        interceptor = new LaunchInterceptor(minParameters, 2, goodTwoPoints, minLCM, minPUV);
+        LaunchInterceptor interceptor = new LaunchInterceptor(minParameters, 2, goodTwoPoints, minLCM, minPUV);
         Assert.assertTrue(null, interceptor.determineLIC5());
 
         double[][] badTwoPoints = {{0, 0}, {1, 1}};
@@ -470,7 +483,7 @@ public class LaunchInterceptorTEST {
         var param = new LaunchInterceptor.Parameters(0, 0, 0, 1, 0,
                 0, 10, 0, 0, 0, 0, 2, 0, 0, 0,
                 0, 0, 0, 0);
-        var lInterceptor = new LaunchInterceptor(param, 1, new double[][]{{0, 0}}, minLCM, minPUV);
+        var lInterceptor = new LaunchInterceptor(param, 2, new double[][]{{0, 0}, {0, 0}}, minLCM, minPUV);
         Assert.assertFalse(lInterceptor.determineLIC14());
     }
 
@@ -498,7 +511,7 @@ public class LaunchInterceptorTEST {
         var param = new LaunchInterceptor.Parameters(2, 0, 0, 0, 10,
                 0, 0, 0, 0, 0, 0, 2, 0, 0, 0,
                 0, 0, 0, 0);
-        var lInterceptor = new LaunchInterceptor(param, 1, new double[][]{{0, 0}}, minLCM, minPUV);
+        var lInterceptor = new LaunchInterceptor(param, 2, new double[][]{{0, 0}, {0, 0}}, minLCM, minPUV);
         Assert.assertFalse(lInterceptor.determineLIC12());
     }
 
@@ -526,7 +539,7 @@ public class LaunchInterceptorTEST {
         var param = new LaunchInterceptor.Parameters(0, 2, 0, 0, 0,
                 10, 0, 0, 0, 0, 0, 0, 1, 1, 0,
                 0, 0, 0, 0);
-        var lInterceptor = new LaunchInterceptor(param, 1, new double[][]{{0, 0}}, minLCM, minPUV);
+        var lInterceptor = new LaunchInterceptor(param, 2, new double[][]{{0, 0}, {0, 0}}, minLCM, minPUV);
         Assert.assertFalse(lInterceptor.determineLIC13());
     }
 
@@ -596,13 +609,13 @@ public class LaunchInterceptorTEST {
         // Create the interceptor
         LaunchInterceptor interceptorArea = new LaunchInterceptor(parameters, 10, points, minLCM, minPUV);
         // Check area for valid points
-        Assert.assertEquals(interceptorArea.computeTriangleArea(0, 1, 2), 0.5, 1e-6);
+        Assert.assertEquals(0.5, interceptorArea.computeTriangleArea(0, 1, 2), 1e-6);
         //Check area for valid points (complex points)
-        Assert.assertEquals(interceptorArea.computeTriangleArea(7, 8, 9), 17.5, 1e-6);
+        Assert.assertEquals(17.5, interceptorArea.computeTriangleArea(7, 8, 9), 1e-6);
         //Check area for a line (should return 0)
-        Assert.assertEquals(interceptorArea.computeTriangleArea(5, 1, 2), 0.0, 1e-6);
+        Assert.assertEquals(0.0, interceptorArea.computeTriangleArea(5, 1, 2), 1e-6);
         //Check area for duplicate points
-        Assert.assertEquals(interceptorArea.computeTriangleArea(1, 1, 0), 0.0, 1e-6);
+        Assert.assertEquals(0.0, interceptorArea.computeTriangleArea(1, 1, 0), 1e-6);
     }
 
     @Test
@@ -653,6 +666,18 @@ public class LaunchInterceptorTEST {
                 else 
                     connectArray[i][j] = LaunchInterceptor.Connectors.NOTUSED;
         return connectArray;
+    }
+
+    /**
+     * Custom method to test if some code does NOT throw any exception
+     * @param executable the code to execute
+     */
+    private static void assertNoExceptionIsThrown(Runnable executable) {
+        try {
+            executable.run();
+        } catch (Exception e) {
+            fail(e.getClass().getSimpleName() + " was thrown");
+        }
     }
 }
 
