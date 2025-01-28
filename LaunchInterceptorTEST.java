@@ -517,7 +517,6 @@ public class LaunchInterceptorTEST {
         LaunchInterceptor interceptorTrue = new LaunchInterceptor(Par, numPointsValid, pointsTrue, minLCM, minPUV);
         Assert.assertTrue(interceptorTrue.determineLIC11());
 
-
         //Check for false case
         // Define the parameters
         double[][] pointsFalse = {
@@ -535,7 +534,6 @@ public class LaunchInterceptorTEST {
 
         LaunchInterceptor interceptorFalse = new LaunchInterceptor(Par, numPointsValid, pointsFalse, minLCM, minPUV);
         Assert.assertFalse(interceptorFalse.determineLIC11());
-
     }
 }
 
