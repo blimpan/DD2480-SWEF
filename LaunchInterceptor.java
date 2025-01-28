@@ -135,35 +135,26 @@ public class LaunchInterceptor {
     /**
      * Determines whether or not there exists at least one set of three consecutive data points that can not
      * be contained in a circle of radius RADIUS1
-     * @return true or false
+     * @return true if the points can not be contained in circle.
      */
     public boolean determineLIC1() {
 
         if (numPoints < 3) {
             return false; // Not enough points to test
         }
+        if (parameters.LENGTH1 < 0) {
+            throw new IllegalArgumentException("LENGTH1 cannot be negative.");
+        }
 
         for (int i = 2; i < numPoints; i++) {
             // first coordinate = (x[i-2], y[i-2])
             // second coordinate = (x[i-1], y[i-1])
             // third coordinate = (x[i], y[i])
-            double a = pointsDistance(x[i-2],y[i-2],x[i-1],y[i-1]);
-            double b = pointsDistance(x[i-1],y[i-1],x[i],y[i]);
-            double c = pointsDistance(x[i-2],y[i-2],x[i],y[i]);
-
-            //Caluclating the area using Heron's formula
-            double semiPerimeter = (a+b+c)/2;
-            double area = Math.sqrt(semiPerimeter * (semiPerimeter-a)*(semiPerimeter-b)*(semiPerimeter-c));
-
-            if (area == 0) {
-                //break;
-            }
-
-            //Calculating the circumradius for a triangle
-            double circumRadius = (a*b*c)/(4*a);
-            if (circumRadius > parameters.RADIUS1) {
+            if(containedInCircle(x[i-2],y[i-2],x[i-1],y[i-1],x[i],y[i],parameters.RADIUS1,1) == true){
                 return true;
             }
+         
+
         }
 
         return false; // No consecutive points do not fulfuill the criteria
