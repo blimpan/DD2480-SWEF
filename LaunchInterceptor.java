@@ -96,7 +96,7 @@ public class LaunchInterceptor {
      * @return the launch decision (boolean)
      */
     public boolean decide(){
-        //TODO call each LIC and populate the PUM, CMV, FUV as well as encode launch decision in STDOUT
+        
         this.processed = true;
         throw new Error("Decide function is not implemented yet");
     }
@@ -329,9 +329,9 @@ public boolean determineLIC2() {
                         return true;
                     }
                 } else {
-                    a = (y[k]-y[i])/(x[k]-x[i]);
-                    b = (x[i]-x[k])/(x[k]-x[i]);
-                    c = (y[i]*x[k] - y[k]*x[i])/(x[k]-x[i]);
+                    a = y[k]-y[i];
+                    b = x[i]-x[k];
+                    c = a*x[i] + b*y[i];
 
                     distance = pointLineDistance(a,b,c,x[j],y[j]);
                     if (distance > parameters.DIST){
