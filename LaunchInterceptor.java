@@ -96,7 +96,7 @@ public class LaunchInterceptor {
      * @return the launch decision (boolean)
      */
     public boolean decide(){
-        
+
         this.processed = true;
         throw new Error("Decide function is not implemented yet");
     }
@@ -381,7 +381,7 @@ public boolean determineLIC2() {
      * 2. there are D PTS in between B and C
      * 3. the angle is defined
      * 4. angle < (PI−EPSILON) or angle > (PI+EPSILON)
-     * 5. NUMPOINTS >= 5 
+     * 5. NUMPOINTS >= 5
      * 6. C PTS >= 1
      * 7. D PTS >= 1
      * 8. C PTS+D PTS ≤ NUMPOINTS−3 (to ensure the size of data is enough)
@@ -414,7 +414,7 @@ public boolean determineLIC2() {
         return found;
     }
 
-   /** 
+   /**
      * Determines if there exists a set of 3 points (A, B, C) such that:
      * 1. There are E PTS in between A and B.
      * 2. There are F PTS in between B and C.
@@ -423,7 +423,7 @@ public boolean determineLIC2() {
      * 5. E PTS >= 1.
      * 6. F PTS >= 1.
      * 7. E PTS + F PTS ≤ NUMPOINTS - 3 (to ensure sufficient data points).
-     * 
+     *
      * @return true if at least one valid set of points exists, false otherwise.
      */
     public boolean determineLIC10(){
@@ -450,14 +450,14 @@ public boolean determineLIC2() {
         return found;
     }
 
-    /** 
+    /**
      * Determines if there exists a set of two data points (X[i], Y[i]) and (X[j], Y[j]) such that:
      * 1. There are G PTS in between the two points (A, B).
      * 2. The condition X[j] - X[i] < 0 holds true (where i < j).
      * 3. The condition is not met when NUMPOINTS < 3.
      * 4. G PTS >= 1.
      * 5. G PTS ≤ NUMPOINTS - 2 (to ensure sufficient data points).
-     * 
+     *
      * @return true if at least one valid set of points exists, false otherwise.
      */
     public boolean determineLIC11(){
@@ -476,6 +476,40 @@ public boolean determineLIC2() {
         return found;
     }
 
+
+    /**
+     *
+     * @return true or false
+     */
+    public boolean determineLIC12() {
+        if (parameters.LENGTH2 < 0)
+            throw new IllegalArgumentException("Length2 must be greater than 0");
+
+        //Condition is not met when numPoints < 3
+        if (numPoints < 3) {
+            return false;
+        }
+
+        boolean matchFound = false;
+        for (int i = 0; (! matchFound) && i + parameters.K_PTS + 1 < numPoints; i++) {
+            if (pointsDistance(x[i], y[i], x[i + parameters.K_PTS + 1], y[i + parameters.K_PTS + 1])
+                    > parameters.LENGTH1) {
+                matchFound = true;
+            }
+        }
+
+        if (!matchFound)
+            return false;
+
+        matchFound = false;
+        for (int i = 0; ! matchFound && i + parameters.K_PTS + 1 < numPoints; i++) {
+            if (pointsDistance(x[i], y[i], x[i + parameters.K_PTS + 1], y[i + parameters.K_PTS + 1])
+                    < parameters.LENGTH2) {
+                matchFound = true;
+            }
+        }
+        return matchFound;
+    }
 
     /**
      *
@@ -592,16 +626,16 @@ public boolean determineLIC2() {
 
     /**
      * Calculates the angle given the indexes of three points.
-     * 
-     * Input: 
+     *
+     * Input:
      * - int aIndex: the index of the first point (Point A)
      * - int bIndex: the index of the second point (Point B), which is always the vertex of the angle
      * - int cIndex: the index of the third point (Point C)
-     * 
+     *
      * This function determines the angle formed by the three points, with the vertex at Point B.
-     * It uses the coordinates of the points identified by the provided indexes to compute the angle 
+     * It uses the coordinates of the points identified by the provided indexes to compute the angle
      * between the lines connecting Point A to Point B and Point B to Point C.
-     * 
+     *
      * The function returns the angle in radians
      */
     private double computeAngle(int aIndex, int bIndex, int cIndex){
@@ -609,7 +643,7 @@ public boolean determineLIC2() {
         double x_a = x[aIndex];double y_a = y[aIndex];
         double x_b = x[bIndex];double y_b = y[bIndex];
         double x_c = x[cIndex];double y_c = y[cIndex];
-        // Compute vector BA and BC 
+        // Compute vector BA and BC
         //BA = OA - OB
         double[] vecBA = {x_a-x_b, y_a-y_b};
         //BC = OC - OB
