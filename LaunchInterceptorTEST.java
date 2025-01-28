@@ -591,5 +591,41 @@ public class LaunchInterceptorTEST {
         LaunchInterceptor interceptorFalse = new LaunchInterceptor(area1TruePar, points.length, points, minLCM, minPUV);
         Assert.assertTrue(interceptorFalse.determineLIC10());
     }
+
+    @Test
+    public void testLIC11InvalidParameters(){
+        // Define the invalid parameters
+        double[][] points = {
+                {1.0, 2.0},  // Point A
+                {2.0, 3.0},  // Point B
+                {3.0, 1.0},  // Point C
+                {4.0, 4.0},  // Point D
+                {5.0, 0.0},  // Point E
+                {6.0, 5.0},  // Point F
+                {7.0, 3.0},  // Point G
+                {8.0, 2.5},  // Point H
+                {9.0, 1.5},  // Point I
+                {10.0, 4.0}  // Point J
+        };
+
+        int numPointsValid = 10;
+
+        LaunchInterceptor.Parameters invalidParGPTSSmall =
+                new LaunchInterceptor.Parameters(1.0, 1.0, 0.1, 0.1, 0.5, 2.0, 0.05, 0.5,
+                        3, 2, 1, 1, 1, 0, 1, 1, 1, 1,0);
+        // Test with invalid G_PTS (too small=0)
+        LaunchInterceptor interceptorInvalidGPTS1 = new LaunchInterceptor(invalidParGPTSSmall, numPointsValid, points, minLCM, minPUV);
+        Assert.assertFalse(interceptorInvalidGPTS1.determineLIC11());
+
+        // Define parameters with invalid G_PTS (too large)
+        LaunchInterceptor.Parameters invalidGPTSLarge =
+                new LaunchInterceptor.Parameters(1.0, 1.0, 0.1, 0.1, 0.5, 2.0, 0.05, 0.5,
+                        3, 2, 1, 1, 1, 1, 1, 1, 1, 1,15);
+
+        // Test with invalid GPTS (too large)
+        LaunchInterceptor interceptorInvalidGPTS2 = new LaunchInterceptor(invalidGPTSLarge, numPointsValid, points, minLCM, minPUV);
+        Assert.assertFalse(interceptorInvalidGPTS2.determineLIC11());
+    }
 }
+
 
