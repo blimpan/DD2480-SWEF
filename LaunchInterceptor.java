@@ -329,9 +329,9 @@ public boolean determineLIC2() {
                         return true;
                     }
                 } else {
-                    a = (y[k]-y[i])/(x[k]-x[i]);
-                    b = (x[i]-x[k])/(x[k]-x[i]);
-                    c = (y[i]*x[k] - y[k]*x[i])/(x[k]-x[i]);
+                    a = y[k]-y[i];
+                    b = x[i]-x[k];
+                    c = a*x[i] + b*y[i];
 
                     distance = pointLineDistance(a,b,c,x[j],y[j]);
                     if (distance > parameters.DIST){
@@ -477,6 +477,71 @@ public boolean determineLIC2() {
     }
 
 
+    /**
+     *
+     * @return true or false
+     */
+    public boolean determineLIC12() {
+        if (parameters.LENGTH2 < 0)
+            throw new IllegalArgumentException("Length2 must be greater than 0");
+
+        //Condition is not met when numPoints < 3
+        if (numPoints < 3) {
+            return false;
+        }
+
+        boolean matchFound = false;
+        for (int i = 0; (! matchFound) && i + parameters.K_PTS + 1 < numPoints; i++) {
+            if (pointsDistance(x[i], y[i], x[i + parameters.K_PTS + 1], y[i + parameters.K_PTS + 1])
+                    > parameters.LENGTH1) {
+                matchFound = true;
+            }
+        }
+
+        if (!matchFound)
+            return false;
+
+        matchFound = false;
+        for (int i = 0; ! matchFound && i + parameters.K_PTS + 1 < numPoints; i++) {
+            if (pointsDistance(x[i], y[i], x[i + parameters.K_PTS + 1], y[i + parameters.K_PTS + 1])
+                    < parameters.LENGTH2) {
+                matchFound = true;
+            }
+        }
+        return matchFound;
+    }
+
+    /**
+     *
+     * @return true or false
+     */
+    public boolean determineLIC14() {
+        if (parameters.AREA2 < 0)
+            throw new IllegalArgumentException("Area2 must be greater than 0");
+
+        //Condition is not met when numPoints < 5
+        if (numPoints < 5) {
+            return false;
+        }
+
+        boolean matchFound = false;
+        for (int i = 0; ! matchFound && i + parameters.E_PTS + parameters.F_PTS + 2 < numPoints; i++) {
+            var area = computeTriangleArea(i, i + parameters.E_PTS + 1, i + parameters.E_PTS + parameters.F_PTS + 1);
+            if (area > parameters.AREA1)
+                matchFound = true;
+        }
+
+        if (!matchFound)
+            return false;
+
+        for (int i = 0; i + parameters.E_PTS + parameters.F_PTS + 2 < numPoints; i++) {
+            var area = computeTriangleArea(i, i + parameters.E_PTS + 1, i + parameters.E_PTS + parameters.F_PTS + 1);
+            if (area < parameters.AREA2)
+                return true;
+        }
+        return false;
+    }
+
     //==========GETTER METHODS==========
     public Parameters getParameters() {
         return parameters;
@@ -619,18 +684,16 @@ public boolean determineLIC2() {
                 - x_b*y_a - x_c* y_b - x_a* y_c);
     }
 
-
-
     /**
     * Determines wherter three points would be contained within a circle with the radius RADIUS1
-    * 
+    *
     * first coordinate = (x[i-2], y[i-2])
     * second coordinate = (x[i-1], y[i-1])
     * third coordinate = (x[i], y[i])
     *
-    * This function calculates this by taking two of three points and calculating where a circle that intersects both points 
+    * This function calculates this by taking two of three points and calculating where a circle that intersects both points
     * with radius RADIUS1 would have it's center point and checking if both possible center points are further away than RADIUS1
-    * from the third point. If none of the three pairs contain all three points 
+    * from the third point. If none of the three pairs contain all three points
     @return true
     */
     private boolean notContainedInCircle(double x1, double y1, double x2, double y2, double x3, double y3) {
@@ -639,35 +702,34 @@ public boolean determineLIC2() {
 
         for (int i = 1; i < 3; i++) {
             double distance = pointsDistance(pointsX[i - 1], pointsY[i - 1], pointsX[i], pointsY[i]);
-            
+
             if (distance == 0) {
-                // Less than diameter away when two points are on top of each other 
+                // Less than diameter away when two points are on top of each other
                 if (pointsDistance(pointsX[i], pointsY[i], pointsX[i + 1], pointsY[i + 1])<parameters.RADIUS1*2){
                     return false;
                 }
                 continue; // Avoid division by zero
             }
             double height = Math.sqrt(parameters.RADIUS1 * parameters.RADIUS1 - distance * distance / 4);
-            
+
             double midX = (pointsX[i] + pointsX[i - 1]) / 2;
             double midY = (pointsY[i] + pointsY[i - 1]) / 2;
-    
+
             double deltaX = (pointsY[i - 1] - pointsY[i]) / distance;
             double deltaY = (pointsX[i - 1] - pointsX[i]) / distance;
-    
-            double xpos1 = midX + height * deltaX;
-            double ypos1 = midY - height * deltaY;
-    
-            double xpos2 = midX - height * deltaX;
-            double ypos2 = midY + height * deltaY;
-    
-            if (pointsDistance(pointsX[i + 1], pointsY[i + 1], xpos1, ypos1) < parameters.RADIUS1 || 
-                pointsDistance(pointsX[i + 1], pointsY[i + 1], xpos2, ypos2) < parameters.RADIUS1) {
+
+            double xPos1 = midX + height * deltaX;
+            double yPos1 = midY - height * deltaY;
+
+            double xPos2 = midX - height * deltaX;
+            double yPos2 = midY + height * deltaY;
+
+            if (pointsDistance(pointsX[i + 1], pointsY[i + 1], xPos1, yPos1) < parameters.RADIUS1 ||
+                pointsDistance(pointsX[i + 1], pointsY[i + 1], xPos2, yPos2) < parameters.RADIUS1) {
                 return false;
-            } 
+            }
         }
         return true;
     }
-    
-}
 
+}
