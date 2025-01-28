@@ -195,6 +195,44 @@ public class LaunchInterceptor {
         return found;
     }
 
+   /** 
+     * Determines if there exists a set of 3 points (A, B, C) such that:
+     * 1. There are E PTS in between A and B.
+     * 2. There are F PTS in between B and C.
+     * 3. The points form a triangle with an area greater than AREA1.
+     * 4. The condition is not met when NUMPOINTS < 5.
+     * 5. E PTS >= 1.
+     * 6. F PTS >= 1.
+     * 7. E PTS + F PTS ≤ NUMPOINTS - 3 (to ensure sufficient data points).
+     * 
+     * @return true if at least one valid set of points exists, false otherwise.
+     */
+    public boolean determineLIC10(){
+        int E_PTS = parameters.E_PTS; int F_PTS = parameters.F_PTS;
+        boolean found =false; // set to true when a set of points are found to meet all requirements
+        //Check requirements 4-7
+        if(E_PTS<1 || F_PTS<1 || E_PTS+F_PTS>numPoints-3 || numPoints<5) return false;
+        //Loop through each point as A
+        for (int aIndex=0; aIndex<numPoints; ++aIndex){
+            if (aIndex+E_PTS>numPoints)break; //if B is already out of boundary then so is C, therefore quit the loop
+            int bIndex = aIndex+E_PTS; // reaching here indicates B is in boundary
+            if (bIndex+F_PTS>numPoints)break;  //if C is out of boundary, then for the next A, the C also will be out of boundary
+            int cIndex = bIndex+F_PTS;// reaching here indicates C is in boundary
+            //A, B and C are all set
+            //Compute the angle using the helper function (implemented in Helper Function Section)
+            double area = computeTriangleArea(aIndex, bIndex, cIndex);
+            //Check conditions 3-4
+            if(doubleCompare(area, 0.0) ==CompType.EQ) continue; //if area is undefined, continue to next set of points
+            if(doubleCompare(area, parameters.AREA1) == CompType.GT){
+                    found = true; //met conditions 3, found the set
+                    break; //stop exploring
+                }
+        }
+        return found;
+    }
+
+
+
     //==========GETTER METHODS==========
     public Parameters getParameters() {
         return parameters;
@@ -271,20 +309,20 @@ public class LaunchInterceptor {
         return distance;
     }
 
- /**
- * Calculates the angle given the indexes of three points.
- * 
- * Input: 
- * - int aIndex: the index of the first point (Point A)
- * - int bIndex: the index of the second point (Point B), which is always the vertex of the angle
- * - int cIndex: the index of the third point (Point C)
- * 
- * This function determines the angle formed by the three points, with the vertex at Point B.
- * It uses the coordinates of the points identified by the provided indexes to compute the angle 
- * between the lines connecting Point A to Point B and Point B to Point C.
- * 
- * The function returns the angle in radians
- */
+    /**
+     * Calculates the angle given the indexes of three points.
+     * 
+     * Input: 
+     * - int aIndex: the index of the first point (Point A)
+     * - int bIndex: the index of the second point (Point B), which is always the vertex of the angle
+     * - int cIndex: the index of the third point (Point C)
+     * 
+     * This function determines the angle formed by the three points, with the vertex at Point B.
+     * It uses the coordinates of the points identified by the provided indexes to compute the angle 
+     * between the lines connecting Point A to Point B and Point B to Point C.
+     * 
+     * The function returns the angle in radians
+     */
     private double computeAngle(int aIndex, int bIndex, int cIndex){
         // get x, y coordinates of each point
         double x_a = x[aIndex];double y_a = y[aIndex];
@@ -304,7 +342,33 @@ public class LaunchInterceptor {
         double cosTheta = dot/(magBA*magBC);
         //theta = arccos(cosTheta)
         return Math.acos(cosTheta);
-
     }
+
+    /**
+     * Calculates the area of a triangle formed by three points.
+     * 
+     * Input: 
+     * - int aIndex: the index of the first point (Point A)
+     * - int bIndex: the index of the second point (Point B)
+     * - int cIndex: the index of the third point (Point C)
+     * 
+     * This function computes the area of the triangle defined by the three points using the 
+     * coordinates of the points identified by the provided indexes. The area is calculated 
+     * using the SHOELACE formula: 
+     * 
+     * Area = 0.5 * (x1y2 +x2y3+ x3y1 - x2y1 - x3y2 - x1y3)
+     * 
+     * The function returns the area as a double value.
+     */
+    double computeTriangleArea (int aIndex, int bIndex, int cIndex){
+        // get x, y coordinates of each point
+        double x_a = x[aIndex];double y_a = y[aIndex];
+        double x_b = x[bIndex];double y_b = y[bIndex];
+        double x_c = x[cIndex];double y_c = y[cIndex];
+        double area = 0.5 * (x_a*y_b + x_b* y_c + x_c* y_a
+                            - x_b*y_a - x_c* y_b - x_a* y_c);
+        return area;
+    }
+
 
 }
