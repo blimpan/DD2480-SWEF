@@ -316,7 +316,7 @@ public boolean determineLIC2() {
 
         double a, b, c; //parameters for straight line equation between first and last point
         double distance;
-        double k = 0;
+        int k = 0;
 
         for (int i = 0; i < numPoints && k < numPoints; i++) {
             k = i + parameters.N_PTS - 1;
