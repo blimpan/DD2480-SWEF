@@ -320,7 +320,7 @@ public boolean determineLIC2() {
 
         for (int i = 0; i < numPoints && k < numPoints; i++) {
             k = i + parameters.N_PTS - 1;
-            for (int j = i + 1; j < k; j++) {
+            for (int j = i + 1; j < k & j< numPoints & k< numPoints; j++) {
 
                 //special case when first and last coordinate is the same
                 if (x[i] == x[k] && y[i] == y[k]) {
