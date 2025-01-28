@@ -1,5 +1,3 @@
-import java.util.Arrays;
-
 import org.junit.*;
 
 public class LaunchInterceptorTEST {
@@ -79,6 +77,34 @@ public class LaunchInterceptorTEST {
         LaunchInterceptor.Parameters largeAreaParameters = new LaunchInterceptor.Parameters(1, 1, 0.1, 5, 0.5, 2.0, 0.05, 0.5, 3, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1);
         interceptor = new LaunchInterceptor(largeAreaParameters, 3, threePoints, minLCM, minPUV);
         Assert.assertFalse(null, interceptor.determineLIC3());
+    }
+
+    @Test
+    public void testLIC12ValidInput() {
+        var param = new LaunchInterceptor.Parameters(2, 0, 0, 0, 10,
+                0, 0, 0, 0, 0, 0, 2, 0, 0, 0,
+                0, 0, 0, 0);
+        var pointCoords = new double[][]{{0, 0}, {0, 1}, {2, 1}, {5, 1}, {10, 3}, {-1, 7}, {7, -1}, {0, 1}};
+        var lInterceptor = new LaunchInterceptor(param, 8, pointCoords, minLCM, minPUV);
+        Assert.assertTrue(null, lInterceptor.determineLIC12());
+    }
+
+    @Test
+    public void testLIC12InvalidParameters() {
+        var param = new LaunchInterceptor.Parameters(2, 0, 0, 0, -2,
+                0, 0, 0, 0, 0, 0, 2, 0, 0, 0,
+                0, 0, 0, 0);
+        var lInterceptor = new LaunchInterceptor(param, 2, minPoints, minLCM, minPUV);
+        Assert.assertThrows(IllegalArgumentException.class, lInterceptor::determineLIC12);
+    }
+
+    @Test
+    public void testLIC12InsufficientPoints() {
+        var param = new LaunchInterceptor.Parameters(2, 0, 0, 0, 10,
+                0, 0, 0, 0, 0, 0, 2, 0, 0, 0,
+                0, 0, 0, 0);
+        var lInterceptor = new LaunchInterceptor(param, 1, new double[][]{{0, 0}}, minLCM, minPUV);
+        Assert.assertFalse(lInterceptor.determineLIC12());
     }
 
 }

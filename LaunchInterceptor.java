@@ -491,9 +491,9 @@ public boolean determineLIC2() {
         }
 
         boolean matchFound = false;
-        for (int i = 0; ! matchFound && i < numPoints + parameters.K_PTS + 1; i++) {
+        for (int i = 0; (! matchFound) && i + parameters.K_PTS + 1 < numPoints; i++) {
             if (pointsDistance(x[i], y[i], x[i + parameters.K_PTS + 1], y[i + parameters.K_PTS + 1])
-                    < parameters.LENGTH1) {
+                    > parameters.LENGTH1) {
                 matchFound = true;
             }
         }
@@ -502,9 +502,9 @@ public boolean determineLIC2() {
             return false;
 
         matchFound = false;
-        for (int i = 0; ! matchFound && i < numPoints + parameters.K_PTS + 1; i++) {
+        for (int i = 0; ! matchFound && i + parameters.K_PTS + 1 < numPoints; i++) {
             if (pointsDistance(x[i], y[i], x[i + parameters.K_PTS + 1], y[i + parameters.K_PTS + 1])
-                    > parameters.LENGTH2) {
+                    < parameters.LENGTH2) {
                 matchFound = true;
             }
         }
