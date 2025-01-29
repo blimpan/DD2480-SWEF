@@ -452,7 +452,7 @@ public class LaunchInterceptorTEST {
         0, 20, 0, 0, 0, 0, 2, 1, 1, 0,
         0, 1, 1, 0);
         LaunchInterceptor interceptFalse = new LaunchInterceptor(paramFalse, points.length, points, minLCM, minPUV);
-        Assert.assertTrue(null, interceptFalse.determineLIC8());
+        Assert.assertFalse(null, interceptFalse.determineLIC8());
     }
 
     @Test
