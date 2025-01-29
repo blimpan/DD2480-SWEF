@@ -63,7 +63,7 @@ If you would like to understand how the code works, please check out
         - Designed and Implemented the LIC09, LIC10, LIC11 methods.
         - Designed and Implemented the Helper Functions `computeAngle()` and `computeTriangleArea()`
         - Created unit tests for LIC09, LIC10, LIC11 methods, and the above helper functions.
-- **Edgar Wolff ([https://github.com/edgarwolff](https://github.com/edgarwolff))
+- **Edgar Wolff (**[https://github.com/edgarwolff](https://github.com/edgarwolff))
     - **Contributions**:
         - Refactored the code infrastructure for easier implementations of LIC methods.
         - Designed and Implemented the LIC12, LIC13, LIC14, `decide()` methods.
