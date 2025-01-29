@@ -33,7 +33,7 @@ If you encounter any issues or have questions about the project, please feel fre
 
 ## Wonder How the Code Works?
 
-If you would like to understand how the code works, please check out 
+If you would like to understand how the code works, please check out [Code Documentation](./CodeDocumentation.md)
 
 ## Statement of Contributions
 
