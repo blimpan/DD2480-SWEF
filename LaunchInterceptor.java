@@ -1,4 +1,5 @@
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 import java.util.Arrays;
 
@@ -30,9 +31,20 @@ public class LaunchInterceptor {
     // Decision: Launch or No
     private boolean launch;
 
-
+    /**
+     * Class constructor
+     * @param parameters an instance of the Parameters record (non-null)
+     * @param numPoints an integer between 2 and 100 (included)
+     * @param pointCoords an array containing the x and y coordinates of numPoints points, needs to be of size numPoints
+     * @param LCM a Logical Connector Matrix of size 15x15 (non-null)
+     * @param PUV a Preliminary Unlocking Vector of size 15 (non-null)
+     * @throws IllegalArgumentException if one of the above constraint on the input is not satisfied
+     */
     public LaunchInterceptor(Parameters parameters, int numPoints, double[][] pointCoords,
                              Connectors[][] LCM, boolean[] PUV) {
+        if (Objects.isNull(parameters))
+            throw new IllegalArgumentException("The input parameters must be non null");
+
         this.parameters = parameters;
 
         if (numPoints < 2 || numPoints > 100)
@@ -583,7 +595,10 @@ public class LaunchInterceptor {
 
 
     /**
-     * @return true or false
+     * Determines if there exists sets of two data points separated by exactly K_PTS consecutive intervening points,
+     * one with distance greater than LENGTH1 and the other less than LENGTH2
+     *
+     * @return true when both conditions are met, false otherwise
      */
     public boolean determineLIC12() {
         if (parameters.LENGTH2 < 0)
@@ -616,7 +631,11 @@ public class LaunchInterceptor {
     }
 
     /**
-     * @return true or false
+     * Determines if there exists sets of three data points such that:
+     *      A set that cannot be contained within a circle of radius RADIUS1.
+     *      Another set that can be contained within a circle of radius RADIUS2.
+     *
+     * @return true when both conditions are met, false otherwise
      */
     public boolean determineLIC13() {
         if (parameters.RADIUS2 < 0)
@@ -659,7 +678,11 @@ public class LaunchInterceptor {
     }
 
     /**
-     * @return true or false
+     * Determines if there exists sets of three data points such that:
+     *      The area of the triangle formed is greater than AREA1 for one set
+     *      The area of the triangle formed is less than AREA2 for another set (can be the same)
+     *
+     * @return true when both conditions are met, false otherwise
      */
     public boolean determineLIC14() {
         if (parameters.AREA2 < 0)
@@ -672,7 +695,8 @@ public class LaunchInterceptor {
 
         boolean matchFound = false;
         for (int i = 0; !matchFound && i + parameters.E_PTS + parameters.F_PTS + 2 < numPoints; i++) {
-            var area = computeTriangleArea(i, i + parameters.E_PTS + 1, i + parameters.E_PTS + parameters.F_PTS + 1);
+            var area = computeTriangleArea(i, i + parameters.E_PTS + 1,
+                    i + parameters.E_PTS + parameters.F_PTS + 1);
             if (area > parameters.AREA1)
                 matchFound = true;
         }
@@ -681,7 +705,8 @@ public class LaunchInterceptor {
             return false;
 
         for (int i = 0; i + parameters.E_PTS + parameters.F_PTS + 2 < numPoints; i++) {
-            var area = computeTriangleArea(i, i + parameters.E_PTS + 1, i + parameters.E_PTS + parameters.F_PTS + 1);
+            var area = computeTriangleArea(i, i + parameters.E_PTS + 1,
+                    i + parameters.E_PTS + parameters.F_PTS + 1);
             if (area < parameters.AREA2)
                 return true;
         }
