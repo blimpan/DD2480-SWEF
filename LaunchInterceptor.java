@@ -136,7 +136,7 @@ public class LaunchInterceptor {
         }
 
         for (int i = 0; i < 15; i++)
-            FUV[i] = PUV[i] || Arrays.stream(PUM[i]).allMatch(Boolean::valueOf);
+            FUV[i] = (! PUV[i]) || Arrays.stream(PUM[i]).allMatch(Boolean::valueOf);
 
         launch = Arrays.stream(FUV).allMatch(Boolean::valueOf);
 
