@@ -53,10 +53,10 @@ If you would like to understand how the code works, please check out [Code Docum
         - Designed the skeleton of the [`LaunchInterceptorTEST.java`](http://LaunchInterceptorTEST.java)
         - Designed and Implemented the LIC03, LIC04, LIC05 methods.
         - Created unit tests for LIC03, LIC04, LIC05 methods.
-- **Kristen Rosen (**[https://github.com/KristinRosen](https://github.com/KristinRosen))
+- **Kristin Rosen (**[https://github.com/KristinRosen](https://github.com/KristinRosen))
     - **Contributions**:
         - Designed and Implemented the LIC06, LIC07, LIC08 methods.
-        - Designed and Implemented the Helper Function `pointLineDistance()`
+        - Designed and Implemented the Helper Function `pointLineDistance()` and `pointsDistance()`
         - Created unit tests for LIC06, LIC07, LIC08 methods, and the above helper function.
 - **Cheang Weng Io, Yoyo (**[https://github.com/beginner003](https://github.com/beginner003))
     - **Contributions**:
@@ -68,7 +68,8 @@ If you would like to understand how the code works, please check out [Code Docum
     - **Contributions**:
         - Refactored the code infrastructure for easier implementations of LIC methods.
         - Designed and Implemented the LIC12, LIC13, LIC14, `decide()` methods.
-        - Created unit tests for constructors, LIC12, LIC13 LIC14, `decide()` methods.
+        - Created unit tests for Constructors, LIC12, LIC13 LIC14, `decide()` methods.
+        - Designed and Implemented the the `main()` function.
 
 ### Acknowledgments
 
