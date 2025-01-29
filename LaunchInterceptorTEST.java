@@ -403,6 +403,59 @@ public class LaunchInterceptorTEST {
     }
 
     @Test
+    public void testLIC8InvalidInput(){
+        LaunchInterceptor.Parameters tooFewPoints = new LaunchInterceptor.Parameters(0, 0, 0, 1, 0,
+        0, 20, 0, 0, 0, 0, 2, 0, 0, 0,
+        0, 1, 1, 0);
+        LaunchInterceptor interceptTooFew = new LaunchInterceptor(tooFewPoints, minNumPoints, minPoints, minLCM, minPUV);
+        Assert.assertFalse(null, interceptTooFew.determineLIC8());
+
+        double[][] points = {{1, 1}, {2, 2}, {3, 3}, {4, 4}, {5, 5}};
+
+        LaunchInterceptor.Parameters invalidA = new LaunchInterceptor.Parameters(0, 0, 0, 1, 0,
+        0, 20, 0, 0, 0, 0, 2, 0, 1, 0,
+        0, 1, 1, 0);
+        LaunchInterceptor interceptA = new LaunchInterceptor(invalidA, points.length, points, minLCM, minPUV);
+        Assert.assertFalse(null, interceptA.determineLIC8());
+
+        LaunchInterceptor.Parameters invalidB = new LaunchInterceptor.Parameters(0, 0, 0, 1, 0,
+        0, 20, 0, 0, 0, 0, 2, 1, 0, 0,
+        0, 1, 1, 0);
+        LaunchInterceptor interceptB = new LaunchInterceptor(invalidB, points.length, points, minLCM, minPUV);
+        Assert.assertFalse(null, interceptB.determineLIC8());
+
+        LaunchInterceptor.Parameters invalidNumPointsToAB = new LaunchInterceptor.Parameters(0, 0, 0, 1, 0,
+        0, 20, 0, 0, 0, 0, 2, 2, 2, 0,
+        0, 1, 1, 0);
+        LaunchInterceptor interceptNumPointsToAB = new LaunchInterceptor(invalidNumPointsToAB, minNumPoints, minPoints, minLCM, minPUV);
+        Assert.assertFalse(null, interceptNumPointsToAB.determineLIC8());
+    }
+
+    @Test
+    public void testLIC8True(){
+
+        double[][] points = {{1, 1}, {2, 2}, {3, 3}, {4, 4}, {5, 5}};
+
+        LaunchInterceptor.Parameters paramTrue = new LaunchInterceptor.Parameters(0, 1, 0, 1, 0,
+        0, 20, 0, 0, 0, 0, 2, 1, 1, 0,
+        0, 1, 1, 0);
+        LaunchInterceptor interceptTrue = new LaunchInterceptor(paramTrue, points.length, points, minLCM, minPUV);
+        Assert.assertTrue(null, interceptTrue.determineLIC8());
+    }
+
+    @Test
+    public void testLIC8False(){
+
+        double[][] points = {{1, 1}, {2, 2}, {3, 3}, {4, 4}, {5, 5}};
+
+        LaunchInterceptor.Parameters paramFalse = new LaunchInterceptor.Parameters(0, 5, 0, 1, 0,
+        0, 20, 0, 0, 0, 0, 2, 1, 1, 0,
+        0, 1, 1, 0);
+        LaunchInterceptor interceptFalse = new LaunchInterceptor(paramFalse, points.length, points, minLCM, minPUV);
+        Assert.assertFalse(null, interceptFalse.determineLIC8());
+    }
+
+    @Test
     public void testLIC14ValidInput() {
         var param = new LaunchInterceptor.Parameters(0, 0, 0, 1, 0,
                 0, 20, 0, 0, 0, 0, 2, 0, 0, 0,

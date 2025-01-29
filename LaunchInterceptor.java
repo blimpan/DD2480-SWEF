@@ -374,8 +374,8 @@ public boolean determineLIC2() {
      */
     public Boolean determineLIC8() {
 
-        //Condition is not met when NUMPOINTS < 3
-        if(numPoints<3){
+        //Condition is not met when NUMPOINTS < 5
+        if(numPoints<5){
             return false;
         }
 
@@ -390,7 +390,7 @@ public boolean determineLIC2() {
             y3 = y[i + parameters.A_PTS + parameters.B_PTS + 1];
         
             //If the radius > RADIUS1 the points fit the criterion, else keep looping
-            if(containedInCircle(x1, y1, x2, y2, x3, y3, parameters.RADIUS1, false)){
+            if(containedInCircle(x1, y1, x2, y2, x3, y3, parameters.RADIUS1, true)){
                 return true;
             }
         }
