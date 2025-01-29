@@ -136,7 +136,7 @@ public class LaunchInterceptor {
         }
 
         for (int i = 0; i < 15; i++)
-            FUV[i] = PUV[i] || Arrays.stream(PUM[i]).allMatch(Boolean::valueOf);
+            FUV[i] = (! PUV[i]) || Arrays.stream(PUM[i]).allMatch(Boolean::valueOf);
 
         launch = Arrays.stream(FUV).allMatch(Boolean::valueOf);
 
@@ -400,9 +400,18 @@ public class LaunchInterceptor {
             return false;
         }
 
+        if (parameters.K_PTS < 1){
+            throw new IllegalArgumentException("K_PTS must be greater than or equal to 1");
+        }
+            
+        if (parameters.K_PTS > (numPoints - 2)){
+            throw new IllegalArgumentException("K_PTS cannot be greater than (NUMPOINTS - 2)");
+        }
+            
+
         int k = 0;
         double x1, x2, y1, y2;
-        for (int i = 0; i < numPoints && k < numPoints; i++) {
+        for (int i = 0; i < numPoints && (k + parameters.K_PTS + 1) < numPoints ; i++) {
             k = i + parameters.K_PTS + 1;
             x1 = x[i];
             y1 = y[i];
@@ -756,7 +765,7 @@ public class LaunchInterceptor {
     }
 
     //Calculates distance between two points
-    private static double pointsDistance(double x1, double y1, double x2, double y2) {
+    public double pointsDistance(double x1, double y1, double x2, double y2) {
         double distance = Math.sqrt(Math.pow((x2 - x1), 2) + Math.pow((y2 - y1), 2));
         return distance;
     }
