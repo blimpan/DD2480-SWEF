@@ -434,6 +434,25 @@ public class LaunchInterceptorTEST {
     @Test
     public void testLIC8True(){
 
+        double[][] points = {{1, 1}, {2, 2}, {3, 3}, {4, 4}, {5, 5}};
+
+        LaunchInterceptor.Parameters paramTrue = new LaunchInterceptor.Parameters(0, 1, 0, 1, 0,
+        0, 20, 0, 0, 0, 0, 2, 1, 1, 0,
+        0, 1, 1, 0);
+        LaunchInterceptor interceptTrue = new LaunchInterceptor(paramTrue, points.length, points, minLCM, minPUV);
+        Assert.assertTrue(null, interceptTrue.determineLIC8());
+    }
+
+    @Test
+    public void testLIC8False(){
+
+        double[][] points = {{1, 1}, {2, 2}, {3, 3}, {4, 4}, {5, 5}};
+
+        LaunchInterceptor.Parameters paramFalse = new LaunchInterceptor.Parameters(0, 5, 0, 1, 0,
+        0, 20, 0, 0, 0, 0, 2, 1, 1, 0,
+        0, 1, 1, 0);
+        LaunchInterceptor interceptFalse = new LaunchInterceptor(paramFalse, points.length, points, minLCM, minPUV);
+        Assert.assertTrue(null, interceptFalse.determineLIC8());
     }
 
     @Test
