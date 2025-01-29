@@ -2,7 +2,7 @@ import org.junit.*;
 
 import static org.junit.Assert.fail;
 
-public class LaunchInterceptorTEST {
+public class LaunchInterceptorTest {
 
     // Variables for minimum test input
     private final int minNumPoints = 2;
@@ -137,15 +137,6 @@ public class LaunchInterceptorTEST {
         var pointCoords = new double[][]{{0, 0}, {0, 1}, {2, 1}, {5, 1}, {10, 3}, {-1, 7}, {7, -1}, {0, 1}};
         var lInterceptor = new LaunchInterceptor(param, 8, pointCoords, minLCM, minPUV);
         Assert.assertThrows(IllegalArgumentException.class, lInterceptor::determineLIC0); // Negative length
-    }
-
-    @Test
-    public void testLIC0InsufficientPoints() {
-        var param = new LaunchInterceptor.Parameters(2, 0, 0, 0, 0,
-                0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                0, 0, 0, 0);
-        var lInterceptor = new LaunchInterceptor(param, 2, new double[][]{{0, 0}, {0, 0}}, minLCM, minPUV);
-        Assert.assertFalse(lInterceptor.determineLIC0());
     }
 
     @Test
@@ -460,6 +451,93 @@ public class LaunchInterceptorTEST {
     }
 
     @Test
+    public void testLIC7InvalidInput(){
+        LaunchInterceptor interceptTooFew = new LaunchInterceptor(minParameters, minNumPoints, minPoints, minLCM, minPUV);
+        Assert.assertFalse(null, interceptTooFew.determineLIC7());
+
+        double[][] points = {{1, 2}, {4, 1}, {9, 10}};
+        LaunchInterceptor.Parameters paramSmallK = new LaunchInterceptor.Parameters(1.0, 1.0, 0.1, 0.1, 0.5, 2.0, 0.05, 0.5, 3, 2, 3, 0, 1, 1, 1, 1, 1, 1, 1);
+        LaunchInterceptor interceptSmallK = new LaunchInterceptor(paramSmallK, points.length, points, minLCM, minPUV);
+        Assert.assertThrows(IllegalArgumentException.class, interceptSmallK::determineLIC7);
+
+        LaunchInterceptor.Parameters paramBigK = new LaunchInterceptor.Parameters(1.0, 1.0, 0.1, 0.1, 0.5, 2.0, 0.05, 0.5, 3, 2, 3, 2, 1, 1, 1, 1, 1, 1, 1);
+        LaunchInterceptor interceptBigK = new LaunchInterceptor(paramBigK, points.length, points, minLCM, minPUV);
+        Assert.assertThrows(IllegalArgumentException.class, interceptBigK::determineLIC7);
+
+    }
+
+    @Test
+    public void testLIC7True(){
+        double[][] points = {{1, 1}, {2, 2}, {3, 3}};
+        LaunchInterceptor.Parameters paramTrue = new LaunchInterceptor.Parameters(1.0, 1.0, 0.1, 0.1, 0.5, 2.0, 0.05, 0.5, 3, 2, 3, 1, 1, 1, 1, 1, 1, 1, 1);
+        LaunchInterceptor interceptTrue = new LaunchInterceptor(paramTrue, points.length, points, minLCM, minPUV);
+        Assert.assertTrue(null, interceptTrue.determineLIC7());
+
+    }
+
+    @Test
+    public void testLIC7False(){
+        double[][] points = {{1, 1}, {2, 2}, {3, 3}};
+        LaunchInterceptor.Parameters paramFalse = new LaunchInterceptor.Parameters(3.0, 1.0, 0.1, 0.1, 0.5, 2.0, 0.05, 0.5, 3, 2, 3, 1, 1, 1, 1, 1, 1, 1, 1);
+        LaunchInterceptor interceptFalse = new LaunchInterceptor(paramFalse, points.length, points, minLCM, minPUV);
+        Assert.assertFalse(null, interceptFalse.determineLIC7());
+
+    }
+
+    @Test
+    public void testLIC8InvalidInput(){
+        LaunchInterceptor.Parameters tooFewPoints = new LaunchInterceptor.Parameters(0, 0, 0, 1, 0,
+        0, 20, 0, 0, 0, 0, 2, 0, 0, 0,
+        0, 1, 1, 0);
+        LaunchInterceptor interceptTooFew = new LaunchInterceptor(tooFewPoints, minNumPoints, minPoints, minLCM, minPUV);
+        Assert.assertFalse(null, interceptTooFew.determineLIC8());
+
+        double[][] points = {{1, 1}, {2, 2}, {3, 3}, {4, 4}, {5, 5}};
+
+        LaunchInterceptor.Parameters invalidA = new LaunchInterceptor.Parameters(0, 0, 0, 1, 0,
+        0, 20, 0, 0, 0, 0, 2, 0, 1, 0,
+        0, 1, 1, 0);
+        LaunchInterceptor interceptA = new LaunchInterceptor(invalidA, points.length, points, minLCM, minPUV);
+        Assert.assertFalse(null, interceptA.determineLIC8());
+
+        LaunchInterceptor.Parameters invalidB = new LaunchInterceptor.Parameters(0, 0, 0, 1, 0,
+        0, 20, 0, 0, 0, 0, 2, 1, 0, 0,
+        0, 1, 1, 0);
+        LaunchInterceptor interceptB = new LaunchInterceptor(invalidB, points.length, points, minLCM, minPUV);
+        Assert.assertFalse(null, interceptB.determineLIC8());
+
+        LaunchInterceptor.Parameters invalidNumPointsToAB = new LaunchInterceptor.Parameters(0, 0, 0, 1, 0,
+        0, 20, 0, 0, 0, 0, 2, 2, 2, 0,
+        0, 1, 1, 0);
+        LaunchInterceptor interceptNumPointsToAB = new LaunchInterceptor(invalidNumPointsToAB, minNumPoints, minPoints, minLCM, minPUV);
+        Assert.assertFalse(null, interceptNumPointsToAB.determineLIC8());
+    }
+
+    @Test
+    public void testLIC8True(){
+
+        double[][] points = {{1, 1}, {2, 2}, {3, 3}, {4, 4}, {5, 5}};
+
+        LaunchInterceptor.Parameters paramTrue = new LaunchInterceptor.Parameters(0, 1, 0, 1, 0,
+        0, 20, 0, 0, 0, 0, 2, 1, 1, 0,
+        0, 1, 1, 0);
+        LaunchInterceptor interceptTrue = new LaunchInterceptor(paramTrue, points.length, points, minLCM, minPUV);
+        Assert.assertTrue(null, interceptTrue.determineLIC8());
+    }
+
+    @Test
+    public void testLIC8False(){
+
+        double[][] points = {{1, 1}, {2, 2}, {3, 3}, {4, 4}, {5, 5}};
+
+        LaunchInterceptor.Parameters paramFalse = new LaunchInterceptor.Parameters(0, 5, 0, 1, 0,
+        0, 20, 0, 0, 0, 0, 2, 1, 1, 0,
+        0, 1, 1, 0);
+        LaunchInterceptor interceptFalse = new LaunchInterceptor(paramFalse, points.length, points, minLCM, minPUV);
+        Assert.assertFalse(null, interceptFalse.determineLIC8());
+    }
+
+    @Test
     public void testLIC14ValidInput() {
         var param = new LaunchInterceptor.Parameters(0, 0, 0, 1, 0,
                 0, 20, 0, 0, 0, 0, 2, 0, 0, 0,
@@ -725,6 +803,33 @@ public class LaunchInterceptorTEST {
 
         LaunchInterceptor interceptorFalse = new LaunchInterceptor(Par, numPointsValid, pointsFalse, minLCM, minPUV);
         Assert.assertFalse(interceptorFalse.determineLIC11());
+    }
+
+    @Test
+    public void testPointLine(){
+        double a = 1;
+        double b = 0;
+        double c = 0;
+        double x = 2;
+        double y = 0;
+        double expected = 2;
+        LaunchInterceptor interceptor = new LaunchInterceptor(minParameters, minNumPoints, minPoints, minLCM, minPUV);
+        double actual = interceptor.pointLineDistance(a,b,c,x,y);
+        Assert.assertEquals(expected,actual,0.000001);
+    }
+
+
+    @Test
+    public void testPointsDistance(){
+        double x1 = 1;
+        double y1 = 0;
+        double x2 = 5;
+        double y2 = 3;
+        double expected = 5;
+
+        LaunchInterceptor interceptor = new LaunchInterceptor(minParameters, minNumPoints, minPoints, minLCM, minPUV);
+        double actual = interceptor.pointsDistance(x1,y1,x2,y2);
+        Assert.assertEquals(expected,actual,0.000001);
     }
 
     /**

@@ -400,9 +400,18 @@ public class LaunchInterceptor {
             return false;
         }
 
+        if (parameters.K_PTS < 1){
+            throw new IllegalArgumentException("K_PTS must be greater than or equal to 1");
+        }
+            
+        if (parameters.K_PTS > (numPoints - 2)){
+            throw new IllegalArgumentException("K_PTS cannot be greater than (NUMPOINTS - 2)");
+        }
+            
+
         int k = 0;
         double x1, x2, y1, y2;
-        for (int i = 0; i < numPoints && k < numPoints; i++) {
+        for (int i = 0; i < numPoints && (k + parameters.K_PTS + 1) < numPoints ; i++) {
             k = i + parameters.K_PTS + 1;
             x1 = x[i];
             y1 = y[i];
@@ -426,8 +435,18 @@ public class LaunchInterceptor {
      */
     public Boolean determineLIC8() {
 
-        //Condition is not met when NUMPOINTS < 3
-        if(numPoints<3){
+        //Condition is not met when NUMPOINTS < 5
+        if(numPoints<5){
+            return false;
+        }
+
+        //A_PTS must be >= 1
+        if(parameters.A_PTS<1){
+            return false;
+        }
+
+        //B_PTS must be >= 1
+        if(parameters.B_PTS<1){
             return false;
         }
 
@@ -442,7 +461,7 @@ public class LaunchInterceptor {
             y3 = y[i + parameters.A_PTS + parameters.B_PTS + 1];
 
             //If the radius > RADIUS1 the points fit the criterion, else keep looping
-            if(containedInCircle(x1, y1, x2, y2, x3, y3, parameters.RADIUS1, false)){
+            if(containedInCircle(x1, y1, x2, y2, x3, y3, parameters.RADIUS1, true)){
                 return true;
             }
         }
@@ -746,7 +765,7 @@ public class LaunchInterceptor {
     }
 
     //Calculates distance between two points
-    private static double pointsDistance(double x1, double y1, double x2, double y2) {
+    public double pointsDistance(double x1, double y1, double x2, double y2) {
         double distance = Math.sqrt(Math.pow((x2 - x1), 2) + Math.pow((y2 - y1), 2));
         return distance;
     }
