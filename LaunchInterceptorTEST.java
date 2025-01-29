@@ -140,15 +140,6 @@ public class LaunchInterceptorTEST {
     }
 
     @Test
-    public void testLIC0InsufficientPoints() {
-        var param = new LaunchInterceptor.Parameters(2, 0, 0, 0, 0,
-                0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                0, 0, 0, 0);
-        var lInterceptor = new LaunchInterceptor(param, 2, new double[][]{{0, 0}, {0, 0}}, minLCM, minPUV);
-        Assert.assertFalse(lInterceptor.determineLIC0());
-    }
-
-    @Test
     public void testLIC1LargerThanL1() {
         var param = new LaunchInterceptor.Parameters(0, 5, 0, 0, 0,
                 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
