@@ -2,7 +2,7 @@ import org.junit.*;
 
 import static org.junit.Assert.fail;
 
-public class LaunchInterceptorTest {
+public class LaunchInterceptorTEST {
 
     // Variables for minimum test input
     private final int minNumPoints = 2;
