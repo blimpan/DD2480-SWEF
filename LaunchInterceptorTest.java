@@ -806,6 +806,20 @@ public class LaunchInterceptorTest {
     }
 
     @Test
+    public void testPointLine(){
+        double a = 1;
+        double b = 0;
+        double c = 0;
+        double x = 2;
+        double y = 0;
+        double expected = 2;
+        LaunchInterceptor interceptor = new LaunchInterceptor(minParameters, minNumPoints, minPoints, minLCM, minPUV);
+        double actual = interceptor.pointLineDistance(a,b,c,x,y);
+        Assert.assertEquals(expected,actual,0.000001);
+    }
+
+
+    @Test
     public void testPointsDistance(){
         double x1 = 1;
         double y1 = 0;
