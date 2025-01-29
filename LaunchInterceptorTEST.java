@@ -451,6 +451,22 @@ public class LaunchInterceptorTEST {
     }
 
     @Test
+    public void testLIC7InvalidInput(){
+        LaunchInterceptor interceptTooFew = new LaunchInterceptor(minParameters, minNumPoints, minPoints, minLCM, minPUV);
+        Assert.assertFalse(null, interceptTooFew.determineLIC7());
+
+        double[][] points = {{1, 2}, {4, 1}, {9, 10}};
+        LaunchInterceptor.Parameters paramSmallK = new LaunchInterceptor.Parameters(1.0, 1.0, 0.1, 0.1, 0.5, 2.0, 0.05, 0.5, 3, 2, 3, 0, 1, 1, 1, 1, 1, 1, 1);
+        LaunchInterceptor interceptSmallK = new LaunchInterceptor(paramSmallK, points.length, points, minLCM, minPUV);
+        Assert.assertThrows(IllegalArgumentException.class, interceptSmallK::determineLIC7);
+
+        LaunchInterceptor.Parameters paramBigK = new LaunchInterceptor.Parameters(1.0, 1.0, 0.1, 0.1, 0.5, 2.0, 0.05, 0.5, 3, 2, 3, 2, 1, 1, 1, 1, 1, 1, 1);
+        LaunchInterceptor interceptBigK = new LaunchInterceptor(paramBigK, points.length, points, minLCM, minPUV);
+        Assert.assertThrows(IllegalArgumentException.class, interceptBigK::determineLIC7);
+
+    }
+
+    @Test
     public void testLIC8InvalidInput(){
         LaunchInterceptor.Parameters tooFewPoints = new LaunchInterceptor.Parameters(0, 0, 0, 1, 0,
         0, 20, 0, 0, 0, 0, 2, 0, 0, 0,
