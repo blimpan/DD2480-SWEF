@@ -11,7 +11,7 @@ The Launch Interceptor Program is designed to evaluate radar tracking informatio
 The project consists of two primary Java files:
 
 1. **LaunchInterceptor.java**: This file contains the implementation of the `LaunchInterceptor` class.
-2. **LaunchInterceptorTEST.java**: This file includes unit tests for the methods defined in the `LaunchInterceptor` class.
+2. **LaunchInterceptorTest.java**: This file includes unit tests for the methods defined in the `LaunchInterceptor` class.
 
 ## LaunchInterceptor.java
 
@@ -68,10 +68,9 @@ This file implements the `LaunchInterceptor` class, which encapsulates the logic
 
 ### Used Attributes
 
-- `processed`: Indicates if the decide method has been processed.
+- `LCM`: Logical Connecting Matrix.
+- `PUV`: Preliminary Unlocking Vector
 - `PUM`: Preliminary Unlocking Matrix.
-- `CMV`: Conditions Met Vector.
-- `FUV`: Final Unlocking Vector.
 
 ### Output Type
 
@@ -524,29 +523,24 @@ There are a total of 15 LICs to be implemented, each will return `true` or `fals
 
 ---
 
-### LaunchInterceptorTEST.java
+### LaunchInterceptorTest.java
 
 This file contains unit tests for the `LaunchInterceptor` class. It verifies the functionality of the implemented methods, ensuring accurate evaluations of the LIC conditions and launch decisions based on input parameters and data points. The tests cover:
 
 - **Constructor Testing**:
-    - Valid parameter initialization.
-    - Invalid parameter cases (e.g., mismatched coordinate lengths).
+    - Valid parameter initialization and launchInterceptor instantiation.
+- **Getters Testing**
+    - Valid the getter methods for the launchInterceptor class.
+- **Decide Method Testing**
+    - Valid the output of the decide method based on hardcoded inputs.
 - **LIC Method Testing**:
     - General cases where the condition is satisfied.
     - Boundary cases with the minimum number of points.
     - Invalid parameters (e.g., negative `LENGTH1`).
-- **Helper Fucntion Testing**
+- **Helper Function Testing**
     - Invalid Input
     - General cases
     - Complex computations Cases
-- **PUM (Preliminary Unlocking Matrix)**:
-    - Validating that the PUM is correctly populated based on LIC evaluations.
-- **LCM (Logical Connector Matrix)**:
-    - Ensuring that the LCM is accurately applied during decision-making.
-- **FUV (Final Unlocking Vector)**:
-    - Testing that the FUV reflects the final launch decision based on the evaluated conditions.
-- **Decide Function Testing**
-
 ---
 
 ## Contributions
