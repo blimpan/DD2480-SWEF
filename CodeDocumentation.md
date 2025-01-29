@@ -3,7 +3,7 @@
 # Launch Interceptor Program
 
 ## Introduction
-
+ 
 The Launch Interceptor Program is designed to evaluate radar tracking information as part of an anti-ballistic missile system. The core function, `DECIDE()`, generates a boolean signal indicating whether an interceptor should be launched based on various Launch Interceptor Conditions (LICs). The program processes up to 100 planar data points to assess the conditions for a potential launch. The system utilizes a Conditions Met Vector (CMV) and a Logical Connector Matrix (LCM) to determine the final launch decision through a Preliminary Unlocking Matrix (PUM) and a Final Unlocking Vector (FUV).
 
 ## Code Infrastructure
