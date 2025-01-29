@@ -891,7 +891,8 @@ public class LaunchInterceptor {
                 }
                 continue;
             }
-    
+            if (distance > 2 * radius) continue;
+
             double height = Math.sqrt(radius * radius - distance * distance / 4);
 
             double midX = (pointsX[i] + pointsX[i - 1]) / 2;

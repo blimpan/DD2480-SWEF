@@ -920,6 +920,54 @@ public class LaunchInterceptorTest {
         double actual = interceptor.pointsDistance(x1,y1,x2,y2);
         Assert.assertEquals(expected,actual,0.000001);
     }
+    @Test
+    public void testNotContainedInCircle(){
+        double x1 = 1;
+        double y1 = 0;
+        double x2 = 5;
+        double y2 = 3;
+        double x3 = 2;
+        double y3 = 1;
+        double radius = 1;
+
+        
+        LaunchInterceptor interceptor = new LaunchInterceptor(minParameters, minNumPoints, minPoints, minLCM, minPUV);
+        boolean result = interceptor.containedInCircle(x1, y1, x2, y2, x3, y3, radius, false);
+        Assert.assertTrue("Expected points not to fit within the circle", result);
+    }
+
+    @Test
+    public void testIsContainedInCircle(){
+        double x1 = 1;
+        double y1 = 0;
+        double x2 = 5;
+        double y2 = 3;
+        double x3 = 2;
+        double y3 = 1;
+        double radius = 10;
+
+        
+        LaunchInterceptor interceptor = new LaunchInterceptor(minParameters, minNumPoints, minPoints, minLCM, minPUV);
+        boolean result = interceptor.containedInCircle(x1, y1, x2, y2, x3, y3, radius, false);
+        Assert.assertFalse("Expected points to fit within the circle", result);
+    }
+
+    @Test
+    public void testIncludedContainedInCircle(){
+        double x1 = 1;
+        double y1 = 0;
+        double x2 = 5;
+        double y2 = 3;
+        double x3 = 2;
+        double y3 = 1;
+        double radius = 10;
+
+        
+        LaunchInterceptor interceptor = new LaunchInterceptor(minParameters, minNumPoints, minPoints, minLCM, minPUV);
+        boolean result = interceptor.containedInCircle(x1, y1, x2, y2, x3, y3, radius, true);
+        Assert.assertTrue("Expected points to fit within the circle", result);
+    }
+
 
     /**
      * Convert the array with 0 --> NOTUSED, 1 --> ANDD, 2 --> ORR, other --> NOTUSED
