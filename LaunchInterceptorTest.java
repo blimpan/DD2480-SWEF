@@ -805,6 +805,20 @@ public class LaunchInterceptorTest {
         Assert.assertFalse(interceptorFalse.determineLIC11());
     }
 
+    @Test
+    public void testPointLine(){
+        double a = 1;
+        double b = 0;
+        double c = 0;
+        double x = 2;
+        double y = 0;
+        double expected = 2;
+        LaunchInterceptor interceptor = new LaunchInterceptor(minParameters, minNumPoints, minPoints, minLCM, minPUV);
+        double actual = interceptor.pointLineDistance(a,b,c,x,y);
+        Assert.assertEquals(expected,actual,0.000001);
+    }
+
+
     /**
      * Convert the array with 0 --> NOTUSED, 1 --> ANDD, 2 --> ORR, other --> NOTUSED
      * @param arr the array to convert
