@@ -110,6 +110,95 @@ public class LaunchInterceptorTest {
     }
 
     @Test
+    public void testDecideValidInputFalseOutput() {
+        var LENGTH1 = 1; var RADIUS1 = 1; var AREA1 = 1; var EPSILON = 0.3;
+        var LENGTH2 = 10; var RADIUS2 = 10;var AREA2 = 11; var DIST = 4;
+
+        var Q_PTS = 6; var QUADS = 2; var N_PTS = 1; var K_PTS = 1;
+        var A_PTS = 1; var B_PTS = 1; var C_PTS = 1; var D_PTS = 1;
+        var E_PTS = 1; var F_PTS = 1; var G_PTS = 1;
+
+        var lParam = new LaunchInterceptor.Parameters(LENGTH1, RADIUS1, EPSILON, AREA1, LENGTH2, RADIUS2, AREA2, DIST,
+                Q_PTS, QUADS, N_PTS, K_PTS, A_PTS, B_PTS, C_PTS, D_PTS, E_PTS, F_PTS, G_PTS);
+
+        boolean[] decidePUV = {true, true, true, true, true, true, true, true,
+                true, true, true, true, true, true, true};
+
+        // Arbitrary but coherent values
+        var decideLCM = fromIntArray(new int[][]{
+            //   0  1  2  3  4  5  6  7  8  9 10 11 12 13 14
+                {0, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1},      //00
+                {1, 0, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1},      //01
+                {1, 1, 0, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1},      //02
+                {1, 1, 1, 0, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1},      //03
+                {1, 1, 1, 1, 0, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1},      //04
+                {1, 1, 1, 1, 1, 0, 2, 1, 1, 1, 1, 1, 1, 1, 1},      //05
+                {2, 2, 2, 2, 2, 2, 0, 2, 2, 2, 1, 2, 1, 2, 2},      //06
+                {1, 1, 1, 1, 1, 1, 2, 0, 1, 1, 1, 1, 1, 1, 1},      //07
+                {1, 1, 1, 1, 1, 1, 2, 1, 0, 1, 1, 1, 1, 1, 1},      //08
+                {1, 1, 1, 1, 1, 1, 2, 1, 1, 0, 1, 1, 1, 1, 1},      //09
+                {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1},      //10
+                {1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 0, 1, 1, 1},      //11
+                {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1},      //12
+                {1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 0, 1},      //13
+                {1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 0}       //14
+        });
+
+        var pointCoords = new double[][]{
+                {0, 0}, {-1, 4}, {-2, 0}, {5, 10}, {1, 1}, {-6, 15}, {0, 1}, {-15, -2}, {1, 0}, {14, -20},
+                {-1, 0}, {0, -1}, {0, 0}, {-1, -1}, {2, 1}, {5, 16}, {-20, 5}, {-5, -10}, {12, -7}
+        };
+        var lInterceptor = new LaunchInterceptor(lParam, pointCoords.length, pointCoords, decideLCM, decidePUV);
+
+        Assert.assertFalse(null, lInterceptor.decide());
+        Assert.assertFalse(null, lInterceptor.isLaunch());
+        Assert.assertArrayEquals(new boolean[]{true, true, true, true, true, true,
+                        true, true, true, true, true, true, true, true, true},
+                lInterceptor.getPUV()
+        );
+
+        assertNoExceptionIsThrown(lInterceptor::getPUM);
+        assertNoExceptionIsThrown(lInterceptor::getFUV);
+        assertNoExceptionIsThrown(lInterceptor::getCMV);
+        assertNoExceptionIsThrown(lInterceptor::isLaunch);
+
+        Assert.assertArrayEquals(new Boolean[]{true, true, true, true, true, true,
+                        false, true, true, true, false, true, false, true, true},
+                lInterceptor.getFUV()
+        );
+
+        Assert.assertArrayEquals(new Boolean[]{true, true, true, true, true, true,
+                        false, true, true, true, true, true, true, true, true},
+                lInterceptor.getCMV()
+        );
+
+        var expectedPUM = new Boolean[][]{
+                {true, true, true, true, true, true, true, true, true, true, true, true, true, true, true},
+                {true, true, true, true, true, true, true, true, true, true, true, true, true, true, true},
+                {true, true, true, true, true, true, true, true, true, true, true, true, true, true, true},
+                {true, true, true, true, true, true, true, true, true, true, true, true, true, true, true},
+                {true, true, true, true, true, true, true, true, true, true, true, true, true, true, true},
+                {true, true, true, true, true, true, true, true, true, true, true, true, true, true, true},
+                {true, true, true, true, true, true, true, true, true, true, false, true, false, true, true},
+                {true, true, true, true, true, true, true, true, true, true, true, true, true, true, true},
+                {true, true, true, true, true, true, true, true, true, true, true, true, true, true, true},
+                {true, true, true, true, true, true, true, true, true, true, true, true, true, true, true},
+                {true, true, true, true, true, true, false, true, true, true, true, true, true, true, true},
+                {true, true, true, true, true, true, true, true, true, true, true, true, true, true, true},
+                {true, true, true, true, true, true, false, true, true, true, true, true, true, true, true},
+                {true, true, true, true, true, true, true, true, true, true, true, true, true, true, true},
+                {true, true, true, true, true, true, true, true, true, true, true, true, true, true, true}
+        };
+
+        var actualPUM = lInterceptor.getPUM();
+
+        for (int i = 0; i < 15; i++) {
+            Assert.assertArrayEquals(expectedPUM[i], actualPUM[i]);
+        }
+
+    }
+
+    @Test
     public void testLIC0FartherThanL1() {
         var param = new LaunchInterceptor.Parameters(5, 0, 0, 0, 0,
                 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
