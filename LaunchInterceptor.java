@@ -209,7 +209,7 @@ public class LaunchInterceptor {
             // first coordinate = (x[i-2], y[i-2])
             // second coordinate = (x[i-1], y[i-1])
             // third coordinate = (x[i], y[i])
-            if (containedInCircle(x[i - 2], y[i - 2], x[i - 1], y[i - 1], x[i], y[i], parameters.RADIUS1, true) == true) {
+            if (containedInCircle(x[i - 2], y[i - 2], x[i - 1], y[i - 1], x[i], y[i], parameters.RADIUS1, false) == true) {
                 return true;
             }
         }
@@ -473,7 +473,7 @@ public class LaunchInterceptor {
             y3 = y[i + parameters.A_PTS + parameters.B_PTS + 1];
 
             //If the radius > RADIUS1 the points fit the criterion, else keep looping
-            if(containedInCircle(x1, y1, x2, y2, x3, y3, parameters.RADIUS1, true)){
+            if(containedInCircle(x1, y1, x2, y2, x3, y3, parameters.RADIUS1, false)){
                 return true;
             }
         }
@@ -655,7 +655,7 @@ public class LaunchInterceptor {
             var x3 = x[i + parameters.A_PTS + parameters.B_PTS + 2];
             var y3 = y[i + parameters.A_PTS + parameters.B_PTS + 2];
 
-            if (containedInCircle(x1, y1, x2, y2, x3, y3, parameters.RADIUS1, true))
+            if (containedInCircle(x1, y1, x2, y2, x3, y3, parameters.RADIUS1, false))
                 matchFound = true;
         }
 
@@ -671,7 +671,7 @@ public class LaunchInterceptor {
             var x3 = x[i + parameters.A_PTS + parameters.B_PTS + 2];
             var y3 = y[i + parameters.A_PTS + parameters.B_PTS + 2];
 
-            if (containedInCircle(x1, y1, x2, y2, x3, y3, parameters.RADIUS2, false))
+            if (containedInCircle(x1, y1, x2, y2, x3, y3, parameters.RADIUS2, true))
                 matchFound = true;
         }
         return matchFound;
@@ -864,32 +864,34 @@ public class LaunchInterceptor {
 
     /**
      * Determines wherter three points would be contained within a circle of a specified radius
-     * <p>
-     * mode == false @return true if all points can be contained within circle
-     * mode == true @return true if no circle of that radius can contain all three points
-     * <p>
+     * 
+     * inclusionCheck == true @return true if all points can be contained within a circle of specified radius
+     * inclusionCheck == false @return true if no circle of that radius can contain all three points
+     * 
      * first coordinate = (x[i-2], y[i-2])
      * second coordinate = (x[i-1], y[i-1])
      * third coordinate = (x[i], y[i])
-     * <p>
+     * 
      * This function calculates this by taking two of three points and calculating where a circle that intersects both points
      * with radius RADIUS1 would have it's center point and checking if the third point is within the specified radius.
-     * Depending on mode it returns true or false for including or excluding all points.
+     * Depending on inclusionCheck it returns true or false for including or excluding all points.
      */
-    public boolean containedInCircle(double x1, double y1, double x2, double y2, double x3, double y3, double radius, boolean mode) {
+    public boolean containedInCircle(double x1, double y1, double x2, double y2, double x3, double y3, double radius, boolean inclusionCheck) {
         double[] pointsX = {x1, x2, x3, x1, x2};
         double[] pointsY = {y1, y2, y3, y1, y2};
-        int containingCircles = 0;
+        
+        int validCircles = 0;
+        
         for (int i = 1; i < 4; i++) {
             double distance = pointsDistance(pointsX[i - 1], pointsY[i - 1], pointsX[i], pointsY[i]);
-
+            
             if (distance == 0) {
-                // Less than diameter away when two points are on top of each other
-                if (pointsDistance(pointsX[i], pointsY[i], pointsX[i + 1], pointsY[i + 1])<=radius*2){
-                    containingCircles++;
+                if (pointsDistance(pointsX[i], pointsY[i], pointsX[i + 1], pointsY[i + 1]) <= radius * 2) {
+                    validCircles++;
                 }
-                continue; // Avoid division by zero
+                continue;
             }
+    
             double height = Math.sqrt(radius * radius - distance * distance / 4);
 
             double midX = (pointsX[i] + pointsX[i - 1]) / 2;
@@ -897,28 +899,29 @@ public class LaunchInterceptor {
 
             double deltaX = (pointsY[i - 1] - pointsY[i]) / distance;
             double deltaY = (pointsX[i - 1] - pointsX[i]) / distance;
-
+    
             double xPos1 = midX + height * deltaX;
             double yPos1 = midY - height * deltaY;
 
             double xPos2 = midX - height * deltaX;
             double yPos2 = midY + height * deltaY;
-
-            if (pointsDistance(pointsX[i + 1], pointsY[i + 1], xPos1, yPos1) <= radius ||
+    
+            if (pointsDistance(pointsX[i + 1], pointsY[i + 1], xPos1, yPos1) <= radius || 
                 pointsDistance(pointsX[i + 1], pointsY[i + 1], xPos2, yPos2) <= radius) {
-                containingCircles++;
+                validCircles++;
             }
         }
-        if (mode == false) {
-            if (containingCircles != 0) {
-                return true;
-            }
-        } else if (mode == true) {
-            if (containingCircles == 0) {
-                return true;
-            }
-        }
+    
+        // Inclusion check returns true if at least one valid circle exists
+        
+        if (inclusionCheck == true && validCircles > 0) 
+            return true;
+        if (inclusionCheck == false && validCircles == 0)
+            return true;
+
         return false;
     }
+    
+
 
 }
