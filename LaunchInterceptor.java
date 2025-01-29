@@ -527,10 +527,9 @@ public class LaunchInterceptor {
         //Check requirements 3-5
         if (numPoints < 3 || G_PTS < 1 || G_PTS > numPoints - 2) return false;
         //loop through all data points for A
-        for (int aIndex = 0; aIndex < numPoints; ++aIndex) {
-            if (aIndex + G_PTS >= numPoints)
-                break; //if B is out of boundary, then the next A will also result in out boundary B
-            int bIndex = aIndex + G_PTS + 1; // reaching here indicates B is in boundary
+        for (int aIndex=0; aIndex<numPoints; ++aIndex){
+            if (aIndex+G_PTS>=numPoints)break; //if B is out of boundary, then the next A will also result in out boundary B
+            int bIndex = aIndex+G_PTS+1; // reaching here indicates B is in boundary
             //A, B  are all set
             //Check conditions 2
             if (x[bIndex] - x[aIndex] < 0) {

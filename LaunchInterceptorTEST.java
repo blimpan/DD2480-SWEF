@@ -650,6 +650,83 @@ public class LaunchInterceptorTEST {
         Assert.assertTrue(interceptorFalse.determineLIC10());
     }
 
+    @Test
+    public void testLIC11InvalidParameters(){
+        // Define the invalid parameters
+        double[][] points = {
+                {1.0, 2.0},  // Point A
+                {2.0, 3.0},  // Point B
+                {3.0, 1.0},  // Point C
+                {4.0, 4.0},  // Point D
+                {5.0, 0.0},  // Point E
+                {6.0, 5.0},  // Point F
+                {7.0, 3.0},  // Point G
+                {8.0, 2.5},  // Point H
+                {9.0, 1.5},  // Point I
+                {10.0, 4.0}  // Point J
+        };
+
+        int numPointsValid = 10;
+
+        LaunchInterceptor.Parameters invalidParGPTSSmall =
+                new LaunchInterceptor.Parameters(1.0, 1.0, 0.1, 0.1, 0.5, 2.0, 0.05, 0.5,
+                        3, 2, 1, 1, 1, 0, 1, 1, 1, 1,0);
+        // Test with invalid G_PTS (too small=0)
+        LaunchInterceptor interceptorInvalidGPTS1 = new LaunchInterceptor(invalidParGPTSSmall, numPointsValid, points, minLCM, minPUV);
+        Assert.assertFalse(interceptorInvalidGPTS1.determineLIC11());
+
+        // Define parameters with invalid G_PTS (too large)
+        LaunchInterceptor.Parameters invalidGPTSLarge =
+                new LaunchInterceptor.Parameters(1.0, 1.0, 0.1, 0.1, 0.5, 2.0, 0.05, 0.5,
+                        3, 2, 1, 1, 1, 1, 1, 1, 1, 1,15);
+
+        // Test with invalid GPTS (too large)
+        LaunchInterceptor interceptorInvalidGPTS2 = new LaunchInterceptor(invalidGPTSLarge, numPointsValid, points, minLCM, minPUV);
+        Assert.assertFalse(interceptorInvalidGPTS2.determineLIC11());
+    }
+    @Test
+    public void testLIC11General(){
+        //Check for true case
+        // Define the parameters
+        double[][] pointsTrue = {
+                {1.0, 2.0},  // Point A
+                {2.0, 3.0},  // Point B
+                {3.0, 1.0},  // Point C
+                {4.0, 4.0},  // Point D
+                {5.0, 0.0},  // Point E
+                {4.0, 5.0},  // Point F
+                {3.0, 3.0},  // Point G
+                {2.0, 2.5},  // Point H
+                {9.0, 1.5},  // Point I
+                {10.0, 4.0}  // Point J
+        };
+        int numPointsValid = 10;
+        LaunchInterceptor.Parameters Par =
+                new LaunchInterceptor.Parameters(1.0, 1.0, 0.1, 0.1, 0.5, 2.0, 0.05, 0.5,
+                        3, 2, 1, 1, 1, 0, 1, 1, 1, 1,1);
+
+        LaunchInterceptor interceptorTrue = new LaunchInterceptor(Par, numPointsValid, pointsTrue, minLCM, minPUV);
+        Assert.assertTrue(interceptorTrue.determineLIC11());
+
+        //Check for false case
+        // Define the parameters
+        double[][] pointsFalse = {
+                {1.0, 2.0},  // Point A
+                {2.0, 3.0},  // Point B
+                {3.0, 1.0},  // Point C
+                {4.0, 4.0},  // Point D
+                {5.0, 0.0},  // Point E
+                {6.0, 5.0},  // Point F
+                {7.0, 3.0},  // Point G
+                {8.0, 2.5},  // Point H
+                {9.0, 1.5},  // Point I
+                {10.0, 4.0}  // Point J
+        };
+
+        LaunchInterceptor interceptorFalse = new LaunchInterceptor(Par, numPointsValid, pointsFalse, minLCM, minPUV);
+        Assert.assertFalse(interceptorFalse.determineLIC11());
+    }
+
     /**
      * Convert the array with 0 --> NOTUSED, 1 --> ANDD, 2 --> ORR, other --> NOTUSED
      * @param arr the array to convert
@@ -660,10 +737,10 @@ public class LaunchInterceptorTEST {
         for (int i = 0; i < 15; i++)
             for (int j = 0; j < 15; j++)
                 if (arr[i][j] == 1)
-                    connectArray[i][j] = LaunchInterceptor.Connectors.ANDD; 
+                    connectArray[i][j] = LaunchInterceptor.Connectors.ANDD;
                 else if (arr[i][j] == 2)
                     connectArray[i][j] = LaunchInterceptor.Connectors.ORR;
-                else 
+                else
                     connectArray[i][j] = LaunchInterceptor.Connectors.NOTUSED;
         return connectArray;
     }
@@ -680,4 +757,3 @@ public class LaunchInterceptorTEST {
         }
     }
 }
-
