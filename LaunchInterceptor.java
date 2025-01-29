@@ -841,7 +841,7 @@ public class LaunchInterceptor {
 
             if (distance == 0) {
                 // Less than diameter away when two points are on top of each other
-                if (pointsDistance(pointsX[i], pointsY[i], pointsX[i + 1], pointsY[i + 1]) < radius * 2) {
+                if (pointsDistance(pointsX[i], pointsY[i], pointsX[i + 1], pointsY[i + 1])<=radius*2){
                     containingCircles++;
                 }
                 continue; // Avoid division by zero
@@ -860,8 +860,8 @@ public class LaunchInterceptor {
             double xPos2 = midX - height * deltaX;
             double yPos2 = midY + height * deltaY;
 
-            if (pointsDistance(pointsX[i + 1], pointsY[i + 1], xPos1, yPos1) < radius ||
-                    pointsDistance(pointsX[i + 1], pointsY[i + 1], xPos2, yPos2) < radius) {
+            if (pointsDistance(pointsX[i + 1], pointsY[i + 1], xPos1, yPos1) <= radius ||
+                pointsDistance(pointsX[i + 1], pointsY[i + 1], xPos2, yPos2) <= radius) {
                 containingCircles++;
             }
         }
