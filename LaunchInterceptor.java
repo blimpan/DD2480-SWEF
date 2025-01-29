@@ -419,13 +419,35 @@ public class LaunchInterceptor {
     }
 
     /**
-     * Not implemented
-     *
-     * @return trivially true
+     * Determines if there exists at least one set of three data points
+     * separated by exactly A_PTS and B_PTS consecutive intervening points, respectively,
+     *  that cannot be contained within or on a circle of radius RADIUS1.
+     * @return true or false
      */
-    public boolean determineLIC8() {
-        //TODO fix when merging LIC8
-        return true;
+    public Boolean determineLIC8() {
+
+        //Condition is not met when NUMPOINTS < 3
+        if(numPoints<3){
+            return false;
+        }
+
+        double x1, x2, x3, y1, y2, y3;
+
+        for(int i = 0; i < numPoints - parameters.A_PTS - parameters.B_PTS - 1; i++){
+            x1 = x[i];
+            x2 = x[i + parameters.A_PTS + 1];
+            x3 = x[i + parameters.A_PTS + parameters.B_PTS + 1];
+            y1 = y[i];
+            y2 = y[i + parameters.A_PTS + 1];
+            y3 = y[i + parameters.A_PTS + parameters.B_PTS + 1];
+
+            //If the radius > RADIUS1 the points fit the criterion, else keep looping
+            if(containedInCircle(x1, y1, x2, y2, x3, y3, parameters.RADIUS1, false)){
+                return true;
+            }
+        }
+
+        return false; //no such points
     }
 
     /**
