@@ -379,6 +379,16 @@ public boolean determineLIC2() {
             return false;
         }
 
+        //A_PTS must be >= 1
+        if(parameters.A_PTS<1){
+            return false;
+        }
+
+        //B_PTS must be >= 1
+        if(parameters.B_PTS<1){
+            return false;
+        }
+
         double x1, x2, x3, y1, y2, y3;
 
         for(int i = 0; i < numPoints - parameters.A_PTS - parameters.B_PTS - 1; i++){
