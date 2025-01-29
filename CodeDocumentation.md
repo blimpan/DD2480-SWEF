@@ -235,8 +235,20 @@ There are a total of 15 LICs to be implemented, each will return `true` or `fals
 - Returns `true` if the condition is met, otherwise `false`.
 
 ---
+### 3.9 LIC 8
 
-### 3.9 LIC 9
+### `boolean determineLIC8()`
+
+###Specification
+
+-Determines if there exists at least one set of three data points separated by exactly A_PTS and B_PTS consecutive intervening points, respectively, that cannot be contained within or on a circle of radius RADIUS1.
+
+### Output Type
+
+- Returns `true` if condition is metor `false` otherwise"
+---
+
+### 3.10 LIC 9
 
 ### `boolean determineLIC9()`
 
@@ -265,7 +277,7 @@ There are a total of 15 LICs to be implemented, each will return `true` or `fals
 
 ---
 
-### 3.10 LIC 10
+### 3.11 LIC 10
 
 ### `boolean determineLIC10()`
 
@@ -290,7 +302,7 @@ There are a total of 15 LICs to be implemented, each will return `true` or `fals
 
 ---
 
-### 3.11 LIC 11
+### 3.12 LIC 11
 
 ### `boolean determineLIC11()`
 
@@ -309,7 +321,7 @@ There are a total of 15 LICs to be implemented, each will return `true` or `fals
 
 ---
 
-### 3.12 LIC 12
+### 3.13 LIC 12
 
 ### `boolean determineLIC12()`
 
@@ -330,7 +342,7 @@ There are a total of 15 LICs to be implemented, each will return `true` or `fals
 
 ---
 
-### 3.13 LIC 13
+### 3.14 LIC 13
 
 ### `boolean determineLIC13()`
 
@@ -354,7 +366,7 @@ There are a total of 15 LICs to be implemented, each will return `true` or `fals
 
 ---
 
-### 3.14 LIC 14
+### 3.15 LIC 14
 
 ### `boolean determineLIC14()`
 
@@ -499,7 +511,7 @@ There are a total of 15 LICs to be implemented, each will return `true` or `fals
 
 ### Specifications
 
-- Determines whether three points can be contained within a circle of a specified radius. Depending on the mode, it checks for containment or exclusion.
+- Determine if all three points can be contained in a circle or if there is no circle that contains all three points.
 
 ### Used Attributes
 
