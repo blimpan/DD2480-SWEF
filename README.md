@@ -8,7 +8,7 @@ The Launch Interceptor Project implements a function called `DECIDE()` that dete
 
 ## Why This Project is a Game Changer
 
-This project is crucial for anti-ballistic missile systems, providing a systematic approach to decision-making based on real-time radar data. By evaluating multiple conditions for interceptor launch, it enhances the reliability and safety of missile defense operations, ensuring that launches occur only when necessary conditions are met.
+This project is crucial for anti-ballistic missile systems, providing a systematic approach to decision-making based on real-time radar data. By evaluating multiple conditions for interceptor launch, it enhances the reliability and safety of missile defense operations, ensuring that launches occur only when necessary conditions are met.  
 
 ## Your Launch Pad: Getting Started
 
