@@ -467,6 +467,24 @@ public class LaunchInterceptorTEST {
     }
 
     @Test
+    public void testLIC7True(){
+        double[][] points = {{1, 1}, {2, 2}, {3, 3}};
+        LaunchInterceptor.Parameters paramTrue = new LaunchInterceptor.Parameters(1.0, 1.0, 0.1, 0.1, 0.5, 2.0, 0.05, 0.5, 3, 2, 3, 1, 1, 1, 1, 1, 1, 1, 1);
+        LaunchInterceptor interceptTrue = new LaunchInterceptor(paramTrue, points.length, points, minLCM, minPUV);
+        Assert.assertTrue(null, interceptTrue.determineLIC7());
+
+    }
+
+    @Test
+    public void testLIC7False(){
+        double[][] points = {{1, 1}, {2, 2}, {3, 3}};
+        LaunchInterceptor.Parameters paramFalse = new LaunchInterceptor.Parameters(3.0, 1.0, 0.1, 0.1, 0.5, 2.0, 0.05, 0.5, 3, 2, 3, 1, 1, 1, 1, 1, 1, 1, 1);
+        LaunchInterceptor interceptFalse = new LaunchInterceptor(paramFalse, points.length, points, minLCM, minPUV);
+        Assert.assertFalse(null, interceptFalse.determineLIC7());
+
+    }
+
+    @Test
     public void testLIC8InvalidInput(){
         LaunchInterceptor.Parameters tooFewPoints = new LaunchInterceptor.Parameters(0, 0, 0, 1, 0,
         0, 20, 0, 0, 0, 0, 2, 0, 0, 0,

@@ -411,7 +411,7 @@ public class LaunchInterceptor {
 
         int k = 0;
         double x1, x2, y1, y2;
-        for (int i = 0; i < numPoints && k < numPoints; i++) {
+        for (int i = 0; i < numPoints && (k + parameters.K_PTS + 1) < numPoints ; i++) {
             k = i + parameters.K_PTS + 1;
             x1 = x[i];
             y1 = y[i];
