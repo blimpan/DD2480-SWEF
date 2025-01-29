@@ -42,18 +42,17 @@ If you would like to understand how the code works, please check out
 ### Project Title: Launch Interceptor
 
 ### Contributors
-
+- **Henrik Pendersén (**[https://github.com/WatermelonGodz](https://github.com/WatermelonGodz))
+    - **Contributions**:
+        - Designed and Implemented the LIC00, LIC01, LIC02 methods.
+        - Designed and Implemented the Helper Function `containedInCircle()`
+        - Created unit tests for LIC00, LIC01, LIC02 methods, and the above helper function.
 - **Linus Bälter (**[https://github.com/blimpan](https://github.com/blimpan))
     - **Contributions**:
         - Designed the code infrastructure and created the skeleton.
         - Designed the skeleton of the [`LaunchInterceptorTEST.java`](http://LaunchInterceptorTEST.java)
-        - Designed and Implemented the LIC00, LIC01, LIC02 methods.
-        - Created unit tests for LIC00, LIC01, LIC02 methods.
-- **Henrik Pendersén (**[https://github.com/WatermelonGodz](https://github.com/WatermelonGodz))
-    - **Contributions**:
         - Designed and Implemented the LIC03, LIC04, LIC05 methods.
-        - Designed and Implemented the Helper Function `containedInCircle()`
-        - Created unit tests for LIC03, LIC04, LIC05 methods, and the above helper function.
+        - Created unit tests for LIC03, LIC04, LIC05 methods.
 - Kristen Rosen ([https://github.com/KristinRosen](https://github.com/KristinRosen))
     - **Contributions**:
         - Designed and Implemented the LIC06, LIC07, LIC08 methods.
