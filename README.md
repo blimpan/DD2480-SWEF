@@ -52,18 +52,18 @@ If you would like to understand how the code works, please check out
         - Designed and Implemented the LIC03, LIC04, LIC05 methods.
         - Designed and Implemented the Helper Function `containedInCircle()`
         - Created unit tests for LIC03, LIC04, LIC05 methods, and the above helper function.
-- Kristen Rosen (**[https://github.com/KristinRosen](https://github.com/KristinRosen))
+- **Kristen Rosen (**[https://github.com/KristinRosen](https://github.com/KristinRosen))
     - **Contributions**:
         - Designed and Implemented the LIC06, LIC07, LIC08 methods.
         - Designed and Implemented the Helper Function `pointLineDistance()`
         - Created unit tests for LIC06, LIC07, LIC08 methods, and the above helper function.
-- Cheang Weng Io, Yoyo (**[https://github.com/beginner003](https://github.com/beginner003))
+- **Cheang Weng Io, Yoyo (**[https://github.com/beginner003](https://github.com/beginner003))
     - **Contributions**:
         - Authored and maintained project documentation, including `README.md` and`CodeDocumentation.md`.
         - Designed and Implemented the LIC09, LIC10, LIC11 methods.
         - Designed and Implemented the Helper Functions `computeAngle()` and `computeTriangleArea()`
         - Created unit tests for LIC09, LIC10, LIC11 methods, and the above helper functions.
-- Edgar Wolff ([https://github.com/edgarwolff](https://github.com/edgarwolff))
+- **Edgar Wolff ([https://github.com/edgarwolff](https://github.com/edgarwolff))
     - **Contributions**:
         - Refactored the code infrastructure for easier implementations of LIC methods.
         - Designed and Implemented the LIC12, LIC13, LIC14, `decide()` methods.
