@@ -374,8 +374,8 @@ public boolean determineLIC2() {
      */
     public Boolean determineLIC8() {
 
-        //Condition is not met when NUMPOINTS < 3
-        if(numPoints<3){
+        //Condition is not met when NUMPOINTS < 5
+        if(numPoints<5){
             return false;
         }
 
