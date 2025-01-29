@@ -34,7 +34,7 @@ public class Main {
                 {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1},      //13
                 {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0}       //14
         });
-
+                                    //   0    1    2    3    4    5    6    7    8    9   10   11   12   13   14
         var decidePUV = new boolean[]{true,true,true,true,true,true,true,true,true,true,true,true,true,true,true};
 
         var lInterceptor = new LaunchInterceptor(
