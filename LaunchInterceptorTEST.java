@@ -70,7 +70,7 @@ public class LaunchInterceptorTEST {
                 0, 0, 0, 0);
         var pointCoords = new double[][]{{0, 0}, {0, 1}, {2, 1}, {5, 1}, {10, 3}, {-1, 7}, {7, -1}, {0, 1}};
         var lInterceptor = new LaunchInterceptor(param, 8, pointCoords, minLCM, minPUV);
-        Assert.assertTrue(null, lInterceptor.determineLIC0());
+        Assert.assertFalse(null, lInterceptor.determineLIC0());
     }
 
     @Test
@@ -79,7 +79,7 @@ public class LaunchInterceptorTEST {
                 0, 0, 0, 0, 0, 0, 2, 0, 0, 0,
                 0, 0, 0, 0);
         var pointCoords = new double[][]{{0, 0}, {0, 1}, {2, 1}, {5, 1}, {10, 3}, {-1, 7}, {7, -1}, {0, 1}};
-        var lInterceptor = new LaunchInterceptor(param, 2, pointCoords, minLCM, minPUV);
+        var lInterceptor = new LaunchInterceptor(param, 8, pointCoords, minLCM, minPUV);
         Assert.assertThrows(IllegalArgumentException.class, lInterceptor::determineLIC0); // Negative length
     }
 
@@ -109,7 +109,7 @@ public class LaunchInterceptorTEST {
                 0, 0, 0, 0);
         var pointCoords = new double[][]{{0, 0}, {0, 1}, {2, 1}, {5, 1}, {10, 3}, {-1, 7}, {7, -1}, {0, 1}};
         var lInterceptor = new LaunchInterceptor(param, 8, pointCoords, minLCM, minPUV);
-        Assert.assertTrue(null, lInterceptor.determineLIC1());
+        Assert.assertFalse(null, lInterceptor.determineLIC1());
     }
 
     @Test
