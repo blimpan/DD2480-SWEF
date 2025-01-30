@@ -507,7 +507,7 @@ There are a total of 15 LICs to be implemented, each will return `true` or `fals
 
 ### 4.6 Circle Containing Three Given Points
 
-### `boolean containedInCircle(double x1, double y1, double x2, double y2, double x3, double y3, double radius, boolean mode)`
+### `boolean containedInCircle(double x1, double y1, double x2, double y2, double x3, double y3, double radius, boolean inclusionCheck)`
 
 ### Specifications
 
@@ -527,11 +527,11 @@ There are a total of 15 LICs to be implemented, each will return `true` or `fals
 - `double x3`: X coordinate of the third point.
 - `double y3`: Y coordinate of the third point.
 - `double radius`: The radius of the circle to check against.
-- `boolean mode`: When `false`, checks if all points can be contained within the circle; when `true`, checks if no circle of that radius can contain all three points.
+- `boolean inclusionCheck`: When `true`, checks if all points can be contained within the circle; when `false`, checks if no circle of that radius can contain all three points.
 
 ### Output Type
 
-- Returns `true` or `false` based on whether the points can be contained within or excluded from the circle.
+- Returns `true` or `false` based on inclusionCheck if the points can be contained within or excluded from the circle.
 
 ---
 
