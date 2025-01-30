@@ -71,6 +71,14 @@ If you would like to understand how the code works, please check out [Code Docum
         - Created unit tests for Constructors, LIC12, LIC13 LIC14, `decide()` methods.
         - Designed and Implemented the the `main()` function.
 
+### Way of working (according to Essence)
+
+We would describe our group as being in the earliest stages of the Essence Way-of-working scale. Because of limited time to complete the assignment, it was necessary to
+begin working before properly establishing principles and foundation. Therefore we would say we are in state 1: *Principles Established*, or part-way throught state 2: *Foundation Established*. 
+To move forward, we need to have a proper converstaion about key practices and the way-of-working. We must try and apply what we've learned from this assignment and discuss what we did wrong this time, 
+so everyone is on the same page reagrding how we should work in the next one.
+
+
 ### Acknowledgments
 
 We would like to thank all contributors for their efforts and dedication to making this project successful. Your hard work and collaboration have been invaluable.
