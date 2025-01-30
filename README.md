@@ -37,6 +37,27 @@ If you encounter any issues or have questions about the project, please feel fre
 
 If you would like to understand how the code works, please check out [Code Documentation](./CodeDocumentation.md)
 
+## Java Requirements
+
+This program requires Java 21 lts (tested on 21.0.1 and 21.0.5)
+
+## How to Run and Build?
+
+1. Clone the repository
+2. Go to the source directory by typing
+    `cd src/`
+   in the terminal
+4. Compile and run the main file using command
+    `javac Main.java; java Main`
+
+If you would like to test it with your own parameters, just edit the `Main`
+1. `var pointCoordinates`: the data points (line 13)
+2. `var decideLCM`: the Logical Connecting Matrix (line 19)
+3. `var decidePUV`: the Preliminary Unlocking Matrix (line 38)
+4. `getLaunchParameters()` : the parameters for the Launch Interceptor (line78)
+
+**Disclaimer: The code execution may produce non-ASCII characters in the output**
+
 ## Statement of Contributions
 
 ### Project Title: Launch Interceptor
